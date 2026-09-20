@@ -71,6 +71,247 @@
   }
 }
 
+/* 화면에서는 숨기고 인쇄할 때만 보이는 요소 */
+.print-only {
+  display: none;
+}
+
+/* ── 인쇄 / PDF 저장 ───────────────────────────────────────
+ *
+ * 화면은 포트폴리오, 인쇄물은 이력서입니다.
+ * 카드·타임라인 같은 화면용 장식을 걷어내고, 한 줄에 정보가 모이는
+ * 이력서 문서 형태로 재배치합니다.
+ */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm 16mm;
+  }
+
+  /* 인쇄물은 항상 라이트 테마로. 다크 배경은 잉크만 먹습니다. */
+  :root,
+  :root.dark {
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #222 !important;
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+
+  /*
+   * 화면 전용 UI 제거 (버튼은 종이에서 누를 수 없습니다).
+   * 주의: 섹션 제목도 <header>로 감싸여 있으므로, 내비게이션 헤더만
+   * 정확히 겨냥해야 합니다. `header`로 뭉뚱그리면 제목이 전부 사라집니다.
+   */
+  body > header,
+  #root > header,
+  footer,
+  .no-print,
+  button {
+    display: none !important;
+  }
+
+  /* 진입 애니메이션이 적용된 채로 인쇄되면 내용이 날아갑니다 */
+  .reveal {
+    opacity: 1 !important;
+    translate: none !important;
+    transition: none !important;
+  }
+
+  /* @page가 이미 용지 여백을 주므로 블록 자체 여백은 없앱니다 */
+  .section,
+  #top {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  /* ── 이름 / 연락처 머리글 ── */
+
+  #top {
+    padding-bottom: 5mm;
+    margin-bottom: 5mm;
+    border-bottom: 1.5pt solid #222 !important;
+  }
+
+  #top h1 {
+    font-size: 22pt;
+    letter-spacing: -0.01em;
+    color: #111 !important;
+  }
+
+  /* 역할 라벨을 이름 아래로 */
+  #top > p:first-of-type {
+    font-size: 10pt;
+    color: #555 !important;
+    margin-top: 1mm;
+  }
+
+  /* 한 줄 소개는 이력서에선 군더더기 */
+  #top > p:nth-of-type(2) {
+    display: none;
+  }
+
+  /* 이름 아래 연락처 한 줄 (화면에서는 About·Contact에 있음) */
+  .print-only {
+    display: block;
+    margin-top: 2mm;
+    font-size: 9.5pt;
+    color: #444 !important;
+  }
+
+  /* ── 섹션 제목 ── */
+
+  .section {
+    padding-top: 6mm;
+    break-inside: auto;
+  }
+
+  h2 {
+    font-size: 11pt;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #111 !important;
+    padding-bottom: 1.5mm;
+    margin-bottom: 3.5mm;
+    border-bottom: 0.5pt solid #bbb;
+    break-after: avoid;
+  }
+
+  /* 섹션 부제는 화면용 안내 문구 */
+  h2 + p {
+    display: none;
+  }
+
+  h3 {
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: #111 !important;
+    break-after: avoid;
+  }
+
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+    color: #333 !important;
+  }
+
+  /* ── 카드 장식 제거 ── */
+
+  article {
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin-bottom: 4.5mm;
+    break-inside: avoid;
+  }
+
+  /* ── 경력 타임라인 → 문서 목록 ── */
+
+  ol {
+    border: 0 !important;
+    padding-left: 0 !important;
+    margin: 0 !important;
+  }
+
+  ol > li {
+    margin-bottom: 4.5mm;
+    break-inside: avoid;
+  }
+
+  /* 타임라인 점 제거 */
+  ol > li > span[aria-hidden='true']:first-child {
+    display: none !important;
+  }
+
+  /* ── 기술 스택 배지 → 쉼표로 이어진 텍스트 ── */
+
+  .tag {
+    display: inline !important;
+    border: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: 9pt;
+    color: #555 !important;
+  }
+
+  .tag::after {
+    content: ', ';
+  }
+
+  .tag:last-child::after {
+    content: '';
+  }
+
+  /* ── Skills: "카테고리  항목, 항목" 한 줄로 ── */
+
+  #skills > div > div {
+    display: flex !important;
+    gap: 4mm;
+    margin-bottom: 2mm;
+  }
+
+  #skills h3 {
+    flex: 0 0 26mm;
+    padding-top: 0 !important;
+    margin: 0 !important;
+    font-size: 9.5pt;
+    font-weight: 600;
+    color: #444 !important;
+  }
+
+  #skills h3 + div {
+    display: block !important;
+    margin-top: 0 !important;
+  }
+
+  /* ── About: 2단 정의 목록을 한 줄로 ── */
+
+  #about dl {
+    display: flex !important;
+    gap: 8mm;
+    margin-top: 3mm;
+  }
+
+  /* ── Contact: 큰 이메일 링크를 본문 크기로 ── */
+
+  #contact a {
+    font-size: 10pt !important;
+  }
+
+  /* ── 링크: 주소를 괄호로 덧붙여 종이에서도 확인 가능하게 ── */
+
+  a {
+    color: #222 !important;
+    text-decoration: none;
+  }
+
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 8pt;
+    color: #666;
+    word-break: break-all;
+  }
+
+  a[href^='#']::after,
+  a[href^='mailto']::after {
+    content: '';
+  }
+
+  /* 글머리 기호를 옅게 */
+  li > span[aria-hidden='true'] {
+    background: #999 !important;
+  }
+}
+
 /* 접근성: 모션 최소화 설정을 존중 */
 @media (prefers-reduced-motion: reduce) {
   html {
