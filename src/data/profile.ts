@@ -53,6 +53,23 @@ export const skills: SkillGroup[] = [
   },
 ]
 
+// ── 상세 내용 (모달) ─────────────────────────────────────────
+
+/**
+ * 클릭하면 뜨는 상세 모달의 본문.
+ * `detail`을 넣은 항목만 클릭할 수 있게 되고, 없으면 평범한 항목으로 남습니다.
+ * 자세히 보여주고 싶은 항목에만 붙이세요.
+ */
+export type Detail = {
+  /** 각 문단은 소제목 + 본문 문단들로 구성됩니다 */
+  sections: {
+    heading: string
+    body: string[]
+  }[]
+  /** 선택: 성과를 숫자로 보여주고 싶을 때 */
+  metrics?: { label: string; value: string }[]
+}
+
 // ── Experience ───────────────────────────────────────────────
 
 export type Experience = {
@@ -62,6 +79,8 @@ export type Experience = {
   summary: string
   highlights: string[]
   stack: string[]
+  /** 회사 전체에 대한 상세 (개별 성과가 아닌 경력 자체를 설명할 때) */
+  detail?: Detail
 }
 
 export const experiences: Experience[] = [
@@ -75,6 +94,24 @@ export const experiences: Experience[] = [
       '반복 수작업을 사내 도구로 자동화해 작업 시간 단축',
     ],
     stack: ['Kotlin', 'Spring Boot', 'MySQL'],
+    // ↓ detail을 넣으면 항목이 클릭 가능해지고 상세 모달이 열립니다.
+    detail: {
+      sections: [
+        {
+          heading: '담당 업무',
+          body: [
+            '사내 서비스의 백엔드 API 개발과 운영을 맡았습니다. 기능 개발뿐 아니라 장애 대응과 성능 개선까지 포함했습니다.',
+          ],
+        },
+        {
+          heading: '기술적 의사결정',
+          body: [
+            '서비스마다 인증·예외 처리·로깅 설정이 복사되어 있어, 한 곳을 고치면 나머지를 모두 찾아 고쳐야 했습니다. 공통 모듈을 라이브러리로 분리해 의존성만 추가하면 되도록 바꿨습니다.',
+            '다만 라이브러리로 묶으면 버전 업그레이드 시 모든 서비스가 영향을 받습니다. 하위 호환을 깨지 않는 선에서만 변경하고, 파괴적 변경은 메이저 버전으로 분리하는 규칙을 두었습니다.',
+          ],
+        },
+      ],
+    },
   },
 ]
 
@@ -89,6 +126,7 @@ export type Project = {
   repoUrl?: string
   liveUrl?: string
   featured?: boolean
+  detail?: Detail
 }
 
 export const projects: Project[] = [
@@ -104,6 +142,34 @@ export const projects: Project[] = [
     stack: ['Spring Boot', 'OAuth2', 'MySQL'],
     repoUrl: '', // TODO: 레포 URL
     featured: true,
+    // ↓ 프로젝트 전체에 대한 상세 (카드의 "자세히 보기" 버튼으로 열림)
+    detail: {
+      metrics: [
+        { label: '개발 기간', value: '3개월' },
+        { label: '팀 구성', value: '1인' },
+      ],
+      sections: [
+        {
+          heading: '배경',
+          body: [
+            '개발자들이 꾸준히 코드를 작성하도록 동기를 부여할 방법을 고민했습니다. 혼자 하는 커밋 기록은 금방 동력을 잃기 쉬워서, 친구·동료와 함께 겨루는 구조라면 지속성이 생길 것이라 판단했습니다.',
+          ],
+        },
+        {
+          heading: '해결한 문제',
+          body: [
+            'GitHub API는 호출 한도가 있어 사용자가 늘수록 실시간 집계가 불가능했습니다. 활동 데이터를 주기적으로 수집해 별도 테이블에 적재하고, 랭킹은 집계된 결과만 조회하도록 분리했습니다.',
+            '커밋 수만으로 점수를 매기면 의미 없는 커밋을 양산하게 됩니다. 이슈·PR·리뷰에 가중치를 다르게 두어 실제 기여에 가까운 점수가 나오도록 설계했습니다.',
+          ],
+        },
+        {
+          heading: '아쉬운 점',
+          body: [
+            '수집 주기를 짧게 하면 API 한도에 걸리고, 길게 하면 랭킹이 늦게 반영됩니다. 현재는 고정 주기지만, 활동이 많은 그룹을 더 자주 수집하는 방식이 나았을 것 같습니다.',
+          ],
+        },
+      ],
+    },
   },
   {
     title: 'HappyTools Kit',

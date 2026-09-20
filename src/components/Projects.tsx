@@ -1,8 +1,14 @@
+import { useState } from 'react'
 import { projects } from '../data/profile'
+import type { Project } from '../data/profile'
 import { Section } from './Section'
 import { Tag } from './Tag'
+import { Modal } from './Modal'
+import { DetailBody } from './DetailBody'
 
 export function Projects() {
+  const [selected, setSelected] = useState<Project | null>(null)
+
   return (
     <Section
       id="projects"
@@ -56,8 +62,29 @@ export function Projects() {
               ))}
             </div>
 
-            {(project.repoUrl || project.liveUrl) && (
+            {(project.detail || project.repoUrl || project.liveUrl) && (
               <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
+                {project.detail && (
+                  <button
+                    type="button"
+                    onClick={() => setSelected(project)}
+                    className="inline-flex items-center gap-1 font-medium text-accent transition-opacity hover:opacity-70 dark:text-accent-dark"
+                  >
+                    자세히 보기
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 6l6 6-6 6" />
+                    </svg>
+                  </button>
+                )}
                 {project.repoUrl && (
                   <a
                     href={project.repoUrl}
@@ -83,6 +110,15 @@ export function Projects() {
           </article>
         ))}
       </div>
+
+      <Modal
+        open={selected !== null}
+        onClose={() => setSelected(null)}
+        title={selected?.title ?? ''}
+        meta={selected?.period}
+      >
+        {selected?.detail && <DetailBody detail={selected.detail} />}
+      </Modal>
     </Section>
   )
 }

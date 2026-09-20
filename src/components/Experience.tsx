@@ -1,8 +1,14 @@
+import { useState } from 'react'
 import { experiences } from '../data/profile'
+import type { Experience as ExperienceItem } from '../data/profile'
 import { Section } from './Section'
 import { Tag } from './Tag'
+import { Modal } from './Modal'
+import { DetailBody } from './DetailBody'
 
 export function Experience() {
+  const [selected, setSelected] = useState<ExperienceItem | null>(null)
+
   return (
     <Section id="experience" title="Experience">
       <ol className="relative space-y-10 border-l border-neutral-200 pl-6 dark:border-neutral-800">
@@ -53,9 +59,40 @@ export function Experience() {
                 ))}
               </div>
             )}
+
+            {exp.detail && (
+              <button
+                type="button"
+                onClick={() => setSelected(exp)}
+                className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent transition-opacity hover:opacity-70 dark:text-accent-dark"
+              >
+                자세히 보기
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+              </button>
+            )}
           </li>
         ))}
       </ol>
+
+      <Modal
+        open={selected !== null}
+        onClose={() => setSelected(null)}
+        title={selected ? `${selected.company} · ${selected.role}` : ''}
+        meta={selected?.period}
+      >
+        {selected?.detail && <DetailBody detail={selected.detail} />}
+      </Modal>
     </Section>
   )
 }
