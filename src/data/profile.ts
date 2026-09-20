@@ -70,6 +70,20 @@ export type Detail = {
   metrics?: { label: string; value: string }[]
 }
 
+/**
+ * 성과 한 줄.
+ *
+ * 문자열로 쓰면 그냥 한 줄로 표시되고, `{ text, detail }` 형태로 쓰면
+ * 그 문장이 클릭 가능해져 배경·과정을 담은 모달이 열립니다.
+ * 두 형태를 한 배열에 섞어 써도 됩니다.
+ *
+ *   highlights: [
+ *     '짧게 남길 성과',
+ *     { text: '자세히 풀고 싶은 성과', detail: { sections: [...] } },
+ *   ]
+ */
+export type Highlight = string | { text: string; detail: Detail }
+
 // ── Experience ───────────────────────────────────────────────
 
 export type Experience = {
@@ -77,7 +91,8 @@ export type Experience = {
   role: string
   period: string
   summary: string
-  highlights: string[]
+  /** 성과 목록. 문장별로 detail을 붙이면 그 문장이 클릭 가능해집니다. */
+  highlights: Highlight[]
   stack: string[]
   /** 회사 전체에 대한 상세 (개별 성과가 아닌 경력 자체를 설명할 때) */
   detail?: Detail
@@ -90,28 +105,42 @@ export const experiences: Experience[] = [
     period: '2024.01 — 재직 중', // TODO
     summary: '사내 서비스의 백엔드 개발과 운영을 담당했습니다.', // TODO
     highlights: [
-      'MSA 공통 모듈을 분리해 서비스 간 중복 설정 코드를 제거', // TODO
+      // ↓ 문장에 detail을 붙이면 그 문장이 클릭 가능해지고 모달이 열립니다.
+      //   TODO: 실제 내용으로 교체하세요. 자세히 쓸 게 없으면 문자열로만 두면 됩니다.
+      {
+        text: 'MSA 공통 모듈을 분리해 서비스 간 중복 설정 코드를 제거',
+        detail: {
+          metrics: [
+            { label: '적용 서비스', value: '5개' },
+            { label: '작업 기간', value: '2주' },
+          ],
+          sections: [
+            {
+              heading: '문제 상황',
+              body: [
+                '서비스마다 인증·예외 처리·로깅 설정이 복사되어 있었습니다. 설정 한 줄을 고치려면 5개 저장소를 모두 찾아 같은 수정을 반복해야 했고, 빠뜨린 서비스에서만 다르게 동작하는 일이 반복됐습니다.',
+              ],
+            },
+            {
+              heading: '진행 과정',
+              body: [
+                '먼저 각 서비스의 설정 클래스를 모아 실제로 동일한 부분과 서비스별로 달라야 하는 부분을 구분했습니다. 무조건 합치면 오히려 예외 처리가 늘어나기 때문입니다.',
+                '공통 부분만 Core 라이브러리로 추출하고 JitPack으로 배포해, 각 서비스는 의존성 한 줄만 추가하도록 했습니다. 서비스별로 달라야 하는 값은 프로퍼티로 주입받게 남겨뒀습니다.',
+              ],
+            },
+            {
+              heading: '고민한 지점',
+              body: [
+                '라이브러리로 묶으면 버전을 올릴 때 모든 서비스가 영향을 받습니다. 하위 호환을 깨지 않는 선에서만 변경하고, 파괴적 변경은 메이저 버전으로 분리하는 규칙을 먼저 정한 뒤 작업을 시작했습니다.',
+              ],
+            },
+          ],
+        },
+      },
+      // 이렇게 문자열로만 두면 클릭할 수 없는 평범한 한 줄이 됩니다.
       '반복 수작업을 사내 도구로 자동화해 작업 시간 단축',
     ],
     stack: ['Kotlin', 'Spring Boot', 'MySQL'],
-    // ↓ detail을 넣으면 항목이 클릭 가능해지고 상세 모달이 열립니다.
-    detail: {
-      sections: [
-        {
-          heading: '담당 업무',
-          body: [
-            '사내 서비스의 백엔드 API 개발과 운영을 맡았습니다. 기능 개발뿐 아니라 장애 대응과 성능 개선까지 포함했습니다.',
-          ],
-        },
-        {
-          heading: '기술적 의사결정',
-          body: [
-            '서비스마다 인증·예외 처리·로깅 설정이 복사되어 있어, 한 곳을 고치면 나머지를 모두 찾아 고쳐야 했습니다. 공통 모듈을 라이브러리로 분리해 의존성만 추가하면 되도록 바꿨습니다.',
-            '다만 라이브러리로 묶으면 버전 업그레이드 시 모든 서비스가 영향을 받습니다. 하위 호환을 깨지 않는 선에서만 변경하고, 파괴적 변경은 메이저 버전으로 분리하는 규칙을 두었습니다.',
-          ],
-        },
-      ],
-    },
   },
 ]
 
@@ -121,7 +150,8 @@ export type Project = {
   title: string
   period: string
   description: string
-  points: string[]
+  /** 성과 목록. 문장별로 detail을 붙이면 그 문장이 클릭 가능해집니다. */
+  points: Highlight[]
   stack: string[]
   repoUrl?: string
   liveUrl?: string
@@ -136,7 +166,27 @@ export const projects: Project[] = [
     description:
       'GitHub 활동을 기반으로 그룹을 만들어 서로 순위를 겨루는 웹 서비스. 커밋·이슈·PR 활동을 점수화하고 배지와 레벨로 보여줍니다.',
     points: [
-      'GitHub OAuth2 로그인과 활동 데이터 수집 파이프라인 구현',
+      // 개별 성과에도 detail을 붙일 수 있습니다 (그 문장만 클릭 가능해짐)
+      {
+        text: 'GitHub OAuth2 로그인과 활동 데이터 수집 파이프라인 구현',
+        detail: {
+          sections: [
+            {
+              heading: '왜 파이프라인이 필요했나',
+              body: [
+                'GitHub API는 시간당 호출 한도가 있습니다. 사용자가 랭킹 화면을 열 때마다 API를 호출하면 몇 명만 접속해도 한도가 소진되어, 화면 조회와 데이터 수집을 분리해야 했습니다.',
+              ],
+            },
+            {
+              heading: '구현 방식',
+              body: [
+                '스케줄러가 주기적으로 각 사용자의 커밋·이슈·PR을 수집해 별도 테이블에 적재하고, 랭킹 화면은 적재된 데이터만 조회합니다. API 호출량이 사용자 수에만 비례하고 접속량과는 무관해졌습니다.',
+                '수집 중 일부 사용자에서 실패해도 전체가 멈추지 않도록, 사용자 단위로 트랜잭션을 나누고 실패한 건만 다음 주기에 재시도하도록 했습니다.',
+              ],
+            },
+          ],
+        },
+      },
       '그룹 생성·초대·랭킹 집계 도메인 설계',
     ],
     stack: ['Spring Boot', 'OAuth2', 'MySQL'],

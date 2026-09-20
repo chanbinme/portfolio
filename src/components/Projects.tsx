@@ -5,6 +5,7 @@ import { Section } from './Section'
 import { Tag } from './Tag'
 import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
+import { HighlightList } from './HighlightList'
 
 export function Projects() {
   const [selected, setSelected] = useState<Project | null>(null)
@@ -39,22 +40,11 @@ export function Projects() {
               {project.description}
             </p>
 
-            {project.points.length > 0 && (
-              <ul className="mt-3 space-y-1.5">
-                {project.points.map((point) => (
-                  <li
-                    key={point}
-                    className="flex gap-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400"
-                  >
-                    <span
-                      className="mt-2 h-1 w-1 shrink-0 rounded-full bg-neutral-400 dark:bg-neutral-600"
-                      aria-hidden="true"
-                    />
-                    {point}
-                  </li>
-                ))}
-              </ul>
-            )}
+            <HighlightList
+              items={project.points}
+              context={project.title}
+              tone="muted"
+            />
 
             <div className="mt-4 flex flex-wrap items-center gap-2">
               {project.stack.map((s) => (

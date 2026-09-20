@@ -115,6 +115,30 @@
     display: none !important;
   }
 
+  /*
+   * 단, 성과 문장은 클릭 가능하도록 <button>으로 만들었을 뿐 내용 자체입니다.
+   * 위 규칙에 걸려 사라지지 않도록 되살리고, 버튼 티를 없앱니다.
+   */
+  li button {
+    display: inline !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    font: inherit !important;
+    text-align: left;
+    color: inherit !important;
+  }
+
+  li button span {
+    text-decoration: none !important;
+  }
+
+  /* 클릭 가능 표시 아이콘은 종이에서 의미가 없습니다 */
+  li button svg {
+    display: none !important;
+  }
+
   /* 진입 애니메이션이 적용된 채로 인쇄되면 내용이 날아갑니다 */
   .reveal {
     opacity: 1 !important;

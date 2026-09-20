@@ -5,6 +5,7 @@ import { Section } from './Section'
 import { Tag } from './Tag'
 import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
+import { HighlightList } from './HighlightList'
 
 export function Experience() {
   const [selected, setSelected] = useState<ExperienceItem | null>(null)
@@ -35,22 +36,7 @@ export function Experience() {
               {exp.summary}
             </p>
 
-            {exp.highlights.length > 0 && (
-              <ul className="mt-3 space-y-1.5">
-                {exp.highlights.map((h) => (
-                  <li
-                    key={h}
-                    className="flex gap-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300"
-                  >
-                    <span
-                      className="mt-2 h-1 w-1 shrink-0 rounded-full bg-neutral-400 dark:bg-neutral-600"
-                      aria-hidden="true"
-                    />
-                    {h}
-                  </li>
-                ))}
-              </ul>
-            )}
+            <HighlightList items={exp.highlights} context={exp.company} />
 
             {exp.stack.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
