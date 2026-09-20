@@ -15,6 +15,7 @@ const NAV = [
 export function Header() {
   const { theme, toggle } = useTheme()
   const [active, setActive] = useState<string>('')
+  const [menuOpen, setMenuOpen] = useState(false)
 
   // 현재 보고 있는 섹션을 내비게이션에 표시
   useEffect(() => {
@@ -35,6 +36,16 @@ export function Header() {
     sections.forEach((el) => observer.observe(el))
     return () => observer.disconnect()
   }, [])
+
+  // 모바일 메뉴가 열려 있을 때 Esc로 닫기
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200/70 bg-white/80 backdrop-blur-md dark:border-neutral-800/70 dark:bg-neutral-950/80">
@@ -63,15 +74,53 @@ export function Header() {
           ))}
         </nav>
 
-        <button
-          type="button"
-          onClick={toggle}
-          aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
-          className="rounded-md p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
-        >
-          {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            className="rounded-md p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+          >
+            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+          </button>
+
+          {/* 모바일 전용 메뉴 버튼 */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="메뉴 열기"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+            className="rounded-md p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 md:hidden dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+          >
+            {menuOpen ? <CloseIcon /> : <MenuIcon />}
+          </button>
+        </div>
       </div>
+
+      {/* 모바일 드롭다운 */}
+      {menuOpen && (
+        <nav
+          id="mobile-nav"
+          className="border-t border-neutral-200 bg-white px-6 py-2 md:hidden dark:border-neutral-800 dark:bg-neutral-950"
+        >
+          {NAV.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              onClick={() => setMenuOpen(false)}
+              className={[
+                'block rounded-md px-2 py-2.5 text-sm transition-colors',
+                active === item.id
+                  ? 'text-accent dark:text-accent-dark'
+                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100',
+              ].join(' ')}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      )}
     </header>
   )
 }
@@ -111,3 +160,36 @@ function MoonIcon() {
   )
 }
 
+function MenuIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  )
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  )
+}
