@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- TODO: 본인 정보로 수정 -->
+    <title>김찬빈 · Backend Engineer</title>
+    <meta
+      name="description"
+      content="Java/Kotlin과 Spring 기반 백엔드 개발자 포트폴리오."
+    />
+
+    <!-- Open Graph (카카오톡·슬랙 링크 미리보기용) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="김찬빈 · Backend Engineer" />
+    <meta
+      property="og:description"
+      content="Java/Kotlin과 Spring 기반 백엔드 개발자 포트폴리오."
+    />
+    <!-- TODO: 배포 후 실제 도메인으로 교체 -->
+    <meta property="og:url" content="https://example.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- 다크 모드 첫 페인트 깜빡임(FOUC) 방지: React 로드 전에 클래스를 붙입니다 -->
+    <script>
+      ;(function () {
+        try {
+          var stored = localStorage.getItem('theme')
+          var dark =
+            stored === 'dark' ||
+            (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          if (dark) document.documentElement.classList.add('dark')
+        } catch (e) {
+          /* localStorage 차단 환경 무시 */
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
