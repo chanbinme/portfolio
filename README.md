@@ -113,10 +113,26 @@ src/
 
 ## 배포
 
-정적 사이트이므로 `npm run build` 후 `dist/`를 그대로 올리면 됩니다.
+### GitHub Pages (기본)
+
+`main`에 푸시하면 `.github/workflows/deploy.yml`이 빌드 후
+<https://chanbinme.github.io/portfolio/> 로 배포합니다.
+
+처음 한 번만 저장소 설정이 필요합니다.
+
+1. GitHub 저장소 → **Settings** → **Pages**
+2. **Build and deployment** → **Source**를 **GitHub Actions**로 변경
+
+수동 배포가 필요하면 **Actions** 탭에서 `Deploy to GitHub Pages` 워크플로를
+**Run workflow**로 실행하면 됩니다.
+
+하위 경로(`/portfolio/`) 배포이므로 `vite.config.ts`에 `base: '/portfolio/'`가
+설정되어 있습니다. 저장소 이름을 바꾸거나 커스텀 도메인을 붙이면 이 값과
+`index.html`의 `og:url`도 함께 바꿔주세요. (커스텀 도메인은 `base: '/'`)
+
+### 그 외
+
+정적 사이트이므로 `npm run build` 후 `dist/`를 그대로 올려도 됩니다.
 
 - **Vercel / Netlify**: 저장소 연결 후 빌드 명령 `npm run build`, 출력 디렉터리 `dist`
-- **GitHub Pages**: 저장소 하위 경로에 배포하는 경우 `vite.config.ts`에
-  `base: '/저장소이름/'`을 추가해야 자산 경로가 맞습니다.
-
-배포 후 `index.html`의 `og:url`을 실제 도메인으로 바꿔주세요.
+  (이 경우 `base`를 `'/'`로 되돌려야 자산 경로가 맞습니다)
