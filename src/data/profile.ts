@@ -1,19 +1,23 @@
 // ─────────────────────────────────────────────────────────────
 // 이 파일 하나만 고치면 사이트 전체 내용이 바뀝니다.
-// TODO 표시된 곳을 본인 정보로 채워주세요.
+// 내용은 기존 이력서(https://chanbinme.github.io/resume-nextjs/)를 옮겨온 것입니다.
 // ─────────────────────────────────────────────────────────────
 
 export const profile = {
-  name: '김찬빈', // TODO: 이름
+  name: '김찬빈',
   role: 'Backend Engineer',
-  tagline: '문제를 정의하고, 필요한 것만 만들어 끝까지 운영합니다.',
+  tagline: '한 가지를 대하는 태도를 보면, 만 가지를 대하는 태도를 알 수 있다.',
   intro: [
-    'Java/Kotlin과 Spring 기반 백엔드를 주로 다룹니다. MSA 환경에서 공통 모듈을 설계하고 배포하는 일, 그리고 반복 작업을 도구로 걷어내는 일에 관심이 많습니다.',
-    '필요하면 프론트엔드와 브라우저 확장까지 직접 만들어 문제를 끝까지 해결하는 편입니다.', // TODO: 본인 소개로 교체
+    'Spring Boot, MySQL, Redis, AWS, Git 등을 사용하여 웹 서비스 설계, 백엔드 개발한 경험이 있습니다. 클린 코드와 객체 지향 설계를 고려하여 유지 보수성이 높은 코드를 작성하는 것을 중요하게 생각합니다.',
+    '컨텐츠 기획자로 일하며 유저와의 상호작용을 통해 제품을 개선시키는 일을 즐기곤 했습니다. 하지만 제품을 더욱 개선하기 위해서는 기술적인 이해와 능력이 필요하다고 생각하게 되었습니다. 학습하는 과정에서 개발에 대한 이해와 관심을 갖게 되었고, 개발 경험을 통해 자신만의 서비스를 만들어 보고 싶은 욕구가 생겨 직무 전환을 결심하게 되었습니다.',
+    '개발자란 처음 접하는 환경이나 기술에 대해서도 주어진 문제를 성공적으로 해결할 수 있어야 한다고 생각하고 있습니다. 문제 해결에서 중요한 점은 사용자를 이해하고 요구사항을 분석하는 것입니다. 컨텐츠 기획자로 일하면서 다양한 관점에서 문제를 바라볼 수 있는 사고력과 협업 능력에 강점을 가지게 되었습니다. 이러한 강점을 바탕으로 더 나은 문제 해결과 비즈니스 발전을 위해 능동적이고 적극적으로 참여하고 있습니다.',
+    '• 개발 중 겪는 기술적 어려움을 개인 시간에 학습하고, 블로그에 정리합니다.',
+    '• 사이드 프로젝트나 알고리즘 스터디, 온라인 모각코 활동 등을 통해 다양한 개발 경험을 즐기고 있습니다.',
+    '• 작은 성과도 꾸준한 커밋을 통해 지속적인 성장을 추구하고 있습니다.',
   ],
-  location: 'Seoul, Korea',
+  location: 'Seoul, Korea', // TODO: 이력서에 없던 항목 — 확인해주세요
   email: 'chanbin.backend@gmail.com',
-  resumeUrl: '', // TODO: 이력서 PDF 링크 (없으면 빈 문자열 → 버튼 숨김)
+  resumeUrl: 'https://chanbinme.github.io/resume-nextjs/',
 } as const
 
 export type SocialLink = {
@@ -22,9 +26,9 @@ export type SocialLink = {
 }
 
 export const socials: SocialLink[] = [
-  { label: 'GitHub', href: 'https://github.com/chanbinme' }, // TODO: 본인 GitHub URL
-  { label: 'LinkedIn', href: '' }, // TODO (빈 값이면 렌더 안 됨)
-  { label: 'Blog', href: 'https://green-bin.tistory.com' }, // TODO
+  { label: 'GitHub', href: 'https://github.com/chanbinme' },
+  { label: 'LinkedIn', href: '' }, // 이력서에 없음 (빈 값이면 렌더 안 됨)
+  { label: 'Blog', href: 'https://green-bin.tistory.com' },
 ]
 
 // ── Skills ───────────────────────────────────────────────────
@@ -36,20 +40,25 @@ export type SkillGroup = {
 
 export const skills: SkillGroup[] = [
   {
-    category: 'Language',
-    items: ['Java', 'Kotlin', 'TypeScript', 'SQL'],
+    category: 'Back-end',
+    items: [
+      'Java',
+      'Spring Boot',
+      'Spring MVC',
+      'Spring Data JPA',
+      'Spring Security',
+      'QueryDSL',
+      'Gradle',
+      'AWS EC2, S3, RDS',
+    ],
   },
   {
-    category: 'Backend',
-    items: ['Spring Boot', 'Spring Data JPA', 'Spring Security', 'Gradle'],
+    category: 'Database',
+    items: ['MySQL', 'Redis', 'H2'],
   },
   {
-    category: 'Frontend',
-    items: ['React', 'Tailwind CSS', 'Vite', 'Chrome Extension API'],
-  },
-  {
-    category: 'Data / Infra',
-    items: ['MySQL', 'Redis', 'Docker', 'GitHub Actions'],
+    category: 'Etc',
+    items: ['Git', 'IntelliJ', 'Vim', 'Slack'],
   },
 ]
 
@@ -100,47 +109,33 @@ export type Experience = {
 
 export const experiences: Experience[] = [
   {
-    company: '회사명', // TODO
-    role: 'Backend Engineer',
-    period: '2024.01 — 재직 중', // TODO
-    summary: '사내 서비스의 백엔드 개발과 운영을 담당했습니다.', // TODO
+    company: '(주)엑스얼라이언스',
+    role: 'SW개발팀 · 백엔드 개발자 (정규직)',
+    period: '2023.06 — 재직 중',
+    summary:
+      '패션 브랜드 루이까또즈를 포함한 다양한 분야의 계열사를 운영하는 지주회사입니다.',
     highlights: [
-      // ↓ 문장에 detail을 붙이면 그 문장이 클릭 가능해지고 모달이 열립니다.
-      //   TODO: 실제 내용으로 교체하세요. 자세히 쓸 게 없으면 문자열로만 두면 됩니다.
-      {
-        text: 'MSA 공통 모듈을 분리해 서비스 간 중복 설정 코드를 제거',
-        detail: {
-          metrics: [
-            { label: '적용 서비스', value: '5개' },
-            { label: '작업 기간', value: '2주' },
-          ],
-          sections: [
-            {
-              heading: '문제 상황',
-              body: [
-                '서비스마다 인증·예외 처리·로깅 설정이 복사되어 있었습니다. 설정 한 줄을 고치려면 5개 저장소를 모두 찾아 같은 수정을 반복해야 했고, 빠뜨린 서비스에서만 다르게 동작하는 일이 반복됐습니다.',
-              ],
-            },
-            {
-              heading: '진행 과정',
-              body: [
-                '먼저 각 서비스의 설정 클래스를 모아 실제로 동일한 부분과 서비스별로 달라야 하는 부분을 구분했습니다. 무조건 합치면 오히려 예외 처리가 늘어나기 때문입니다.',
-                '공통 부분만 Core 라이브러리로 추출하고 JitPack으로 배포해, 각 서비스는 의존성 한 줄만 추가하도록 했습니다. 서비스별로 달라야 하는 값은 프로퍼티로 주입받게 남겨뒀습니다.',
-              ],
-            },
-            {
-              heading: '고민한 지점',
-              body: [
-                '라이브러리로 묶으면 버전을 올릴 때 모든 서비스가 영향을 받습니다. 하위 호환을 깨지 않는 선에서만 변경하고, 파괴적 변경은 메이저 버전으로 분리하는 규칙을 먼저 정한 뒤 작업을 시작했습니다.',
-              ],
-            },
-          ],
-        },
-      },
-      // 이렇게 문자열로만 두면 클릭할 수 없는 평범한 한 줄이 됩니다.
-      '반복 수작업을 사내 도구로 자동화해 작업 시간 단축',
+      // TODO: 이력서에는 결과만 적혀 있어 상세 모달을 비워뒀습니다.
+      //       배경·과정을 풀고 싶은 문장은 { text, detail } 형태로 바꿔주세요.
+      'Test case를 통한 QA 테스트 도입, 프로젝트 배포 후 발생하는 버그 80% 최소화',
+      '서버 재기동 없이 JSP 파일 배포만으로 프로모션 페이지가 생성되도록 프로세스 개선, 서비스 중단 시간 90% 감소 및 마케팅 대응 속도 개선',
+      '복잡한 로직 및 시스템 설정을 문서화하여 반복적인 문의에 대한 신속한 대응 체계 구축',
+      '직영몰 선물하기 서비스 API 설계 및 화면 개발',
+      '직영몰 배송비 부과 API 설계 및 화면 개발',
+      '사내 인사평가 시스템 API 설계 및 화면 개발',
     ],
-    stack: ['Kotlin', 'Spring Boot', 'MySQL'],
+    stack: [
+      'Java',
+      'Spring Boot',
+      'MyBatis',
+      'JPA/Hibernate',
+      'QueryDSL',
+      'Oracle',
+      'JUnit',
+      'JEUS',
+      'WebToB',
+      'Slack',
+    ],
   },
 ]
 
@@ -159,114 +154,136 @@ export type Project = {
   detail?: Detail
 }
 
+const projectStack = [
+  'Java 11',
+  'Spring Boot',
+  'Spring Security',
+  'MySQL',
+  'QueryDSL',
+  'AWS (EC2, S3, RDS)',
+  'GitHub Actions',
+]
+
 export const projects: Project[] = [
   {
-    title: 'CodeQuest',
-    period: '2025',
+    title: '66 챌린지',
+    period: '2023.01 — 2023.02',
     description:
-      'GitHub 활동을 기반으로 그룹을 만들어 서로 순위를 겨루는 웹 서비스. 커밋·이슈·PR 활동을 점수화하고 배지와 레벨로 보여줍니다.',
+      '66일 동안 올바른 습관을 만들 수 있도록 도와주는 하드코어 목표 달성 서비스. 백엔드를 담당했습니다.',
     points: [
-      // 개별 성과에도 detail을 붙일 수 있습니다 (그 문장만 클릭 가능해짐)
       {
-        text: 'GitHub OAuth2 로그인과 활동 데이터 수집 파이프라인 구현',
+        text: 'Offset Pagination을 No Offset Pagination으로 전환해 페이징 성능 약 100배 개선',
         detail: {
+          metrics: [
+            { label: '성능 개선', value: '약 100배' },
+            { label: '측정 데이터', value: '15만 건' },
+            { label: '조회 시간', value: '0.058s → 0.00032s' },
+          ],
           sections: [
             {
-              heading: '왜 파이프라인이 필요했나',
+              heading: '측정 결과',
               body: [
-                'GitHub API는 시간당 호출 한도가 있습니다. 사용자가 랭킹 화면을 열 때마다 API를 호출하면 몇 명만 접속해도 한도가 소진되어, 화면 조회와 데이터 수집을 분리해야 했습니다.',
+                '데이터 15만 건을 기준으로 측정했을 때 기존 Offset 방식은 0.058초, No Offset 방식은 0.00032초가 걸렸습니다.',
               ],
             },
             {
-              heading: '구현 방식',
+              heading: '기록',
               body: [
-                '스케줄러가 주기적으로 각 사용자의 커밋·이슈·PR을 수집해 별도 테이블에 적재하고, 랭킹 화면은 적재된 데이터만 조회합니다. API 호출량이 사용자 수에만 비례하고 접속량과는 무관해졌습니다.',
-                '수집 중 일부 사용자에서 실패해도 전체가 멈추지 않도록, 사용자 단위로 트랜잭션을 나누고 실패한 건만 다음 주기에 재시도하도록 했습니다.',
+                '전환 과정은 블로그(green-bin.tistory.com/23)에 정리해 두었습니다.',
               ],
             },
           ],
         },
       },
-      '그룹 생성·초대·랭킹 집계 도메인 설계',
+      '스케줄링을 통해 사용자의 당일 인증 여부를 체크하는 시스템 구현',
+      'OAuth 2.0 소셜 로그인 구현 (Google, Naver, Kakao)',
+      'S3 이미지 서버 구축 및 웹 성능 개선을 위한 이미지 최적화',
+      '협업 생산성을 높이기 위한 Git Flow · Commit Convention 정립',
+      'CI/CD 구성 및 RDS 세팅',
     ],
-    stack: ['Spring Boot', 'OAuth2', 'MySQL'],
-    repoUrl: '', // TODO: 레포 URL
+    stack: projectStack,
+    repoUrl: 'https://github.com/codestates-seb/66Challenge',
+    liveUrl: 'https://66challenge.shop',
     featured: true,
-    // ↓ 프로젝트 전체에 대한 상세 (카드의 "자세히 보기" 버튼으로 열림)
     detail: {
       metrics: [
-        { label: '개발 기간', value: '3개월' },
-        { label: '팀 구성', value: '1인' },
+        { label: '개발 인원', value: '7명 (백엔드 3 · 프론트 4)' },
+        { label: '담당', value: '백엔드' },
+        { label: '기간', value: '2023.01 — 2023.02' },
       ],
       sections: [
         {
-          heading: '배경',
+          heading: '담당 역할',
           body: [
-            '개발자들이 꾸준히 코드를 작성하도록 동기를 부여할 방법을 고민했습니다. 혼자 하는 커밋 기록은 금방 동력을 잃기 쉬워서, 친구·동료와 함께 겨루는 구조라면 지속성이 생길 것이라 판단했습니다.',
+            'API 개발 (습관, 인증 게시물)',
+            'S3 이미지 서버 구축',
+            'Git Flow · Git Convention 정립',
+            '알림 서비스 구축',
+            'CI/CD 구성 및 RDS DB 세팅',
+            'OAuth 로그인 (Google, Kakao, Naver)',
           ],
         },
         {
-          heading: '해결한 문제',
+          heading: '기여한 내용',
           body: [
-            'GitHub API는 호출 한도가 있어 사용자가 늘수록 실시간 집계가 불가능했습니다. 활동 데이터를 주기적으로 수집해 별도 테이블에 적재하고, 랭킹은 집계된 결과만 조회하도록 분리했습니다.',
-            '커밋 수만으로 점수를 매기면 의미 없는 커밋을 양산하게 됩니다. 이슈·PR·리뷰에 가중치를 다르게 두어 실제 기여에 가까운 점수가 나오도록 설계했습니다.',
+            'Offset Pagination을 No Offset Pagination으로 전환하여 약 100배의 페이징 성능 개선 (데이터 15만 건 기준, 0.058sec → 0.00032sec)',
+            '웹 성능 개선을 위한 이미지 최적화',
+            '스케줄링을 통해 사용자의 당일 인증 여부를 체크하는 시스템 구현',
+            'Spring Data JPA Auditing 기능으로 엔티티 생성/수정 시간 기록 자동화',
+            'Commit Message Convention 정립 및 Template 작성',
           ],
         },
         {
-          heading: '아쉬운 점',
-          body: [
-            '수집 주기를 짧게 하면 API 한도에 걸리고, 길게 하면 랭킹이 늦게 반영됩니다. 현재는 고정 주기지만, 활동이 많은 그룹을 더 자주 수집하는 방식이 나았을 것 같습니다.',
-          ],
+          heading: '체험 계정',
+          body: ['Guest ID : guest@mail.com / Guest PW : guest123!'],
         },
       ],
     },
   },
   {
-    title: 'HappyTools Kit',
-    period: '2025',
+    title: '소셜미디어를 담은 여행 동행 모집 서비스',
+    period: '2023.03',
     description:
-      '외부 AI 도구를 쓸 수 없는 내부망 환경에서 Entity ↔ DDL 변환 같은 반복 작업을 처리하는 크롬 확장 프로그램.',
+      '여행 동행을 모집하고 피드로 기록을 남기는 사이드 팀 프로젝트. 백엔드를 담당했습니다.',
     points: [
-      '내부망 제약 조건에서 동작하도록 모든 처리를 브라우저 로컬에서 수행',
-      'Entity ↔ DDL 양방향 변환기 구현',
+      'Spring Security + JWT를 이용한 로그인·로그아웃 구현',
+      '회원·피드·인증 API 개발 및 이메일 인증 구현',
+      'AOP를 통한 Logging 구현',
+      'Rest Docs를 이용한 API 문서 자동화',
+      '추상화를 통한 통합 테스트 구조 개선, 제네릭을 이용한 코드 리팩토링',
     ],
-    stack: ['TypeScript', 'Chrome Extension'],
-    repoUrl: '',
+    stack: projectStack,
+    repoUrl: 'https://github.com/Travel-WithMe/TravelWithMe-sever/tree/develop',
     featured: true,
-  },
-  {
-    title: 'q-it-core',
-    period: '2025',
-    description:
-      'Q-IT MSA 프로젝트의 공통 설정·유틸리티·예외 처리·비동기 구성을 담은 Core 라이브러리. JitPack으로 배포해 다른 서비스가 의존성만 추가해 사용합니다.',
-    points: [
-      '서비스 간 중복되던 설정과 예외 처리를 라이브러리로 통합',
-      'JitPack 배포 파이프라인 구성',
-    ],
-    stack: ['Kotlin', 'Spring Boot', 'Gradle', 'JitPack'],
-    repoUrl: '',
-    featured: true,
-  },
-  {
-    title: 'Star Pig',
-    period: '2026',
-    description:
-      '여러 탭을 그룹으로 묶어 저장하고 한 번에 다시 열 수 있는 북마크 매니저 크롬 확장 프로그램.',
-    points: [
-      '창 단위 탭 일괄 저장 및 복원 기능',
-      'shadcn/ui 기반 UI와 TypeScript 타입 안정성 확보',
-    ],
-    stack: ['TypeScript', 'React', 'shadcn/ui'],
-    repoUrl: '',
-  },
-  {
-    title: 'Slack-JIRA Bot',
-    period: '2025',
-    description:
-      'Socket Mode로 Slack 이벤트를 실시간 처리해 JIRA와 연동하는 알림 봇.',
-    points: ['Socket Mode 기반 실시간 이벤트 처리', '멘션·DM·슬래시 커맨드 응답 처리'],
-    stack: ['Node.js', 'Slack API', 'JIRA API'],
-    repoUrl: '',
+    detail: {
+      metrics: [
+        { label: '개발 인원', value: '4명 (백엔드 2 · 프론트 2)' },
+        { label: '담당', value: '백엔드' },
+        { label: '시작', value: '2023.03' },
+      ],
+      sections: [
+        {
+          heading: '담당 역할',
+          body: [
+            'API 개발 (회원, 피드, 인증)',
+            'Spring Security Auth · Email 인증',
+            '알림 서비스 구축',
+            'AOP를 통한 Logging 구현',
+            'Rest Docs API 문서 자동화',
+          ],
+        },
+        {
+          heading: '기여한 내용',
+          body: [
+            'Spring Security + JWT를 이용한 로그인, 로그아웃',
+            '추상화를 통한 효율적인 통합 테스트',
+            '제네릭(Generic)을 이용한 코드 리팩토링',
+            '이메일 인증 구현',
+            'ConcurrentModificationException · 순환 참조 등 운영 중 마주친 문제 해결',
+          ],
+        },
+      ],
+    },
   },
 ]
 
@@ -274,29 +291,57 @@ export const projects: Project[] = [
 
 export type Post = {
   title: string
-  date: string
   url: string
-  excerpt: string
+  /** 선택: 발행일을 적으면 제목 오른쪽에 표시됩니다 */
+  date?: string
+  /** 선택: 한 줄 요약 */
+  excerpt?: string
 }
 
 export const posts: Post[] = [
   {
-    title: 'MSA 공통 모듈을 라이브러리로 분리한 이유', // TODO
-    date: '2026-01-15',
-    url: '',
-    excerpt:
-      '서비스마다 복사되던 설정 코드를 Core 라이브러리로 옮기면서 겪은 판단과 트레이드오프를 정리했습니다.',
+    title: 'Offset Pagination을 No Offset Pagination으로 전환해 성능 개선하기',
+    url: 'https://green-bin.tistory.com/23',
   },
   {
-    title: '내부망에서 개발 생산성을 지키는 방법',
-    date: '2025-11-02',
-    url: '',
-    excerpt:
-      '외부 AI 도구 없이 반복 작업을 줄이기 위해 만든 브라우저 확장 이야기.',
+    title: '웹 성능 개선을 위한 이미지 최적화',
+    url: 'https://green-bin.tistory.com/32',
+  },
+  {
+    title: '협업 생산성을 높이기 위한 Git Flow · Convention 정립',
+    url: 'https://green-bin.tistory.com/26',
+  },
+  {
+    title: '스케줄링을 통해 사용자의 당일 인증 여부를 체크하는 시스템 구현',
+    url: 'https://green-bin.tistory.com/25',
+  },
+  {
+    title: 'OAuth 2.0 로그인 기능 구현 (Google, Naver, Kakao)',
+    url: 'https://green-bin.tistory.com/27',
+  },
+  {
+    title: 'S3를 통해 이미지 업로드/삭제',
+    url: 'https://green-bin.tistory.com/29',
+  },
+  {
+    title: 'Spring Security + JWT를 이용한 로그인, 로그아웃',
+    url: 'https://green-bin.tistory.com/68',
+  },
+  {
+    title: '추상화를 통한 효율적인 통합 테스트',
+    url: 'https://green-bin.tistory.com/66',
+  },
+  {
+    title: '제네릭(Generic)을 이용한 코드 리팩토링',
+    url: 'https://green-bin.tistory.com/75',
+  },
+  {
+    title: '이메일 인증 구현',
+    url: 'https://green-bin.tistory.com/83',
   },
 ]
 
-// ── 기타 이력 (자격증 / 수상 / 교육 / 활동) ──────────────────
+// ── 기타 이력 (학력 / 활동 / 그 외) ──────────────────────────
 
 export type OtherItem = {
   title: string
@@ -307,14 +352,42 @@ export type OtherItem = {
 
 export const others: OtherItem[] = [
   {
-    title: '정보처리기사', // TODO
-    issuer: '한국산업인력공단',
-    date: '2026.06',
+    title: '온라인 모각코 스터디 개굴단 운영',
+    issuer: '온라인을 통한 개발 스터디 그룹',
+    date: '2022.09 — 2023.05',
+    note: '정해진 시간 동안 개인 목표를 세우고 집중해 공부하는 스터디를 운영했습니다. 목표와 진행 상황을 공유하며 피드백을 주고받았고, 스터디는 이후에도 이어지고 있습니다.',
   },
   {
-    title: '사이드 프로젝트 스터디 운영', // TODO
-    issuer: '개인',
-    date: '2025 —',
-    note: '주 1회 코드 리뷰 및 발표 진행',
+    title: '1일 1커밋 스터디',
+    issuer: '일일 커밋을 목표로 하는 스터디 그룹',
+    date: '2022.08 — 2023.03',
+    note: '일상 속에서 시간을 내어 개발에 집중하는 습관을 만들었고, 스터디 종료 후에도 개인적으로 커밋을 이어가고 있습니다.',
+  },
+  {
+    title: '코드스테이츠 (Codestates)',
+    issuer: 'Software Engineering Bootcamp, Backend 41기',
+    date: '2022.08 — 2023.02',
+    note: 'Java와 Spring Boot 기반 서버 개발, JPA를 활용한 CRUD API와 데이터베이스 설계, RESTful API 디자인, JUnit·Mockito를 이용한 테스트, AWS(EC2·RDS·S3) 배포를 학습했습니다.',
+  },
+  {
+    title: '(주)모',
+    issuer: '(비개발 경력) 컨텐츠 팀 · 컨텐츠 기획자 (정규직)',
+    date: '2018.01 — 2022.08',
+    note: 'UI/UX 디자이너로 1년, 컨텐츠 기획자로 3년 근무했습니다. 인기 이모티콘 시리즈(오늘의 짤)를 기획·관리하고, SNS 컨텐츠를 제안해 런칭·운영했습니다. (TikTok 팔로워 346K·좋아요 3.8M / YouTube 구독자 3.2만·총 조회수 12M)',
+  },
+  {
+    title: '해군 병장 만기 전역',
+    issuer: '2함대 광개토대왕함 갑판병 → 정훈병',
+    date: '2013.06 — 2015.05',
+  },
+  {
+    title: '인덕대학교',
+    issuer: '시각디자인',
+    date: '2012.03 — 2018.02',
+  },
+  {
+    title: '신일고등학교',
+    issuer: '인문계 졸업',
+    date: '2009.03 — 2012.02',
   },
 ]
