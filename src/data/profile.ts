@@ -47,6 +47,7 @@ export const skills: SkillGroup[] = [
       'Spring MVC',
       'Spring Data JPA',
       'Spring Security',
+      'Spring WebFlux',
       'QueryDSL',
       'Gradle',
       'AWS EC2, S3, RDS',
@@ -54,11 +55,15 @@ export const skills: SkillGroup[] = [
   },
   {
     category: 'Database',
-    items: ['MySQL', 'Redis', 'H2'],
+    items: ['MySQL', 'Redis', 'H2', 'Oracle'],
+  },
+  {
+    category: 'Performance / Monitoring',
+    items: ['K6', 'Grafana', 'InfluxDB', 'Jaeger'],
   },
   {
     category: 'Etc',
-    items: ['Git', 'IntelliJ', 'Vim', 'Slack'],
+    items: ['Git', 'Gradle Multi-module', 'IntelliJ', 'Vim', 'Slack'],
   },
 ]
 
@@ -109,9 +114,148 @@ export type Experience = {
 
 export const experiences: Experience[] = [
   {
+    company: '(주)더즌',
+    role: '백엔드 개발자', // TODO: 정확한 팀·직급 표기 확인
+    period: '2025.04 — 재직 중',
+    summary:
+      '선불전자금융업 기반 결제 서비스를 개발·운영하는 핀테크 회사입니다.', // TODO: 회사 소개 문구 확인
+    // TODO: 주 사용 언어 확인 (Java / Kotlin)
+    stack: [
+      'Java',
+      'Spring Boot',
+      'Spring WebFlux',
+      'Gradle Multi-module',
+      'Redis',
+      'JWT',
+      'K6',
+      'Grafana',
+      'InfluxDB',
+      'Jaeger',
+    ],
+    highlights: [
+      {
+        text: '금융감독원 선불전자금융업 인허가 심사 시연을 준비·진행해 심사 통과',
+        detail: {
+          metrics: [
+            { label: '진행 기간', value: '2025.09.15 — 09.25' },
+            { label: '결과', value: '인허가 심사 통과' },
+          ],
+          sections: [
+            {
+              heading: '배경',
+              body: [
+                '선불전자금융업 인허가는 서비스를 합법적으로 운영하기 위한 전제 조건이었습니다. 금융감독원 심사 현장에서 선불서비스 전 과정을 직접 시연해야 했습니다.',
+              ],
+            },
+            {
+              heading: '준비 과정',
+              body: [
+                '먼저 금융감독원의 심사 요구사항을 기술적 안정성·보안·거래 투명성 관점으로 나눠 분석했습니다.',
+                '충전, 사용, 환불, 잔액 조회, 거래 내역 조회, 정산까지 선불서비스 전 과정을 담은 시연 시나리오를 설계했습니다.',
+                '시연 전용 환경을 별도로 구축하고 안정성을 검증했으며, 앞서 구축해 둔 부하테스트 결과를 서비스 안정성의 근거 자료로 활용했습니다.',
+                '외부 인증 기관(NICE) 연동은 심사 환경에서 그대로 쓸 수 없어, 이를 대신하는 시연용 API를 개발해 대응했습니다.',
+                '여러 차례 리허설을 거치며 시연 완성도를 높였습니다.',
+              ],
+            },
+            {
+              heading: '결과',
+              body: [
+                '심사 현장에서 선불서비스 전 과정 시연을 차질 없이 완료해 인허가 심사를 통과했고, 서비스의 기술적 안정성과 보안성을 인정받았습니다.',
+                '준비 과정은 키오스크 개발팀(서버), 플랫폼 개발팀과 협업해 진행했습니다.',
+              ],
+            },
+          ],
+        },
+      },
+      {
+        text: 'DBP 신규 프로젝트의 멀티모듈 아키텍처 설계 및 Gateway·공통 모듈 등 핵심 시스템 개발',
+        detail: {
+          metrics: [
+            { label: '진행 기간', value: '2025.09 — 2025.12' },
+            { label: '모듈 구성', value: '6개' },
+          ],
+          sections: [
+            {
+              heading: '목표',
+              body: [
+                '신규 프로젝트의 기술적 기반을 구축하고, 기능이 늘어나도 기존 코드에 영향이 적은 확장 가능한 아키텍처를 설계하는 것이 목표였습니다.',
+              ],
+            },
+            {
+              heading: '아키텍처 설계와 데이터 모델링',
+              body: [
+                '단일 모듈 구조의 한계를 넘기 위해 멀티모듈 설계 방법론과 Gateway 패턴을 학습해 적용했습니다.',
+                'core(공통 기능·유틸리티), api(외부 사용자 REST API), admin(백오피스 API), inbound-gateway(외부 요청 수신), outbound-gateway(외부 시스템 연동), batch(배치 작업) 여섯 개 모듈로 나누고, 각 모듈의 책임과 경계를 명확히 정의했습니다.',
+                'Gradle 멀티프로젝트 빌드를 설정하고 모듈 간 의존성 관리 규칙을 정리했습니다. 도메인 분석을 통해 ERD를 설계하고 테이블 정의서를 문서화했습니다.',
+              ],
+            },
+            {
+              heading: '공통 라이브러리',
+              body: [
+                '프로젝트 전체에서 재사용할 기능을 core 모듈로 모았습니다. 공통 예외 처리와 에러 응답 포맷, API 응답 표준 포맷, 날짜·암복호화·검증 유틸리티, 공통 설정과 상수 관리를 포함해 중복 코드를 줄였습니다.',
+              ],
+            },
+            {
+              heading: 'Inbound Gateway (Spring WebFlux)',
+              body: [
+                '높은 동시성 처리가 필요하다고 판단해 Spring WebFlux를 학습한 뒤 Inbound Gateway에 적용했습니다. 그 결과 적은 리소스로 높은 처리량을 낼 수 있었습니다.',
+                'Client Credentials 방식의 인증·인가 로직, JWT 기반 Access Token 발급과 검증, Redis를 활용한 토큰 캐싱, 외부 클라이언트 요청 수신과 라우팅을 구현했습니다.',
+              ],
+            },
+            {
+              heading: 'Outbound Gateway와 배치',
+              body: [
+                '외부 시스템과 REST API로 연동하는 Client를 개발하면서, 표준화된 에러 응답 처리와 연동 이력 로깅을 함께 붙였습니다. 다른 외부 시스템을 추가할 때도 같은 구조를 쓸 수 있도록 설계했습니다.',
+                '일일 거래 집계 배치와 외부 연동 토큰 갱신 자동화 배치를 개발하고, CI/CD 파이프라인을 구축했습니다.',
+              ],
+            },
+          ],
+        },
+      },
+      {
+        text: 'K6·Grafana·InfluxDB·Jaeger 기반 부하테스트 환경 구축, 병목 개선으로 특정 API 응답시간 50% 단축',
+        detail: {
+          metrics: [
+            { label: '진행 기간', value: '2025.08.25 — 09.10' },
+            { label: '응답시간 개선', value: '특정 API 50%' },
+          ],
+          sections: [
+            {
+              heading: '배경',
+              body: [
+                '선불서비스의 성능 한계를 모르는 상태로 배포하고 있었습니다. 배포 전에 성능을 검증할 수단이 필요하다고 판단해 부하테스트 환경 구축을 시작했습니다.',
+              ],
+            },
+            {
+              heading: '환경 구축',
+              body: [
+                'K6, Grafana, InfluxDB, Jaeger의 역할과 연동 방법을 학습한 뒤, 간단한 환경에서 실습하며 메트릭 수집·분석 방법을 익혔습니다.',
+                'K6로 점진적 증가(Ramp-up), 스파이크, 스트레스 세 가지 시나리오를 작성했습니다. TPS·응답시간·에러율 같은 시계열 메트릭은 InfluxDB에 저장하고 Grafana 대시보드로 실시간 시각화했습니다.',
+                'Jaeger 분산 트레이싱으로 API 호출 체인을 따라가며 병목 구간을 식별했습니다.',
+              ],
+            },
+            {
+              heading: '성능 분석과 개선',
+              body: [
+                '선불 충전·사용 API의 처리 한계(TPS)와 성능 임계치를 정량적으로 파악했습니다.',
+                '발견한 병목 구간을 개선해 특정 API의 응답시간을 50% 줄였고, 카드 발급 API의 병목 구간을 안정화했습니다. 트래픽 급증 시나리오를 검증해 운영 장애 가능성을 낮췄습니다.',
+              ],
+            },
+            {
+              heading: '문서화와 공유',
+              body: [
+                '아키텍처, 설치 방법, 시나리오 작성법을 담은 구축 가이드를 작성해 팀에 공유했습니다. 이후 다른 팀원들도 자체적으로 부하테스트를 수행할 수 있게 됐습니다.',
+              ],
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
     company: '(주)엑스얼라이언스',
     role: 'SW개발팀 · 백엔드 개발자 (정규직)',
-    period: '2023.06 — 재직 중',
+    period: '2023.06 — 2025.04', // TODO: 정확한 퇴사 시점 확인 (더즌 입사 시점으로 추정)
     summary:
       '패션 브랜드 루이까또즈를 포함한 다양한 분야의 계열사를 운영하는 지주회사입니다.',
     highlights: [
