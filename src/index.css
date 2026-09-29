@@ -4,7 +4,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: 'Inter', 'Pretendard', system-ui, -apple-system, sans-serif;
+  /* Pretendard는 라틴 글리프가 Inter 기반이라 한글·영문이 한 폰트로 어울립니다 */
+  --font-sans: 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
 
   /* 액센트 컬러 — 여기만 바꾸면 사이트 전체 포인트 색이 바뀝니다 */
@@ -24,6 +25,9 @@
     @apply bg-white text-neutral-800 antialiased;
     @apply dark:bg-neutral-950 dark:text-neutral-200;
     font-family: var(--font-sans);
+    /* 한글이 단어 중간에서 줄바꿈되지 않도록 */
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 
   ::selection {
@@ -177,9 +181,10 @@
     margin-top: 1mm;
   }
 
-  /* 한 줄 소개는 이력서에선 군더더기 */
+  /* 한 줄 소개는 이력서 요약문으로 그대로 둡니다 */
   #top > p:nth-of-type(2) {
-    display: none;
+    margin-top: 2mm;
+    font-size: 10pt;
   }
 
   /* 이름 아래 연락처 한 줄 (화면에서는 About·Contact에 있음) */

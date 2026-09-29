@@ -1,4 +1,4 @@
-import { profile, socials } from '../data/profile'
+import { heroMetrics, profile, socials } from '../data/profile'
 
 export function Hero() {
   const links = socials.filter((s) => s.href)
@@ -17,7 +17,7 @@ export function Hero() {
       </h1>
 
       <p className="mt-5 text-lg leading-relaxed text-neutral-600 dark:text-neutral-300">
-        {profile.tagline}
+        {profile.headline}
       </p>
 
       {/* 인쇄물 상단에 연락처를 넣습니다 (화면에서는 About·Contact에 있음) */}
@@ -82,6 +82,31 @@ export function Hero() {
           </div>
         )}
       </div>
+
+      {/* 대표 성과. 인쇄물에서는 Experience와 겹치므로 뺍니다. */}
+      {heroMetrics.length > 0 && (
+        <dl className="no-print mt-14 grid gap-5 border-t border-neutral-200 pt-8 sm:grid-cols-3 sm:gap-6 dark:border-neutral-800">
+          {heroMetrics.map((m) => (
+            <div
+              key={m.label}
+              className="flex items-baseline gap-4 sm:flex-col sm:gap-1.5"
+            >
+              {/* 읽는 순서는 "무엇이 → 얼마나", 보이는 순서는 숫자가 먼저 */}
+              <dt className="order-last">
+                <span className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                  {m.label}
+                </span>
+                <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+                  {m.source}
+                </span>
+              </dt>
+              <dd className="order-first w-16 shrink-0 text-3xl font-semibold tracking-tight text-accent sm:w-auto dark:text-accent-dark">
+                {m.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
     </section>
   )
 }

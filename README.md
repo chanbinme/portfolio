@@ -87,7 +87,8 @@ Hero의 **"PDF 저장"** 버튼은 브라우저 인쇄 대화상자를 엽니다
 ## 디자인 커스터마이징
 
 - **포인트 색상**: [`src/index.css`](src/index.css)의 `@theme` 안 `--color-accent` 계열 3개 값
-- **폰트**: `index.html`의 Google Fonts 링크 + `index.css`의 `--font-sans` / `--font-mono`
+- **폰트**: 본문은 npm `pretendard` 패키지(`src/main.tsx`에서 import), 코드체는 `index.html`의 Google Fonts 링크.
+  적용은 `index.css`의 `--font-sans` / `--font-mono`
 - **다크 모드**: `html` 요소의 `.dark` 클래스로 제어. 최초 진입 시 OS 설정을 따르고,
   헤더의 토글 버튼을 누르면 선택이 `localStorage`에 저장됩니다.
   첫 페인트 깜빡임은 `index.html`의 인라인 스크립트로 막습니다.
