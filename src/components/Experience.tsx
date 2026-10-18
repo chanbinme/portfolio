@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { experiences } from '../data/profile'
-import type { Experience as ExperienceItem } from '../data/profile'
+import type { Experience as ExperienceItem, Position } from '../data/profile'
 import { Section } from './Section'
 import { Tag } from './Tag'
 import { Modal } from './Modal'
@@ -15,9 +15,9 @@ export function Experience() {
       <ol className="relative space-y-10 border-l border-neutral-200 pl-6 dark:border-neutral-800">
         {experiences.map((exp, i) => (
           <li key={`${i}-${exp.company}`} className="relative">
-            {/* 타임라인 점 */}
+            {/* 타임라인 점 (회사) */}
             <span
-              className="absolute top-2 -left-[25px] h-2 w-2 rounded-full bg-accent ring-4 ring-white dark:bg-accent-dark dark:ring-neutral-950"
+              className="timeline-dot absolute top-2 -left-[28.5px] h-2 w-2 rounded-full bg-accent ring-4 ring-white dark:bg-accent-dark dark:ring-neutral-950"
               aria-hidden="true"
             />
 
@@ -27,24 +27,32 @@ export function Experience() {
 
             <h3 className="mt-1.5 font-medium text-neutral-900 dark:text-neutral-100">
               {exp.company}
-              <span className="ml-2 font-normal text-neutral-500 dark:text-neutral-400">
-                {exp.role}
-              </span>
+              {exp.role && (
+                <span className="ml-2 font-normal text-neutral-500 dark:text-neutral-400">
+                  {exp.role}
+                </span>
+              )}
             </h3>
 
             <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
               {exp.summary}
             </p>
 
-            <HighlightList items={exp.highlights} context={exp.company} />
-
-            {exp.stack.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {exp.stack.map((s, j) => (
-                  <Tag key={`${j}-${s}`}>{s}</Tag>
+            {/* 팀을 옮긴 회사는 팀별로, 아니면 회사 단위로 */}
+            {exp.positions.length > 0 && (
+              <ol className="positions mt-6 space-y-8">
+                {exp.positions.map((pos, j) => (
+                  <PositionItem
+                    key={`${j}-${pos.team}`}
+                    position={pos}
+                    company={exp.company}
+                  />
                 ))}
-              </div>
+              </ol>
             )}
+
+            <HighlightList items={exp.highlights} context={exp.company} />
+            <StackTags stack={exp.stack} />
 
             {exp.detail && (
               <button
@@ -74,11 +82,59 @@ export function Experience() {
       <Modal
         open={selected !== null}
         onClose={() => setSelected(null)}
-        title={selected ? `${selected.company} · ${selected.role}` : ''}
+        title={selected ? [selected.company, selected.role].filter(Boolean).join(' · ') : ''}
         meta={selected?.period}
       >
         {selected?.detail && <DetailBody detail={selected.detail} />}
       </Modal>
     </Section>
+  )
+}
+
+/** 회사 안의 팀 하나. 회사와 같은 타임라인 선 위에 속이 빈 점을 찍습니다. */
+function PositionItem({ position, company }: { position: Position; company: string }) {
+  return (
+    <li className="relative">
+      <span
+        className="timeline-dot absolute top-1.5 -left-[30px] h-[11px] w-[11px] rounded-full border-2 border-neutral-300 bg-white dark:border-neutral-600 dark:bg-neutral-950"
+        aria-hidden="true"
+      />
+
+      <p className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+        {position.period}
+      </p>
+
+      <h4 className="mt-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
+        {position.team}
+        {position.role && (
+          <span className="ml-2 font-normal text-neutral-500 dark:text-neutral-400">
+            {position.role}
+          </span>
+        )}
+      </h4>
+
+      {position.summary && (
+        <p className="mt-1.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+          {position.summary}
+        </p>
+      )}
+
+      <HighlightList
+        items={position.highlights}
+        context={`${company} · ${position.team}`}
+      />
+      <StackTags stack={position.stack} />
+    </li>
+  )
+}
+
+function StackTags({ stack }: { stack: string[] }) {
+  if (stack.length === 0) return null
+  return (
+    <div className="mt-4 flex flex-wrap gap-2">
+      {stack.map((s, i) => (
+        <Tag key={`${i}-${s}`}>{s}</Tag>
+      ))}
+    </div>
   )
 }

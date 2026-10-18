@@ -116,55 +116,81 @@ collections:
             summary: '{{fields.company}} · {{fields.period}}'
             fields:
               - { name: company, label: 회사, widget: string }
-              - { name: role, label: 직무, widget: string }
+              - { name: role, label: 직무, widget: string, required: false, hint: 팀별 경력을 쓰면 비워 두세요 }
               - { name: period, label: 기간, widget: string, hint: '예: 2025.04 — 재직 중' }
               - { name: summary, label: 회사 소개, widget: text }
+              - name: positions
+                label: 팀별 경력
+                label_singular: 팀
+                widget: list
+                required: false
+                collapsed: true
+                hint: 한 회사 안에서 팀을 옮겼다면 팀마다 추가하세요 (최신순). 채우면 아래 회사 단위 성과·기술 스택 대신 팀별로 보입니다
+                summary: '{{fields.team}} · {{fields.period}}'
+                fields:
+                  - { name: team, label: 팀, widget: string, hint: '예: 차세대결제팀' }
+                  - { name: role, label: 직무, widget: string, hint: '예: 풀스택 개발자' }
+                  - { name: period, label: 기간, widget: string, hint: '예: 2026.04 — 재직 중' }
+                  - { name: summary, label: 이 팀에서 맡은 일, widget: text, required: false }
+                  - name: highlights
+                    label: 성과
+                    label_singular: 성과
+                    widget: list
+                    required: false
+                    summary: '{{fields.text}}'
+                    # 성과 한 줄의 구조 — 프로젝트에서도 그대로 씁니다
+                    fields: &highlight_fields
+                      - { name: text, label: 문장, widget: text }
+                      - name: detail
+                        label: 상세 (문장 클릭 시 모달)
+                        widget: object
+                        required: false
+                        collapsed: true
+                        hint: 채우면 문장이 클릭 가능해집니다
+                        # 상세 모달의 구조 — 경력·프로젝트 상세에서도 그대로 씁니다
+                        fields: &detail_fields
+                          - name: metrics
+                            label: 지표
+                            label_singular: 지표
+                            widget: list
+                            required: false
+                            summary: '{{fields.label}}: {{fields.value}}'
+                            fields:
+                              - { name: label, label: 항목, widget: string, hint: '예: 응답시간 개선' }
+                              - { name: value, label: 값, widget: string, hint: '예: 특정 API 50%' }
+                          - name: sections
+                            label: 본문
+                            label_singular: 섹션
+                            widget: list
+                            summary: '{{fields.heading}}'
+                            fields:
+                              - { name: heading, label: 소제목, widget: string, hint: '예: 배경, 과정, 결과' }
+                              - name: list
+                                label: 목록으로 표시
+                                widget: boolean
+                                required: false
+                                default: false
+                                hint: 켜면 각 항목 앞에 점을 붙인 목록으로, 끄면 문단으로 보입니다
+                              - name: body
+                                label: 문단 / 목록 항목
+                                label_singular: 항목
+                                widget: list
+                                field: { name: paragraph, label: 내용, widget: text }
+                  - name: stack
+                    label: 기술 스택
+                    label_singular: 기술
+                    widget: list
+                    required: false
+                    field: { name: item, label: 기술, widget: string }
               - name: highlights
-                label: 성과
+                label: 성과 (팀을 나누지 않을 때)
                 label_singular: 성과
                 widget: list
                 required: false
                 summary: '{{fields.text}}'
-                # 성과 한 줄의 구조 — 프로젝트에서도 그대로 씁니다
-                fields: &highlight_fields
-                  - { name: text, label: 문장, widget: text }
-                  - name: detail
-                    label: 상세 (문장 클릭 시 모달)
-                    widget: object
-                    required: false
-                    collapsed: true
-                    hint: 채우면 문장이 클릭 가능해집니다
-                    # 상세 모달의 구조 — 경력·프로젝트 상세에서도 그대로 씁니다
-                    fields: &detail_fields
-                      - name: metrics
-                        label: 지표
-                        label_singular: 지표
-                        widget: list
-                        required: false
-                        summary: '{{fields.label}}: {{fields.value}}'
-                        fields:
-                          - { name: label, label: 항목, widget: string, hint: '예: 응답시간 개선' }
-                          - { name: value, label: 값, widget: string, hint: '예: 특정 API 50%' }
-                      - name: sections
-                        label: 본문
-                        label_singular: 섹션
-                        widget: list
-                        summary: '{{fields.heading}}'
-                        fields:
-                          - { name: heading, label: 소제목, widget: string, hint: '예: 배경, 과정, 결과' }
-                          - name: list
-                            label: 목록으로 표시
-                            widget: boolean
-                            required: false
-                            default: false
-                            hint: 켜면 각 항목 앞에 점을 붙인 목록으로, 끄면 문단으로 보입니다
-                          - name: body
-                            label: 문단 / 목록 항목
-                            label_singular: 항목
-                            widget: list
-                            field: { name: paragraph, label: 내용, widget: text }
+                fields: *highlight_fields
               - name: stack
-                label: 기술 스택
+                label: 기술 스택 (팀을 나누지 않을 때)
                 label_singular: 기술
                 widget: list
                 required: false
