@@ -13,6 +13,17 @@
           {
             "text": "크로스보더 아키텍처 설계 및 서비스 개발"
           }
+        ],
+        "stack": [
+          "Java",
+          "Spring Boot",
+          "Spring WebFlux",
+          "Gradle Multi-module",
+          "Redis",
+          "RabbitMQ",
+          "JWT",
+          "ELK",
+          "JUnit5"
         ]
       },
       {
@@ -172,8 +183,6 @@
         "stack": [
           "Java",
           "Spring Boot",
-          "Spring WebFlux",
-          "Gradle Multi-module",
           "Redis",
           "JWT",
           "K6",
