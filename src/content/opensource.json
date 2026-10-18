@@ -1,0 +1,167 @@
+[
+  {
+    "name": "Spring Boot",
+    "url": "https://github.com/spring-projects/spring-boot",
+    "contributions": [
+      {
+        "text": "DataSourceBuilder로 드라이버가 설정되지 않은 DataSource를 복제할 때 발생하는 NPE 수정",
+        "number": "45976",
+        "url": "https://github.com/spring-projects/spring-boot/pull/45976",
+        "status": "Merged",
+        "merged": "2025.06",
+        "release": "3.4.7 · 3.5.1 · 4.0.0",
+        "detail": {
+          "metrics": [
+            {
+              "label": "머지",
+              "value": "2025.06.17"
+            },
+            {
+              "label": "반영 버전",
+              "value": "3.4.7 · 3.5.1 · 4.0.0"
+            }
+          ],
+          "sections": [
+            {
+              "heading": "배경",
+              "list": false,
+              "body": [
+                "실무에서 Spring Boot의 DataSourceBuilder를 사용하던 중 발견했습니다."
+              ]
+            },
+            {
+              "heading": "문제",
+              "list": false,
+              "body": [
+                "DataSourceBuilder.derivedFrom()으로 SimpleDriverDataSource를 바탕으로 새 DataSource를 만들 때, 드라이버를 설정하지 않은 상태면 getDriver()가 null을 반환해 NullPointerException이 발생했습니다."
+              ]
+            },
+            {
+              "heading": "해결",
+              "list": true,
+              "body": [
+                "드라이버가 없으면 드라이버 클래스 속성을 null로 다루도록 null 검사 추가",
+                "드라이버 없이 URL·계정만 설정한 경우를 재현하는 테스트 작성"
+              ]
+            },
+            {
+              "heading": "리뷰",
+              "list": false,
+              "body": [
+                "메인테이너 Stéphane Nicoll이 null 검사 표현과 테스트 이름을 프로젝트 컨벤션에 맞게 다듬는 Polish 커밋을 더해 머지했습니다."
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Spring Security",
+    "url": "https://github.com/spring-projects/spring-security",
+    "contributions": [
+      {
+        "text": "JwtAuthenticationProvider에서 변환 결과가 null이면 NPE 대신 명확한 예외를 던지도록 수정",
+        "number": "17251",
+        "url": "https://github.com/spring-projects/spring-security/pull/17251",
+        "status": "Merged",
+        "merged": "2025.06",
+        "release": "7.0.0",
+        "detail": {
+          "metrics": [
+            {
+              "label": "머지",
+              "value": "2025.06.17"
+            },
+            {
+              "label": "반영 버전",
+              "value": "7.0.0"
+            }
+          ],
+          "sections": [
+            {
+              "heading": "배경",
+              "list": false,
+              "body": [
+                "실무에서 Spring Security로 JWT 인증을 다루던 중 발견했습니다."
+              ]
+            },
+            {
+              "heading": "문제",
+              "list": false,
+              "body": [
+                "JwtAuthenticationProvider는 JWT를 인증 토큰으로 바꾸는 변환기(Converter)의 결과를 검사 없이 사용했습니다. 등록한 변환기가 null을 반환하면 원인을 알기 어려운 NullPointerException이 발생했습니다."
+              ]
+            },
+            {
+              "heading": "해결",
+              "list": true,
+              "body": [
+                "변환 결과에 Assert.notNull 검사를 추가해 \"token cannot be null\" 메시지의 IllegalArgumentException을 던지도록 변경",
+                "변환기가 null을 반환하는 경우를 재현하는 테스트 작성"
+              ]
+            },
+            {
+              "heading": "리뷰",
+              "list": false,
+              "body": [
+                "메인테이너 Rob Winch가 테스트 코드의 Checkstyle을 맞추는 커밋을 더해 머지했습니다."
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "text": "JwtGrantedAuthoritiesConverter의 권한 클레임 이름 처리를 하나의 목록으로 단순화",
+        "number": "17247",
+        "url": "https://github.com/spring-projects/spring-security/pull/17247",
+        "status": "Merged",
+        "merged": "2025.08",
+        "release": "7.0.0",
+        "detail": {
+          "metrics": [
+            {
+              "label": "머지",
+              "value": "2025.08.13"
+            },
+            {
+              "label": "반영 버전",
+              "value": "7.0.0"
+            }
+          ],
+          "sections": [
+            {
+              "heading": "배경",
+              "list": false,
+              "body": [
+                "실무에서 JWT의 권한 클레임을 다루던 중 발견했습니다."
+              ]
+            },
+            {
+              "heading": "문제",
+              "list": false,
+              "body": [
+                "권한 클레임 이름을 단일 필드(authoritiesClaimName)와 기본 목록(WELL_KNOWN_AUTHORITIES_CLAIM_NAMES)으로 따로 관리해, 값을 설정했는지를 null로 판별하는 분기가 있었습니다."
+              ]
+            },
+            {
+              "heading": "해결",
+              "list": true,
+              "body": [
+                "별도 필드를 없애고 authoritiesClaimNames 목록 하나로 통합 (기본값은 잘 알려진 클레임 이름 목록, 설정하면 그 이름 하나만 담은 목록)",
+                "null 분기 없이 같은 반복문으로 클레임을 찾도록 정리"
+              ]
+            },
+            {
+              "heading": "리뷰",
+              "list": false,
+              "body": [
+                "처음에는 authoritiesClaimName 검증을 개선하는 방향으로 제안했고, 최종적으로 필드 자체를 제거하는 형태로 메인테이너 Josh Cummings가 머지했습니다."
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

@@ -27,6 +27,7 @@ npm run preview  # 빌드 결과 로컬 확인
 | `skills.json` | 기술 스택 |
 | `experiences.json` | 경력 타임라인 |
 | `projects.json` | 프로젝트 카드 (`featured: true` → 배지 표시) |
+| `opensource.json` | 오픈소스 기여 (프로젝트별 PR 목록, 비우면 섹션·메뉴가 사라짐) |
 | `posts.json` | 글 목록 |
 | `others.json` | 자격증·활동·학력 |
 
@@ -206,8 +207,9 @@ src/
     HighlightList.tsx 성과 목록 — detail이 있는 문장만 클릭 가능하게
     DetailBody.tsx    detail 데이터를 모달 본문으로 렌더링
     Tag.tsx           기술 스택 배지
+    DetailTrigger.tsx 클릭하면 상세 모달이 열리는 문장 (점선 밑줄 + ⓘ)
     Bullet.tsx        목록 앞 점 (인쇄 시 텍스트 •로 대체)
-    Hero / About / Skills / Experience / Projects / Writing / More / Contact
+    Hero / About / Skills / Experience / Projects / OpenSource / Writing / More / Contact
   App.tsx             섹션 조립 + 푸터
 ```
 

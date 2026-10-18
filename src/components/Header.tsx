@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
-import { profile } from '../data/profile'
+import { openSource, profile } from '../data/profile'
 
 const NAV = [
   { id: 'about', label: 'About' },
   { id: 'skills', label: 'Skills' },
   { id: 'experience', label: 'Experience' },
   { id: 'projects', label: 'Projects' },
+  { id: 'opensource', label: 'Open Source' },
   { id: 'writing', label: 'Writing' },
   { id: 'more', label: 'More' },
   { id: 'contact', label: 'Contact' },
-]
+].filter(
+  // 내용이 비어 섹션이 그려지지 않으면 메뉴에서도 뺍니다
+  (n) => n.id !== 'opensource' || openSource.length > 0,
+)
 
 export function Header() {
   const { theme, toggle } = useTheme()
