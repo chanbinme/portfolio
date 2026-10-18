@@ -5,7 +5,7 @@ export function Writing() {
   return (
     <Section id="writing" title="Writing">
       <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
-        {posts.map((post) => {
+        {posts.map((post, i) => {
           const titleNode = post.url ? (
             <a
               href={post.url}
@@ -22,7 +22,7 @@ export function Writing() {
           )
 
           return (
-            <li key={post.title} className="group py-4 first:pt-0 last:pb-0">
+            <li key={`${i}-${post.title}`} className="group py-4 first:pt-0 last:pb-0">
               <div className="flex items-baseline justify-between gap-4">
                 {titleNode}
                 {post.date && (

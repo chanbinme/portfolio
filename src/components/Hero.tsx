@@ -20,9 +20,24 @@ export function Hero() {
         {profile.headline}
       </p>
 
-      {/* 인쇄물 상단에 연락처를 넣습니다 (화면에서는 About·Contact에 있음) */}
+      {/*
+        인쇄물 상단의 연락처. 화면에서는 About·Contact에 있지만,
+        인쇄물에서는 그 둘을 빼고 여기 한곳에 모읍니다.
+      */}
       <p className="print-only mt-3 font-mono text-xs text-neutral-500">
         {[profile.email, profile.location].filter(Boolean).join(' · ')}
+        {links.length > 0 && (
+          <>
+            <br />
+            {links.map((s, i) => (
+              <span key={`${i}-${s.label}`}>
+                {i > 0 && ' · '}
+                {/* 종이에서는 주소 자체가 정보라 프로토콜만 떼고 그대로 보여줍니다 */}
+                <a href={s.href}>{s.href.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
+              </span>
+            ))}
+          </>
+        )}
       </p>
 
       <div className="no-print mt-8 flex flex-wrap items-center gap-3">
@@ -68,9 +83,9 @@ export function Hero() {
 
         {links.length > 0 && (
           <div className="flex items-center gap-4 sm:ml-2">
-            {links.map((s) => (
+            {links.map((s, i) => (
               <a
-                key={s.label}
+                key={`${i}-${s.label}`}
                 href={s.href}
                 target="_blank"
                 rel="noreferrer noopener"
@@ -86,9 +101,9 @@ export function Hero() {
       {/* 대표 성과. 인쇄물에서는 Experience와 겹치므로 뺍니다. */}
       {heroMetrics.length > 0 && (
         <dl className="no-print mt-14 grid gap-5 border-t border-neutral-200 pt-8 sm:grid-cols-3 sm:gap-6 dark:border-neutral-800">
-          {heroMetrics.map((m) => (
+          {heroMetrics.map((m, i) => (
             <div
-              key={m.label}
+              key={`${i}-${m.label}`}
               className="flex items-baseline gap-4 sm:flex-col sm:gap-1.5"
             >
               {/* 읽는 순서는 "무엇이 → 얼마나", 보이는 순서는 숫자가 먼저 */}

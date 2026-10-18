@@ -5,8 +5,8 @@ export function More() {
   return (
     <Section id="more" title="More" subtitle="자격증 · 활동 · 그 외 이력">
       <ul className="space-y-5">
-        {others.map((item) => (
-          <li key={`${item.title}-${item.date}`} className="sm:flex sm:gap-6">
+        {others.map((item, i) => (
+          <li key={`${i}-${item.title}`} className="sm:flex sm:gap-6">
             <span className="shrink-0 font-mono text-xs text-neutral-400 sm:w-32 sm:pt-0.5 dark:text-neutral-500">
               {item.date}
             </span>

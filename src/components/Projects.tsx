@@ -17,9 +17,9 @@ export function Projects() {
       subtitle="직접 설계하고 만든 것들입니다."
     >
       <div className="space-y-4">
-        {projects.map((project) => (
+        {projects.map((project, i) => (
           <article
-            key={project.title}
+            key={`${i}-${project.title}`}
             className="rounded-xl border border-neutral-200 p-5 transition-colors hover:border-neutral-300 dark:border-neutral-800 dark:hover:border-neutral-700"
           >
             <div className="flex items-baseline justify-between gap-4">
@@ -47,8 +47,8 @@ export function Projects() {
             />
 
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              {project.stack.map((s) => (
-                <Tag key={s}>{s}</Tag>
+              {project.stack.map((s, j) => (
+                <Tag key={`${j}-${s}`}>{s}</Tag>
               ))}
             </div>
 

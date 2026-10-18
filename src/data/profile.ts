@@ -45,6 +45,8 @@ export type Detail = {
   /** 각 문단은 소제목 + 본문 문단들로 구성됩니다 */
   sections: {
     heading: string
+    /** true면 body를 점 목록으로, 아니면 문단으로 표시합니다 */
+    list?: boolean
     body: string[]
   }[]
   /** 선택: 성과를 숫자로 보여주고 싶을 때 */
@@ -129,7 +131,7 @@ const list = <T>(v: Maybe<Maybe<T>[]>) =>
 function toDetail(d: Maybe<Loose<Detail>>): Detail | undefined {
   if (!d) return undefined
   const sections = list(d.sections)
-    .map((s) => ({ heading: req(s.heading), body: lines(s.body) }))
+    .map((s) => ({ heading: req(s.heading), list: s.list === true, body: lines(s.body) }))
     .filter((s) => s.heading || s.body.length > 0)
   const metrics = list(d.metrics)
     .map((m) => ({ label: req(m.label), value: req(m.value) }))
