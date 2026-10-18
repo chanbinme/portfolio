@@ -302,18 +302,27 @@
     margin-top: 0 !important;
   }
 
-  /* ── About: 2단 정의 목록을 한 줄로 ── */
+  /*
+   * ── 연락처는 머리글 한곳에 ──
+   * About의 Location·Email과 Contact 섹션은 머리글 연락처와 겹칩니다.
+   * 특히 Contact는 마지막 장에 홀로 남아 빈 페이지를 만들기 쉬워 뺍니다.
+   */
 
-  #about dl {
-    display: flex !important;
-    gap: 8mm;
-    margin-top: 3mm;
+  #about dl,
+  #contact {
+    display: none !important;
   }
 
-  /* ── Contact: 큰 이메일 링크를 본문 크기로 ── */
+  /* ── Writing: 제목 목록을 촘촘하게 ── */
 
-  #contact a {
-    font-size: 10pt !important;
+  #writing li {
+    padding: 0.6mm 0 !important;
+    border: 0 !important;
+  }
+
+  #writing li a,
+  #writing li span {
+    font-weight: 500;
   }
 
   /* ── 링크: 주소를 괄호로 덧붙여 종이에서도 확인 가능하게 ── */
@@ -331,13 +340,38 @@
   }
 
   a[href^='#']::after,
-  a[href^='mailto']::after {
+  a[href^='mailto']::after,
+  .print-only a::after {
+    /* 머리글 연락처는 이미 주소를 그대로 보여주므로 덧붙이지 않습니다 */
     content: '';
   }
 
-  /* 글머리 기호를 옅게 */
-  li > span[aria-hidden='true'] {
-    background: #999 !important;
+  /*
+   * ── 글머리 점 ──
+   * 화면의 점은 배경색을 칠한 원인데, 브라우저는 인쇄할 때 배경을 빼므로
+   * ("배경 그래픽" 옵션 기본값 꺼짐) 점이 사라집니다. 텍스트 '•'로 바꿉니다.
+   */
+  .bullet {
+    width: auto !important;
+    height: auto !important;
+    margin-top: 0 !important;
+    border-radius: 0 !important;
+    background: none !important;
+  }
+
+  .bullet::before {
+    content: '•';
+    color: #888;
+  }
+
+  /*
+   * 모달을 Esc로 닫으면 포커스가 원래 버튼으로 돌아오는데,
+   * 그 상태로 인쇄하면 포커스 테두리가 종이에 찍힙니다.
+   */
+  *:focus,
+  *:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
   }
 }
 

@@ -24,12 +24,14 @@
           "sections": [
             {
               "heading": "측정 결과",
+              "list": false,
               "body": [
                 "데이터 15만 건을 기준으로 측정했을 때 기존 Offset 방식은 0.058초, No Offset 방식은 0.00032초가 걸렸습니다."
               ]
             },
             {
               "heading": "기록",
+              "list": false,
               "body": [
                 "전환 과정은 블로그(green-bin.tistory.com/23)에 정리해 두었습니다."
               ]
@@ -83,6 +85,7 @@
       "sections": [
         {
           "heading": "담당 역할",
+          "list": true,
           "body": [
             "API 개발 (습관, 인증 게시물)",
             "S3 이미지 서버 구축",
@@ -94,6 +97,7 @@
         },
         {
           "heading": "기여한 내용",
+          "list": true,
           "body": [
             "Offset Pagination을 No Offset Pagination으로 전환하여 약 100배의 페이징 성능 개선 (데이터 15만 건 기준, 0.058sec → 0.00032sec)",
             "웹 성능 개선을 위한 이미지 최적화",
@@ -104,6 +108,7 @@
         },
         {
           "heading": "체험 계정",
+          "list": false,
           "body": [
             "Guest ID : guest@mail.com / Guest PW : guest123!"
           ]
@@ -161,6 +166,7 @@
       "sections": [
         {
           "heading": "담당 역할",
+          "list": true,
           "body": [
             "API 개발 (회원, 피드, 인증)",
             "Spring Security Auth · Email 인증",
@@ -171,6 +177,7 @@
         },
         {
           "heading": "기여한 내용",
+          "list": true,
           "body": [
             "Spring Security + JWT를 이용한 로그인, 로그아웃",
             "추상화를 통한 효율적인 통합 테스트",

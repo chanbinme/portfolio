@@ -19,9 +19,9 @@ export function Contact() {
 
       {links.length > 0 && (
         <div className="mt-8 flex flex-wrap gap-4 text-sm">
-          {links.map((s) => (
+          {links.map((s, i) => (
             <a
-              key={s.label}
+              key={`${i}-${s.label}`}
               href={s.href}
               target="_blank"
               rel="noreferrer noopener"

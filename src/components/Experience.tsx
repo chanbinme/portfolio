@@ -13,8 +13,8 @@ export function Experience() {
   return (
     <Section id="experience" title="Experience">
       <ol className="relative space-y-10 border-l border-neutral-200 pl-6 dark:border-neutral-800">
-        {experiences.map((exp) => (
-          <li key={`${exp.company}-${exp.period}`} className="relative">
+        {experiences.map((exp, i) => (
+          <li key={`${i}-${exp.company}`} className="relative">
             {/* 타임라인 점 */}
             <span
               className="absolute top-2 -left-[25px] h-2 w-2 rounded-full bg-accent ring-4 ring-white dark:bg-accent-dark dark:ring-neutral-950"
@@ -40,8 +40,8 @@ export function Experience() {
 
             {exp.stack.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
-                {exp.stack.map((s) => (
-                  <Tag key={s}>{s}</Tag>
+                {exp.stack.map((s, j) => (
+                  <Tag key={`${j}-${s}`}>{s}</Tag>
                 ))}
               </div>
             )}

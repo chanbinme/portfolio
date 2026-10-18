@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { Detail, Highlight } from '../data/profile'
 import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
+import { Bullet } from './Bullet'
 
 type HighlightListProps = {
   items: Highlight[]
@@ -25,15 +26,12 @@ export function HighlightList({ items, context, tone = 'default' }: HighlightLis
   return (
     <>
       <ul className="mt-3 space-y-1.5">
-        {items.map((item) => {
+        {items.map((item, i) => {
           const { text, detail } = item
 
           return (
-            <li key={text} className={`flex gap-2 text-sm leading-relaxed ${textColor}`}>
-              <span
-                className="mt-2 h-1 w-1 shrink-0 rounded-full bg-neutral-400 dark:bg-neutral-600"
-                aria-hidden="true"
-              />
+            <li key={`${i}-${text}`} className={`flex gap-2 text-sm leading-relaxed ${textColor}`}>
+              <Bullet />
 
               {detail ? (
                 <button

@@ -152,11 +152,17 @@ collections:
                         summary: '{{fields.heading}}'
                         fields:
                           - { name: heading, label: 소제목, widget: string, hint: '예: 배경, 과정, 결과' }
+                          - name: list
+                            label: 목록으로 표시
+                            widget: boolean
+                            required: false
+                            default: false
+                            hint: 켜면 각 항목 앞에 점을 붙인 목록으로, 끄면 문단으로 보입니다
                           - name: body
-                            label: 문단
-                            label_singular: 문단
+                            label: 문단 / 목록 항목
+                            label_singular: 항목
                             widget: list
-                            field: { name: paragraph, label: 문단, widget: text }
+                            field: { name: paragraph, label: 내용, widget: text }
               - name: stack
                 label: 기술 스택
                 label_singular: 기술
