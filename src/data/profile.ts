@@ -59,11 +59,30 @@ export type Highlight = {
   detail?: Detail
 }
 
-export type Experience = {
-  company: string
+/** 한 회사 안에서 팀을 옮긴 경우의 팀별 경력 */
+export type Position = {
+  team: string
   role: string
   period: string
+  /** 그 팀에서 맡은 일 한 줄 */
+  summary?: string
+  highlights: Highlight[]
+  stack: string[]
+}
+
+export type Experience = {
+  company: string
+  /** 팀을 나누지 않을 때의 직무. positions를 쓰면 비워 둡니다. */
+  role: string
+  /** 회사 전체 재직 기간 */
+  period: string
+  /** 회사 소개 */
   summary: string
+  /**
+   * 팀별 경력 (최신순). 있으면 회사 아래에 팀별로 나눠 보여주고,
+   * 없으면 아래 highlights·stack을 회사 단위로 보여줍니다.
+   */
+  positions: Position[]
   /** 성과 목록. 문장별로 detail을 붙이면 그 문장이 클릭 가능해집니다. */
   highlights: Highlight[]
   stack: string[]
@@ -200,6 +219,16 @@ export const experiences: Experience[] = list<Loose<Experience>>(experiencesJson
     role: req(e.role),
     period: req(e.period),
     summary: req(e.summary),
+    positions: list(e.positions)
+      .map((po) => ({
+        team: req(po.team),
+        role: req(po.role),
+        period: req(po.period),
+        summary: opt(po.summary),
+        highlights: toHighlights(po.highlights),
+        stack: lines(po.stack),
+      }))
+      .filter((po) => po.team || po.role),
     highlights: toHighlights(e.highlights),
     stack: lines(e.stack),
     detail: toDetail(e.detail),
