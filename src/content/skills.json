@@ -1,0 +1,44 @@
+[
+  {
+    "category": "Back-end",
+    "items": [
+      "Java",
+      "Spring Boot",
+      "Spring MVC",
+      "Spring Data JPA",
+      "Spring Security",
+      "Spring WebFlux",
+      "QueryDSL",
+      "Gradle",
+      "AWS EC2, S3, RDS"
+    ]
+  },
+  {
+    "category": "Database",
+    "items": [
+      "MySQL",
+      "Redis",
+      "H2",
+      "Oracle"
+    ]
+  },
+  {
+    "category": "Performance / Monitoring",
+    "items": [
+      "K6",
+      "Grafana",
+      "InfluxDB",
+      "Jaeger"
+    ]
+  },
+  {
+    "category": "Etc",
+    "items": [
+      "Git",
+      "Gradle Multi-module",
+      "IntelliJ",
+      "Vim",
+      "Slack"
+    ]
+  }
+]

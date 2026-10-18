@@ -26,14 +26,16 @@ export function About() {
       </ul>
 
       <dl className="mt-8 grid gap-4 text-sm sm:grid-cols-2">
-        <div>
-          <dt className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
-            Location
-          </dt>
-          <dd className="mt-1 text-neutral-700 dark:text-neutral-300">
-            {profile.location}
-          </dd>
-        </div>
+        {profile.location && (
+          <div>
+            <dt className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+              Location
+            </dt>
+            <dd className="mt-1 text-neutral-700 dark:text-neutral-300">
+              {profile.location}
+            </dd>
+          </div>
+        )}
         <div>
           <dt className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
             Email
