@@ -16,6 +16,7 @@ import experiencesJson from '../content/experiences.json'
 import projectsJson from '../content/projects.json'
 import postsJson from '../content/posts.json'
 import othersJson from '../content/others.json'
+import openSourceJson from '../content/opensource.json'
 
 // ── 타입 ─────────────────────────────────────────────────────
 
@@ -112,6 +113,28 @@ export type Post = {
   excerpt?: string
 }
 
+/** 오픈소스 기여 한 건 (PR 하나) */
+export type Contribution = {
+  /** 무엇을 했는지 한국어 한 줄 */
+  text: string
+  /** PR 번호 (예: 45976) */
+  number: string
+  url: string
+  status: 'Merged' | 'Open'
+  /** 머지 시점 (예: 2025.06) */
+  merged?: string
+  /** 반영된 릴리스 버전 (예: 3.4.7 · 3.5.1) */
+  release?: string
+  detail?: Detail
+}
+
+/** 기여한 오픈소스 프로젝트 */
+export type OpenSourceProject = {
+  name: string
+  url?: string
+  contributions: Contribution[]
+}
+
 export type OtherItem = {
   title: string
   issuer: string
@@ -125,11 +148,13 @@ export type OtherItem = {
  * 관리자 페이지가 저장할 수 있는 느슨한 모양.
  * 모든 필드가 빠지거나 null일 수 있다고 보고 받아들입니다.
  */
-type Loose<T> = T extends string | number | boolean
-  ? T | null
-  : T extends (infer U)[]
-    ? Loose<U>[] | null
-    : { [K in keyof T]?: Loose<T[K]> | null } | null
+type Loose<T> = T extends string
+  ? string | null // 'Merged' 같은 리터럴도 JSON에서는 그냥 문자열로 읽힙니다
+  : T extends number | boolean
+    ? T | null
+    : T extends (infer U)[]
+      ? Loose<U>[] | null
+      : { [K in keyof T]?: Loose<T[K]> | null } | null
 
 type Maybe<T> = T | null | undefined
 
@@ -262,3 +287,22 @@ export const others: OtherItem[] = list<Loose<OtherItem>>(othersJson).map((o) =>
   date: req(o.date),
   note: opt(o.note),
 }))
+
+export const openSource: OpenSourceProject[] = list<Loose<OpenSourceProject>>(openSourceJson)
+  .map((pr) => ({
+    name: req(pr.name),
+    url: opt(pr.url),
+    contributions: list(pr.contributions)
+      .map((c) => ({
+        text: req(c.text),
+        number: req(c.number).replace(/^#/, ''),
+        url: req(c.url),
+        // 모르는 값은 Open으로 칩니다 (Merged라고 잘못 보이는 쪽이 더 나쁩니다)
+        status: c.status === 'Merged' ? ('Merged' as const) : ('Open' as const),
+        merged: opt(c.merged),
+        release: opt(c.release),
+        detail: toDetail(c.detail),
+      }))
+      .filter((c) => c.text),
+  }))
+  .filter((pr) => pr.name && pr.contributions.length > 0)

@@ -242,6 +242,40 @@ collections:
                 hint: 채우면 '자세히 보기' 버튼이 생깁니다
                 fields: *detail_fields
 
+      # ── Open Source ───────────────────────────────────────
+      - name: opensource
+        label: Open Source
+        file: src/content/opensource.json
+        fields:
+          - name: items
+            label: 오픈소스 프로젝트
+            label_singular: 프로젝트
+            widget: list
+            root: true
+            summary: '{{fields.name}}'
+            fields:
+              - { name: name, label: 프로젝트 이름, widget: string, hint: '예: Spring Boot' }
+              - { name: url, label: 저장소 주소, widget: string, required: false }
+              - name: contributions
+                label: 기여 (PR)
+                label_singular: PR
+                widget: list
+                summary: '#{{fields.number}} {{fields.text}}'
+                fields:
+                  - { name: text, label: 무엇을 했는지, widget: text, hint: 한국어 한 줄. 영어 PR 제목은 링크로 확인할 수 있습니다 }
+                  - { name: number, label: PR 번호, widget: string, hint: '예: 45976' }
+                  - { name: url, label: PR 주소, widget: string }
+                  - { name: status, label: 상태, widget: select, options: [Merged, Open], default: Merged }
+                  - { name: merged, label: 머지 시점, widget: string, required: false, hint: '예: 2025.06' }
+                  - { name: release, label: 반영 버전, widget: string, required: false, hint: '예: 3.4.7 · 3.5.1 · 4.0.0' }
+                  - name: detail
+                    label: 상세 (문장 클릭 시 모달)
+                    widget: object
+                    required: false
+                    collapsed: true
+                    hint: '배경(어떻게 발견했는지) · 문제 · 해결 · 리뷰 순서를 추천합니다'
+                    fields: *detail_fields
+
       # ── Writing ───────────────────────────────────────────
       - name: posts
         label: Writing
