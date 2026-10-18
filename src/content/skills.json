@@ -10,7 +10,8 @@
       "Spring WebFlux",
       "QueryDSL",
       "Gradle",
-      "AWS EC2, S3, RDS"
+      "AWS EC2, S3, RDS",
+      "Kafka"
     ]
   },
   {
