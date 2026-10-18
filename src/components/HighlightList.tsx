@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Highlight } from '../data/profile'
+import type { Detail, Highlight } from '../data/profile'
 import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 
@@ -11,12 +11,9 @@ type HighlightListProps = {
   tone?: 'default' | 'muted'
 }
 
-/** 문자열이든 객체든 표시할 문장을 꺼냅니다 */
-const textOf = (item: Highlight) => (typeof item === 'string' ? item : item.text)
-
 export function HighlightList({ items, context, tone = 'default' }: HighlightListProps) {
   // 열려 있는 성과 (null이면 닫힘)
-  const [selected, setSelected] = useState<Exclude<Highlight, string> | null>(null)
+  const [selected, setSelected] = useState<(Highlight & { detail: Detail }) | null>(null)
 
   if (items.length === 0) return null
 
@@ -29,8 +26,7 @@ export function HighlightList({ items, context, tone = 'default' }: HighlightLis
     <>
       <ul className="mt-3 space-y-1.5">
         {items.map((item) => {
-          const text = textOf(item)
-          const hasDetail = typeof item !== 'string'
+          const { text, detail } = item
 
           return (
             <li key={text} className={`flex gap-2 text-sm leading-relaxed ${textColor}`}>
@@ -39,10 +35,10 @@ export function HighlightList({ items, context, tone = 'default' }: HighlightLis
                 aria-hidden="true"
               />
 
-              {hasDetail ? (
+              {detail ? (
                 <button
                   type="button"
-                  onClick={() => setSelected(item)}
+                  onClick={() => setSelected({ text, detail })}
                   className="group -my-0.5 cursor-pointer py-0.5 text-left transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
                 >
                   <span className="underline decoration-neutral-300 decoration-dashed underline-offset-4 transition-colors group-hover:decoration-accent dark:decoration-neutral-600 dark:group-hover:decoration-accent-dark">

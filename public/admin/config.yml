@@ -1,0 +1,245 @@
+# Sveltia CMS 설정 — 관리자 페이지(/portfolio/admin/)의 편집 화면을 정의합니다.
+#
+# 저장하면 아래 저장소의 main 브랜치에 바로 커밋되고,
+# GitHub Actions 배포가 돌아 1~2분 뒤 사이트에 반영됩니다.
+#
+# 필드 구조는 src/data/profile.ts의 타입과 맞춰야 합니다.
+# 필드를 추가·변경하면 두 곳을 함께 고치세요.
+# 문서: https://sveltiacms.app/en/docs
+
+backend:
+  name: github
+  repo: chanbinme/portfolio
+  branch: main
+  # 저장소 쓰기 권한이 있는 토큰으로만 로그인합니다.
+  # OAuth 로그인은 별도 인증 서버가 필요해 꺼 둡니다.
+  auth_methods: [token]
+  commit_messages:
+    update: 'content: {{slug}} 수정 (관리자 페이지)'
+    uploadMedia: 'content: 이미지 업로드 {{path}} (관리자 페이지)'
+    deleteMedia: 'content: 이미지 삭제 {{path}} (관리자 페이지)'
+
+app_title: 포트폴리오 관리
+site_url: https://chanbinme.github.io/portfolio/
+display_url: https://chanbinme.github.io/portfolio/
+
+# 지금은 이미지 필드가 없지만, 나중에 추가하면 여기에 저장됩니다.
+media_folder: public/images
+public_folder: /portfolio/images
+
+output:
+  # 비워 둔 선택 항목은 JSON에서 아예 뺍니다 (빈 문자열 대신)
+  omit_empty_optional_fields: true
+  json:
+    indent_size: 2
+
+collections:
+  - name: content
+    label: 포트폴리오 내용
+    format: json
+    editor:
+      preview: false
+    files:
+      # ── 기본 정보 ──────────────────────────────────────────
+      - name: profile
+        label: 기본 정보 · 첫 화면 · About
+        file: src/content/profile.json
+        fields:
+          - { name: name, label: 이름, widget: string }
+          - { name: role, label: 역할, widget: string, hint: '이름 위 작은 글씨 (예: Backend Engineer)' }
+          - { name: headline, label: 한 줄 소개, widget: text, hint: 첫 화면 이름 아래. 무엇을 하는 개발자인지 }
+          - name: heroMetrics
+            label: 대표 성과 (첫 화면)
+            label_singular: 성과
+            widget: list
+            required: false
+            hint: 3개 안팎이 적당합니다
+            summary: '{{fields.value}} {{fields.label}}'
+            fields:
+              - { name: value, label: 수치, widget: string, hint: '예: 50%' }
+              - { name: label, label: 무엇이, widget: string, hint: '예: API 응답시간 단축' }
+              - { name: source, label: 출처, widget: string, required: false, hint: '예: 더즌 · 부하테스트 병목 개선' }
+          - { name: motto, label: 좌우명, widget: string, required: false, hint: About 제목 아래 }
+          - name: intro
+            label: 자기소개 문단
+            label_singular: 문단
+            widget: list
+            field: { name: paragraph, label: 문단, widget: text }
+          - name: habits
+            label: 일하는 방식 (글머리 목록)
+            label_singular: 항목
+            widget: list
+            required: false
+            field: { name: item, label: 항목, widget: string }
+          - { name: location, label: 지역, widget: string, required: false }
+          - { name: email, label: 이메일, widget: string }
+          - { name: resumeUrl, label: 이력서 링크, widget: string, required: false, hint: 비우면 버튼이 사라집니다 }
+          - name: socials
+            label: 링크
+            label_singular: 링크
+            widget: list
+            required: false
+            summary: '{{fields.label}}'
+            fields:
+              - { name: label, label: 이름, widget: string, hint: '예: GitHub' }
+              - { name: href, label: 주소, widget: string, required: false, hint: 비우면 표시되지 않습니다 }
+
+      # ── Skills ────────────────────────────────────────────
+      - name: skills
+        label: Skills
+        file: src/content/skills.json
+        fields:
+          - name: groups
+            label: 기술 분류
+            label_singular: 분류
+            widget: list
+            root: true
+            summary: '{{fields.category}}'
+            fields:
+              - { name: category, label: 분류 이름, widget: string }
+              - name: items
+                label: 기술
+                label_singular: 기술
+                widget: list
+                field: { name: item, label: 기술, widget: string }
+
+      # ── Experience ────────────────────────────────────────
+      - name: experiences
+        label: Experience
+        file: src/content/experiences.json
+        fields:
+          - name: items
+            label: 경력
+            label_singular: 경력
+            widget: list
+            root: true
+            summary: '{{fields.company}} · {{fields.period}}'
+            fields:
+              - { name: company, label: 회사, widget: string }
+              - { name: role, label: 직무, widget: string }
+              - { name: period, label: 기간, widget: string, hint: '예: 2025.04 — 재직 중' }
+              - { name: summary, label: 회사 소개, widget: text }
+              - name: highlights
+                label: 성과
+                label_singular: 성과
+                widget: list
+                required: false
+                summary: '{{fields.text}}'
+                # 성과 한 줄의 구조 — 프로젝트에서도 그대로 씁니다
+                fields: &highlight_fields
+                  - { name: text, label: 문장, widget: text }
+                  - name: detail
+                    label: 상세 (문장 클릭 시 모달)
+                    widget: object
+                    required: false
+                    collapsed: true
+                    hint: 채우면 문장이 클릭 가능해집니다
+                    # 상세 모달의 구조 — 경력·프로젝트 상세에서도 그대로 씁니다
+                    fields: &detail_fields
+                      - name: metrics
+                        label: 지표
+                        label_singular: 지표
+                        widget: list
+                        required: false
+                        summary: '{{fields.label}}: {{fields.value}}'
+                        fields:
+                          - { name: label, label: 항목, widget: string, hint: '예: 응답시간 개선' }
+                          - { name: value, label: 값, widget: string, hint: '예: 특정 API 50%' }
+                      - name: sections
+                        label: 본문
+                        label_singular: 섹션
+                        widget: list
+                        summary: '{{fields.heading}}'
+                        fields:
+                          - { name: heading, label: 소제목, widget: string, hint: '예: 배경, 과정, 결과' }
+                          - name: body
+                            label: 문단
+                            label_singular: 문단
+                            widget: list
+                            field: { name: paragraph, label: 문단, widget: text }
+              - name: stack
+                label: 기술 스택
+                label_singular: 기술
+                widget: list
+                required: false
+                field: { name: item, label: 기술, widget: string }
+              - name: detail
+                label: 경력 전체 상세 (자세히 보기)
+                widget: object
+                required: false
+                collapsed: true
+                hint: 채우면 '자세히 보기' 버튼이 생깁니다
+                fields: *detail_fields
+
+      # ── Projects ──────────────────────────────────────────
+      - name: projects
+        label: Projects
+        file: src/content/projects.json
+        fields:
+          - name: items
+            label: 프로젝트
+            label_singular: 프로젝트
+            widget: list
+            root: true
+            summary: '{{fields.title}} · {{fields.period}}'
+            fields:
+              - { name: title, label: 제목, widget: string }
+              - { name: period, label: 기간, widget: string }
+              - { name: description, label: 설명, widget: text }
+              - name: points
+                label: 성과
+                label_singular: 성과
+                widget: list
+                required: false
+                summary: '{{fields.text}}'
+                fields: *highlight_fields
+              - name: stack
+                label: 기술 스택
+                label_singular: 기술
+                widget: list
+                required: false
+                field: { name: item, label: 기술, widget: string }
+              - { name: repoUrl, label: 코드 링크, widget: string, required: false }
+              - { name: liveUrl, label: 서비스 링크, widget: string, required: false }
+              - { name: featured, label: featured 표시, widget: boolean, required: false, default: false }
+              - name: detail
+                label: 프로젝트 상세 (자세히 보기)
+                widget: object
+                required: false
+                collapsed: true
+                hint: 채우면 '자세히 보기' 버튼이 생깁니다
+                fields: *detail_fields
+
+      # ── Writing ───────────────────────────────────────────
+      - name: posts
+        label: Writing
+        file: src/content/posts.json
+        fields:
+          - name: items
+            label: 글
+            label_singular: 글
+            widget: list
+            root: true
+            summary: '{{fields.title}}'
+            fields:
+              - { name: title, label: 제목, widget: string }
+              - { name: url, label: 주소, widget: string }
+              - { name: date, label: 발행일, widget: string, required: false, hint: '예: 2023-03-15. 제목 오른쪽에 표시됩니다' }
+              - { name: excerpt, label: 한 줄 요약, widget: text, required: false }
+
+      # ── More ──────────────────────────────────────────────
+      - name: others
+        label: More (자격증 · 활동 · 학력)
+        file: src/content/others.json
+        fields:
+          - name: items
+            label: 항목
+            label_singular: 항목
+            widget: list
+            root: true
+            summary: '{{fields.title}} · {{fields.date}}'
+            fields:
+              - { name: title, label: 이름, widget: string }
+              - { name: issuer, label: 기관 · 설명, widget: string }
+              - { name: date, label: 기간, widget: string }
+              - { name: note, label: 메모, widget: text, required: false }

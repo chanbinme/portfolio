@@ -22,7 +22,7 @@ export function Hero() {
 
       {/* 인쇄물 상단에 연락처를 넣습니다 (화면에서는 About·Contact에 있음) */}
       <p className="print-only mt-3 font-mono text-xs text-neutral-500">
-        {profile.email} · {profile.location}
+        {[profile.email, profile.location].filter(Boolean).join(' · ')}
       </p>
 
       <div className="no-print mt-8 flex flex-wrap items-center gap-3">
