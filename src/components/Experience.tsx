@@ -12,7 +12,7 @@ export function Experience() {
 
   return (
     <Section id="experience" title="Experience">
-      <ol className="relative space-y-10 border-l border-neutral-200 pl-6 dark:border-neutral-800">
+      <ol className="relative space-y-8 border-l border-neutral-200 pl-6 dark:border-neutral-800">
         {experiences.map((exp, i) => (
           <li key={`${i}-${exp.company}`} className="relative">
             {/* 타임라인 점 (회사) */}

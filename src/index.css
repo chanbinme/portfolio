@@ -38,7 +38,7 @@
 @layer utilities {
   /* 섹션 공통 여백 */
   .section {
-    @apply mx-auto w-full max-w-3xl px-6 py-20 sm:py-24;
+    @apply mx-auto w-full max-w-5xl px-6 py-12 sm:py-14;
   }
 
   /* 본문 링크 */
@@ -151,6 +151,11 @@
   }
 
   /* @page가 이미 용지 여백을 주므로 블록 자체 여백은 없앱니다 */
+  /* 넓은 화면의 '제목 | 내용' 두 칸은 종이에서 위아래로 */
+  .section-grid {
+    display: block !important;
+  }
+
   .section,
   #top {
     width: 100%;

@@ -16,7 +16,7 @@ export function Projects() {
       title="Projects"
       subtitle="직접 설계하고 만든 것들입니다."
     >
-      <div className="space-y-4">
+      <div className="grid gap-4 lg:grid-cols-2">
         {projects.map((project, i) => (
           <article
             key={`${i}-${project.title}`}
