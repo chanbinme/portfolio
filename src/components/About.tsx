@@ -1,51 +1,40 @@
 import { profile } from '../data/profile'
-import { Section, order } from './Section'
+import { Section } from './Section'
 import { Bullet } from './Bullet'
 
-/** 편지처럼: 1인칭 문단, 일하는 방식, 좌우명, 서명 */
 export function About() {
   return (
-    <Section id="about" title="About">
-      <div className="max-w-[40rem] space-y-6 text-body text-ink">
-        {profile.intro.map((paragraph, i) => (
-          <p key={`${i}-${paragraph}`} className="rise" style={order(2 + i)}>
-            {paragraph}
-          </p>
-        ))}
-      </div>
-
-      {profile.habits.length > 0 && (
-        <ul className="mt-10 space-y-3">
-          {profile.habits.map((habit, i) => (
-            <li
-              key={`${i}-${habit}`}
-              className="rise flex gap-3 text-body text-ink"
-              style={order(4 + i)}
-            >
-              <Bullet />
-              {habit}
-            </li>
+    <Section id="about" title="소개">
+      <div className="print-stack grid gap-8 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-14">
+        <div className="max-w-2xl space-y-4 text-[1.0625rem] leading-[1.8] text-fg">
+          {profile.intro.map((paragraph, i) => (
+            <p key={`${i}-${paragraph}`}>{paragraph}</p>
           ))}
-        </ul>
-      )}
+        </div>
 
-      {profile.motto && (
-        <p className="motto rise mt-14 text-lead text-ink" style={order(7)}>
-          <mark className="bg-marker px-1 text-marker-ink [box-decoration-break:clone]">
-            {profile.motto}
-          </mark>
-        </p>
-      )}
-
-      <p className="signoff rise mt-14" style={order(8)}>
-        <span className="block text-lead font-semibold text-ink">{profile.name}</span>
-        <span className="mt-1 block text-small text-muted">
-          {[profile.role, profile.location].filter(Boolean).join(' · ')} ·{' '}
-          <a href={`mailto:${profile.email}`} className="link">
-            {profile.email}
-          </a>
-        </span>
-      </p>
+        {(profile.habits.length > 0 || profile.motto) && (
+          <div className="card self-start p-6">
+            {profile.habits.length > 0 && (
+              <>
+                <h3 className="text-sm font-semibold text-muted">일하는 방식</h3>
+                <ul className="mt-3 space-y-2.5">
+                  {profile.habits.map((habit, i) => (
+                    <li key={`${i}-${habit}`} className="flex gap-2.5 text-[0.9375rem] leading-relaxed text-fg">
+                      <Bullet />
+                      {habit}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {profile.motto && (
+              <blockquote className="motto mt-5 border-l-2 border-primary pl-4 text-[0.9375rem] leading-relaxed text-muted">
+                {profile.motto}
+              </blockquote>
+            )}
+          </div>
+        )}
+      </div>
     </Section>
   )
 }

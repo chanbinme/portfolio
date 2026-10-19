@@ -25,14 +25,6 @@ export type SocialLink = {
   href: string
 }
 
-/** 첫 화면에 숫자로 보여줄 대표 성과. 3개 안팎이 적당합니다. */
-export type HeroMetric = {
-  value: string
-  label: string
-  /** 어디서 낸 성과인지 */
-  source: string
-}
-
 export type SkillGroup = {
   category: string
   items: string[]
@@ -211,7 +203,6 @@ type ProfileJson = Loose<{
   email: string
   resumeUrl: string
   socials: SocialLink[]
-  heroMetrics: HeroMetric[]
 }>
 
 // 타입을 붙여 대입해야 JSON 구조가 어긋났을 때 빌드가 실패합니다 (as 캐스트 금지)
@@ -234,10 +225,6 @@ export const profile = {
 export const socials: SocialLink[] = list(p.socials)
   .map((s) => ({ label: req(s.label), href: req(s.href) }))
   .filter((s) => s.label && s.href)
-
-export const heroMetrics: HeroMetric[] = list(p.heroMetrics)
-  .map((m) => ({ value: req(m.value), label: req(m.label), source: req(m.source) }))
-  .filter((m) => m.value && m.label)
 
 export const skills: SkillGroup[] = list<Loose<SkillGroup>>(skillsJson)
   .map((g) => ({ category: req(g.category), items: lines(g.items) }))

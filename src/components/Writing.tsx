@@ -1,33 +1,30 @@
 import { posts } from '../data/profile'
-import { Section, order } from './Section'
+import { Section } from './Section'
 
-/** 장부형 목록: 줄 사이에 선 없이, 한 줄을 가리키면 나머지가 물러납니다 */
 export function Writing() {
+  if (posts.length === 0) return null
   return (
-    <Section id="writing" title="Writing" subtitle="개발하며 겪은 문제를 블로그에 정리합니다.">
-      <ul className="ledger">
+    <Section id="writing" title="글" subtitle="개발하며 해결한 문제를 블로그에 정리합니다.">
+      <ul className="card divide-y divide-line">
         {posts.map((post, i) => (
-          <li key={`${i}-${post.title}`} className="rise" style={order(2 + i)}>
+          <li key={`${i}-${post.title}`}>
             <a
               href={post.url}
               target="_blank"
               rel="noreferrer noopener"
-              className="group flex min-h-14 items-baseline justify-between gap-6 py-3 text-ink transition-colors"
+              className="group flex min-h-14 items-start justify-between gap-4 px-6 py-4 transition-colors hover:bg-chip sm:px-7"
             >
-              <span className="text-body group-hover:underline group-hover:underline-offset-4">
-                {post.title}
+              <span className="min-w-0">
+                <span className="font-medium text-fg group-hover:underline">{post.title}</span>
+                {post.excerpt && <span className="mt-1 block text-sm text-muted">{post.excerpt}</span>}
               </span>
-              {post.date ? (
-                <time dateTime={post.date} className="shrink-0 text-small text-muted">
-                  {post.date}
-                </time>
-              ) : (
-                <span className="shrink-0 text-small text-muted" aria-hidden="true">
-                  ↗
-                </span>
-              )}
+              <span className="no-print flex shrink-0 items-center gap-3 pt-0.5 text-sm text-muted">
+                {post.date && <time dateTime={post.date}>{post.date}</time>}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M7 17 17 7M9 7h8v8" />
+                </svg>
+              </span>
             </a>
-            {post.excerpt && <p className="-mt-1 pb-3 text-small text-muted">{post.excerpt}</p>}
           </li>
         ))}
       </ul>

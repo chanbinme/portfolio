@@ -4,6 +4,7 @@ import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { Bullet } from './Bullet'
 import { DetailTrigger } from './DetailTrigger'
+import { Emphasis } from './Emphasis'
 
 type HighlightListProps = {
   items: Highlight[]
@@ -19,18 +20,20 @@ export function HighlightList({ items, context }: HighlightListProps) {
 
   return (
     <>
-      <ul className="mt-5 space-y-2.5">
+      <ul className="mt-4 space-y-2">
         {items.map((item, i) => {
           const { text, detail } = item
 
           return (
-            <li key={`${i}-${text}`} className="flex gap-3 text-body text-ink">
+            <li key={`${i}-${text}`} className="flex gap-2.5 text-[0.9375rem] leading-relaxed text-muted">
               <Bullet />
 
               {detail ? (
                 <DetailTrigger text={text} onClick={() => setSelected({ text, detail })} />
               ) : (
-                <span>{text}</span>
+                <span>
+                  <Emphasis text={text} />
+                </span>
               )}
             </li>
           )

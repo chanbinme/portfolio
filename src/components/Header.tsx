@@ -3,13 +3,13 @@ import { useTheme } from '../hooks/useTheme'
 import { useActiveSection } from '../hooks/useActiveSection'
 import { openSource, profile } from '../data/profile'
 
-// 메뉴는 다섯 개만. About·Skills·More는 스크롤로 자연스럽게 지나갑니다.
 const NAV = [
+  { id: 'about', label: '소개' },
   { id: 'experience', label: '경력' },
-  { id: 'opensource', label: '오픈소스' },
   { id: 'projects', label: '프로젝트' },
+  { id: 'opensource', label: '오픈소스' },
+  { id: 'skills', label: '기술' },
   { id: 'writing', label: '글' },
-  { id: 'contact', label: '연락' },
 ].filter(
   // 내용이 비어 섹션이 그려지지 않으면 메뉴에서도 뺍니다
   (n) => n.id !== 'opensource' || openSource.length > 0,
@@ -32,66 +32,86 @@ export function Header() {
     return () => window.removeEventListener('keydown', onKey)
   }, [menuOpen])
 
-  const linkClass = (id: string) =>
-    [
-      'transition-colors',
-      active === id
-        ? 'text-ink underline decoration-2 underline-offset-8'
-        : 'text-muted hover:text-ink',
-    ].join(' ')
+  const iconButton =
+    'grid size-10 cursor-pointer place-items-center rounded-lg text-muted transition-colors hover:bg-chip hover:text-fg'
 
   return (
-    <header id="site-header" className="sticky top-0 z-50 bg-ground">
-      <div className="flex h-16 w-full items-center justify-between px-6 sm:px-12 lg:px-[calc(0.75rem+3rem)]">
-        <a href="#top" className="text-body font-semibold text-ink transition-opacity hover:opacity-70">
+    <header id="site-header" className="sticky top-0 z-50 border-b border-line bg-bg/95 backdrop-blur">
+      <div className="container-page flex h-16 items-center justify-between gap-4">
+        <a href="#top" className="shrink-0 font-bold text-fg">
           {profile.name}
         </a>
 
-        <nav aria-label="주요 섹션" className="hidden items-center gap-7 text-small md:flex">
+        <nav aria-label="주요 섹션" className="hidden items-center gap-1 lg:flex">
           {NAV.map((item) => (
-            <a key={item.id} href={`#${item.id}`} className={linkClass(item.id)}>
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              aria-current={active === item.id ? 'true' : undefined}
+              className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                active === item.id ? 'bg-chip text-fg' : 'text-muted hover:text-fg'
+              }`}
+            >
               {item.label}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-1.5">
           <button
             type="button"
             onClick={toggle}
             aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
-            className="grid size-11 place-items-center text-muted transition-colors hover:bg-surface hover:text-ink"
+            className={iconButton}
           >
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
           </button>
+          {/* 채용 담당자가 어디서든 바로 쓰는 두 동작 */}
+          <button type="button" onClick={() => window.print()} className="btn btn-outline hidden sm:inline-flex">
+            PDF 저장
+          </button>
+          <a href="#contact" className="btn btn-primary hidden sm:inline-flex">
+            연락하기
+          </a>
 
-          {/* 모바일 전용 메뉴 버튼 */}
+          {/* 모바일·태블릿 메뉴 버튼 */}
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
-            className="grid size-11 place-items-center text-muted transition-colors hover:bg-surface hover:text-ink md:hidden"
+            className={`${iconButton} lg:hidden`}
           >
             {menuOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
         </div>
       </div>
 
-      {/* 모바일 드롭다운: 선 대신 한 단계 밝은 면으로 구분 */}
       {menuOpen && (
-        <nav id="mobile-nav" aria-label="주요 섹션" className="bg-surface px-6 py-2 md:hidden">
-          {NAV.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              onClick={() => setMenuOpen(false)}
-              className={`flex min-h-11 items-center text-body ${active === item.id ? 'font-semibold text-ink' : 'text-muted hover:text-ink'}`}
-            >
-              {item.label}
-            </a>
-          ))}
+        <nav id="mobile-nav" aria-label="주요 섹션" className="border-t border-line bg-bg lg:hidden">
+          <div className="container-page grid gap-1 py-3">
+            {NAV.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={() => setMenuOpen(false)}
+                className={`flex min-h-11 items-center rounded-md px-3 text-[0.9375rem] font-medium ${
+                  active === item.id ? 'bg-chip text-fg' : 'text-muted hover:text-fg'
+                }`}
+              >
+                {item.label}
+              </a>
+            ))}
+            <div className="mt-2 grid grid-cols-2 gap-2 sm:hidden">
+              <button type="button" onClick={() => window.print()} className="btn btn-outline">
+                PDF 저장
+              </button>
+              <a href="#contact" onClick={() => setMenuOpen(false)} className="btn btn-primary">
+                연락하기
+              </a>
+            </div>
+          </div>
         </nav>
       )}
     </header>

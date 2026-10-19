@@ -5,13 +5,13 @@ export function DetailBody({ detail }: { detail: Detail }) {
   return (
     <div className="space-y-7">
       {detail.metrics && detail.metrics.length > 0 && (
-        <dl className="flex flex-wrap gap-x-10 gap-y-4 bg-surface px-5 py-4">
+        <dl className="flex flex-wrap gap-x-10 gap-y-4 bg-chip px-5 py-4">
           {detail.metrics.map((m, i) => (
             <div key={`${i}-${m.label}`}>
-              <dt className="text-small text-muted">
+              <dt className="text-sm text-muted">
                 {m.label}
               </dt>
-              <dd className="num mt-1 text-body font-semibold text-ink">
+              <dd className="num mt-1 text-[0.9375rem] font-semibold text-fg">
                 {m.value}
               </dd>
             </div>
@@ -21,7 +21,7 @@ export function DetailBody({ detail }: { detail: Detail }) {
 
       {detail.sections.map((section, i) => (
         <section key={`${i}-${section.heading}`}>
-          <h4 className="text-body font-semibold text-ink">
+          <h4 className="text-[0.9375rem] font-semibold text-fg">
             {section.heading}
           </h4>
 
@@ -31,7 +31,7 @@ export function DetailBody({ detail }: { detail: Detail }) {
               {section.body.map((item, j) => (
                 <li
                   key={`${j}-${item}`}
-                  className="flex gap-3 text-body text-ink"
+                  className="flex gap-3 text-[0.9375rem] text-fg"
                 >
                   <Bullet />
                   <span>{item}</span>
@@ -43,7 +43,7 @@ export function DetailBody({ detail }: { detail: Detail }) {
               {section.body.map((paragraph, j) => (
                 <p
                   key={`${j}-${paragraph}`}
-                  className="text-body text-ink"
+                  className="text-[0.9375rem] text-fg"
                 >
                   {paragraph}
                 </p>

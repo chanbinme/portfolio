@@ -5,69 +5,58 @@
 
 /*
  * ── 색 토큰 ──
- * 바탕(ground) 하나, 글자(ink) 하나, 강조(accent) 하나.
- * 면(surface)은 바탕에서 한 단계 톤만 바꾼 색으로, 선이나 그림자 대신 영역을 나눕니다.
- * 다크 모드는 아래 값만 바꿉니다. 컴포넌트는 dark: 클래스 없이 토큰만 씁니다.
- *
- * 병 초록과 금색은 블로그 주소 green-bin의 초록에서 왔습니다.
+ * 이력서·포트폴리오에 맞는 차분한 네이비와 흰 바탕 (ui-ux-pro-max: Minimalism & Swiss, Resume/CV).
+ * 컴포넌트는 dark: 클래스 없이 토큰만 씁니다. 다크 모드는 아래 값만 바꿉니다.
+ * 모든 글자 조합은 대비 4.5:1 이상입니다 (가장 낮은 조합 5.0:1).
  */
 :root {
-  --ground: #eef1ea;
-  --surface: #e0e6da;
-  --ink: #133621;
-  --muted: #46604d;
-  --accent: #133621;
-  --accent-ink: #eef1ea;
-  --marker: #f4d96c;
-  /* 금색 표시 위의 글자는 두 테마 모두 초록 */
-  --marker-ink: #133621;
-  /* 모달 뒤를 가리는 막 */
-  --scrim: rgb(11 31 19 / 0.7);
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --chip: #eef2f7;
+  --fg: #0f172a;
+  --muted: #475569;
+  --border: #e2e8f0;
+  --primary: #1e3a5f;
+  --on-primary: #ffffff;
+  --link: #1d4ed8;
+  --success: #15803d;
+  --mark: #dbeafe;
   color-scheme: light;
 }
 
 :root.dark {
-  --ground: #133621;
-  --surface: #1a4429;
-  --ink: #f4d96c;
-  --muted: #c2b56c;
-  --accent: #f4d96c;
-  --accent-ink: #133621;
-  --marker: #f4d96c;
+  --bg: #0b1220;
+  --card: #111a2b;
+  --chip: #1a2539;
+  --fg: #e2e8f0;
+  --muted: #94a3b8;
+  --border: #1e293b;
+  --primary: #dbeafe;
+  --on-primary: #0b1220;
+  --link: #93c5fd;
+  --success: #4ade80;
+  --mark: #1e3a5f;
   color-scheme: dark;
 }
 
 @theme inline {
-  --color-ground: var(--ground);
-  --color-surface: var(--surface);
-  --color-ink: var(--ink);
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-chip: var(--chip);
+  --color-fg: var(--fg);
   --color-muted: var(--muted);
-  --color-accent: var(--accent);
-  --color-accent-ink: var(--accent-ink);
-  --color-marker: var(--marker);
-  --color-marker-ink: var(--marker-ink);
-  --color-scrim: var(--scrim);
+  --color-line: var(--border);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-link: var(--link);
+  --color-success: var(--success);
+  --color-mark: var(--mark);
 }
 
 @theme {
-  /* 글꼴은 하나. Pretendard는 라틴 글리프가 Inter 기반이라 한글·영문이 함께 어울립니다 */
+  /* Pretendard는 라틴 글리프가 Inter 기반이라 한글·영문이 한 폰트로 어울립니다 */
   --font-sans: 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, sans-serif;
-  /* 고정폭은 실제 코드(diff, SQL)에만 씁니다 */
-  --font-code: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; /* taste-skill-ignore: 코드 블록 전용 */
-
-  /* ── 글자 크기 5단계 ── 이 밖의 크기는 쓰지 않습니다 */
-  --text-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
-  --text-small--line-height: 1.5;
-  --text-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-  --text-body--line-height: 1.6;
-  --text-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
-  --text-lead--line-height: 1.35;
-  --text-head: clamp(2rem, 1.4rem + 1.6vw, 2.75rem);
-  --text-head--line-height: 1.1;
-  --text-display: clamp(3rem, 1.2rem + 5.4vw, 6rem);
-  --text-display--line-height: 0.95;
-
-  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 }
 
 @layer base {
@@ -78,91 +67,103 @@
   }
 
   body {
-    background: var(--ground);
-    color: var(--ink);
+    background: var(--bg);
+    color: var(--fg);
     font-family: var(--font-sans);
-    font-size: var(--text-body);
-    line-height: 1.6;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     /* 한글이 단어 중간에서 줄바꿈되지 않도록 */
     word-break: keep-all;
     overflow-wrap: break-word;
   }
 
-  /* 날짜·버전·수치는 자리가 맞게 */
+  /* 날짜·기간·수치는 자리가 맞게 */
   time,
   .num {
     font-variant-numeric: tabular-nums;
   }
 
   ::selection {
-    background: var(--marker);
-    color: #133621;
+    background: var(--mark);
   }
 
   :focus-visible {
-    outline: 2px solid var(--ink);
-    outline-offset: 3px;
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
 @layer components {
-  /* 왼쪽 읽기 칼럼의 섹션 */
-  .section {
-    @apply mx-auto w-full max-w-[46rem] px-6 py-24 sm:px-12 lg:py-32;
+  /* 페이지 공통 폭과 여백 */
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
   }
 
-  /* 본문 링크: 밑줄은 글자색을 옅게 써서, 마우스를 올리면 진해집니다 */
+  .section {
+    @apply py-12 sm:py-16;
+  }
+
+  .card {
+    @apply rounded-xl border border-line bg-card;
+  }
+
+  /* 본문 링크 */
   .link {
-    color: var(--ink);
+    color: var(--link);
     text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--ink) 35%, transparent);
-    text-underline-offset: 0.25em;
+    text-decoration-color: color-mix(in srgb, var(--link) 35%, transparent);
+    text-underline-offset: 0.2em;
     transition: text-decoration-color 0.2s;
   }
 
   .link:hover {
-    text-decoration-color: var(--ink);
+    text-decoration-color: var(--link);
   }
 
-  /* 버튼은 한 가지 모양: 직각, 단색 */
+  /* 버튼 두 가지: 주 버튼(채움)과 보조 버튼(테두리) */
   .btn {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 px-6 font-medium;
-    background: var(--accent);
-    color: var(--accent-ink);
-    transition:
-      opacity 0.2s,
-      translate 0.15s;
-  }
-
-  .btn:hover {
-    opacity: 0.88;
+    @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg px-4 text-[0.9375rem] font-semibold transition-[background-color,border-color,opacity,translate] duration-200;
   }
 
   .btn:active {
     translate: 0 1px;
   }
 
-  /* 장부형 목록: 한 줄을 가리키면 나머지는 보조 글자색으로 물러납니다 */
-  .ledger:hover > li:not(:hover) a,
-  .ledger:focus-within > li:not(:focus-within) a {
-    color: var(--muted);
+  .btn-primary {
+    background: var(--primary);
+    color: var(--on-primary);
   }
 
-  /* 실제 코드 조각 (diff, SQL). 고정폭은 여기서만 씁니다 */
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+
+  .btn-outline {
+    @apply border border-line bg-card text-fg;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--muted);
+  }
+
+  /* 기술 이름 */
+  .chip {
+    @apply inline-flex items-center rounded-md bg-chip px-2 py-0.5 text-[0.8125rem] font-medium text-fg;
+  }
+
+  /* 실제 코드(diff) */
   .code {
-    font-family: var(--font-code);
-    font-size: var(--text-small);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
     line-height: 1.7;
-    /* 긴 줄은 패널 폭 안에서 줄바꿈합니다 (잘려 보이지 않게) */
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
 }
 
 /*
- * ── 등장 모션 ──
- * 섹션이 화면에 들어오면 그 안의 부분(.rise)이 순서대로(--i) 올라옵니다.
+ * 섹션 진입 애니메이션 (은은한 fade-up, 한 번만).
  *
  * 기본값은 "보이는 상태"입니다. 숨김은 JS가 data-animate로 애니메이션을
  * 끝까지 재생할 수 있다고 알렸을 때만 적용합니다. 그래야 JS가 실패하거나,
@@ -170,49 +171,16 @@
  * 내용이 빈 화면으로 남지 않습니다.
  */
 @media (prefers-reduced-motion: no-preference) {
-  .reveal[data-animate='true'] .rise {
+  .reveal[data-animate='true'] {
     transition:
-      opacity 0.7s var(--ease-out-soft),
-      translate 0.7s var(--ease-out-soft);
-    transition-delay: calc(min(var(--i, 0), 8) * 80ms);
+      opacity 0.6s ease-out,
+      translate 0.6s ease-out;
   }
 
-  .reveal[data-animate='true'][data-revealed='false'] .rise {
+  .reveal[data-animate='true'][data-revealed='false'] {
     opacity: 0;
-    translate: 0 1.5rem;
+    translate: 0 0.75rem;
   }
-
-  /* 증거판 전환 (시그니처 모션): 섹션이 바뀌면 새 증거가 천천히 떠오릅니다.
-     이전 패널은 바로 숨깁니다. 두 패널이 겹친 채로 있으면 새 패널이
-     이전 패널의 글자를 덮기 때문입니다. */
-  .stage-panel[data-active='true'] {
-    transition: opacity 1.2s var(--ease-out-soft);
-  }
-
-  /* 첫 화면 줄무늬가 아주 천천히 흐릅니다 */
-  .stripe-track {
-    animation: stripe-drift 28s linear infinite;
-  }
-}
-
-@keyframes stripe-drift {
-  to {
-    translate: -56px 0;
-  }
-}
-
-/* 증거판: 지금 섹션의 패널만 보이고, 나머지는 자리도 차지하지 않습니다 */
-.stage-panel {
-  opacity: 0;
-  visibility: hidden;
-  /* 사라지는 중인 패널이 아래 패널의 글자를 가리거나 클릭을 받지 않게 */
-  pointer-events: none;
-}
-
-.stage-panel[data-active='true'] {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
 }
 
 /* 화면에서는 숨기고 인쇄할 때만 보이는 요소 */
@@ -223,8 +191,8 @@
 /* ── 인쇄 / PDF 저장 ───────────────────────────────────────
  *
  * 화면은 포트폴리오, 인쇄물은 이력서입니다.
- * 두 칸 구성, 증거판, 색 면 같은 화면용 장치를 걷어내고,
- * 한 줄에 정보가 모이는 이력서 문서 형태로 재배치합니다.
+ * 카드·버튼 같은 화면용 장식을 걷어내고, 한 줄에 정보가 모이는
+ * 이력서 문서 형태로 재배치합니다.
  */
 @media print {
   @page {
@@ -232,16 +200,17 @@
     margin: 15mm 16mm;
   }
 
-  /* 인쇄물은 항상 흰 바탕. 색 면은 잉크만 먹습니다. */
+  /* 인쇄물은 항상 흰 바탕 */
   :root,
   :root.dark {
-    --ground: #fff;
-    --surface: #fff;
-    --ink: #222;
+    --bg: #fff;
+    --card: #fff;
+    --chip: transparent;
+    --fg: #222;
     --muted: #555;
-    --accent: #222;
-    --accent-ink: #fff;
-    --marker: transparent;
+    --border: transparent;
+    --link: #222;
+    --success: #222;
     color-scheme: light;
   }
 
@@ -255,9 +224,6 @@
 
   /* 화면 전용 UI 제거. 버튼은 종이에서 누를 수 없습니다. */
   #site-header,
-  .stage,
-  .evidence,
-  .stripe,
   #contact,
   #site-footer,
   .no-print,
@@ -288,75 +254,75 @@
     display: none !important;
   }
 
-  /* 등장 모션이 걸린 채로 인쇄되면 내용이 날아갑니다 */
-  .rise {
+  .reveal {
     opacity: 1 !important;
     translate: none !important;
     transition: none !important;
   }
 
-  /* 두 칸 구성을 한 칸으로 */
-  .split {
+  .container-page {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .card {
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+  }
+
+  /* 두 칸 배치를 한 칸으로 */
+  .print-stack {
     display: block !important;
-    padding: 0 !important;
   }
 
-  .section,
-  #top {
-    width: 100%;
-    max-width: none;
-    min-height: 0 !important;
-    margin: 0;
-    padding: 0;
-    background: none !important;
-  }
-
-  /* 화면용 색 면·톤 면 제거 */
-  .surface {
-    background: none !important;
-    padding: 0 !important;
+  .print-stack > * + * {
+    margin-top: 2mm !important;
   }
 
   /* ── 이름 / 연락처 머리글 ── */
 
-  /* 화면용 가운데 정렬·세로 가운데 배치를 걷어냅니다 */
-  #top > div {
-    display: block !important;
-    padding: 0 !important;
-    text-align: left !important;
-  }
-
   #top {
-    display: block !important;
-    text-align: left !important;
-    padding-bottom: 5mm;
+    padding: 0 0 5mm !important;
     margin-bottom: 5mm;
     border-bottom: 1.5pt solid #222 !important;
   }
 
   #top h1 {
-    font-size: 22pt;
+    font-size: 22pt !important;
     line-height: 1.15;
-    letter-spacing: -0.01em;
     color: #111 !important;
   }
 
-  /* 두 줄 제목의 둘째 줄(역할)은 이름 아래 작은 글씨로 */
-  #top h1 .role {
-    display: block;
-    font-size: 10pt;
-    font-weight: 500;
-    letter-spacing: 0;
+  #top .role {
+    font-size: 10pt !important;
     color: #555 !important;
-    margin-top: 1mm;
   }
 
-  /* 한 줄 소개는 이력서 요약문으로 */
   #top .headline {
-    margin: 2mm 0 0 !important;
-    max-width: none !important;
-    font-size: 10pt;
+    margin-top: 2mm !important;
+    font-size: 10pt !important;
     color: #333 !important;
+  }
+
+  /* 첫 화면의 성과·기술 카드는 아래 섹션과 겹치므로 뺍니다 */
+  #top .hero-side {
+    display: none !important;
+  }
+
+  /* 빠른 정보는 한 줄로 */
+  #top .facts {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 1mm 6mm;
+    margin-top: 3mm !important;
+    font-size: 9.5pt;
+  }
+
+  #top .facts > div {
+    display: flex;
+    gap: 1.5mm;
   }
 
   .print-only {
@@ -366,10 +332,10 @@
     color: #444 !important;
   }
 
-  /* ── 섹션 제목 ── */
+  /* ── 섹션 ── */
 
   .section {
-    padding-top: 4.5mm;
+    padding: 4.5mm 0 0 !important;
     break-inside: auto;
   }
 
@@ -385,8 +351,13 @@
     break-after: avoid;
   }
 
-  /* 섹션 부제는 화면용 안내 문구 */
-  h2 + p {
+  /* 섹션 부제·요약(총 경력 등)은 제목 옆 작은 글씨로 */
+  .section-head {
+    display: block !important;
+    margin-bottom: 0 !important;
+  }
+
+  .section-head p {
     display: none;
   }
 
@@ -406,113 +377,63 @@
     color: #333 !important;
   }
 
-  /* 작은 글씨(기간·버전)는 9pt로 */
-  .text-small,
+  .text-sm,
+  .text-xs,
   time {
     font-size: 9pt !important;
   }
 
-  /* 화면용 큰 여백을 문서 간격으로.
-     Tailwind v4의 space-y는 아래 여백(margin-block-end)을 쓰므로 위아래를 함께 지웁니다. */
-  .section [class*='mt-'] {
-    margin-top: 1.5mm !important;
-  }
-
-  .section [class*='mb-'] {
-    margin-bottom: 0 !important;
-  }
-
+  /* 화면용 큰 간격을 문서 간격으로 */
   .section [class*='space-y-'] > * {
     margin-block: 0 !important;
   }
 
   .section [class*='space-y-'] > * + * {
-    margin-top: 1.5mm !important;
+    margin-top: 2mm !important;
   }
 
-  /* 위 규칙보다 뒤에, 같은 구체성으로 두어 이쪽이 이기게 합니다 */
-  .section article,
-  .section .company {
+  .section [class*='gap-'] {
+    row-gap: 1.5mm !important;
+  }
+
+  .section .entry {
     margin-top: 4mm !important;
-    break-inside: auto;
+    padding-top: 0 !important;
+    border-top: 0 !important;
   }
 
-  .section .bullet {
-    margin-top: 0 !important;
-  }
-
-  /* 성과 한 줄이 두 장에 걸쳐 잘리지 않게 */
   li {
     break-inside: avoid;
   }
 
-  /* About: 서명과 좌우명은 화면용 */
-  #about .signoff,
+  /* About: 좌우명 카드는 화면용 */
   #about .motto {
     display: none;
   }
 
-  /* ── 팀별 경력 ── */
-
+  /* 팀별 경력 */
   .section .positions > li {
     padding-left: 3mm !important;
-    border-left: 0.75pt solid #ccc;
+    border-left: 0.75pt solid #ccc !important;
     margin-top: 2.5mm !important;
   }
 
-  /* ── 기술 스택 → 쉼표로 이어진 텍스트 ── */
+  /* ── 기술 이름 → 쉼표로 이어진 텍스트 ── */
 
-  .tag {
+  .chip {
     display: inline !important;
-    background: transparent !important;
     padding: 0 !important;
+    background: transparent !important;
     font-size: 9pt !important;
+    font-weight: 400 !important;
     color: #555 !important;
   }
 
-  .tag::after {
+  .chip::after {
     content: ', ';
   }
 
-  .tag:last-child::after {
-    content: '';
-  }
-
-  /* ── Skills: "분류  항목, 항목" 한 줄로 ── */
-
-  #skills .skill-columns {
-    columns: auto !important;
-  }
-
-  #skills .skill-group {
-    display: flex !important;
-    gap: 4mm;
-    margin: 0 0 1.5mm !important;
-  }
-
-  #skills .skill-group h3 {
-    flex: 0 0 30mm;
-    margin: 0 !important;
-    font-size: 9.5pt !important;
-    color: #444 !important;
-  }
-
-  #skills .skill-group ul {
-    display: block !important;
-    margin: 0 !important;
-  }
-
-  #skills .skill-group li {
-    display: inline;
-    font-size: 9.5pt;
-    margin: 0 !important;
-  }
-
-  #skills .skill-group li::after {
-    content: ', ';
-  }
-
-  #skills .skill-group li:last-child::after {
+  .chip:last-child::after {
     content: '';
   }
 
@@ -532,8 +453,9 @@
 
   a[href^='#']::after,
   a[href^='mailto']::after,
-  .print-only a::after {
-    content: '';
+  .print-only a::after,
+  .no-url::after {
+    content: '' !important;
   }
 
   /* 글머리 점: 배경 대신 텍스트 '•' (인쇄는 배경을 빼므로) */
@@ -549,11 +471,10 @@
     color: #888;
   }
 
-  /* 모달을 닫은 뒤 남은 포커스 테두리가 찍히지 않게 */
   *:focus,
   *:focus-visible {
     outline: none !important;
-    box-shadow: none !important; /* taste-skill-ignore: 그림자를 없애는 규칙 */
+    box-shadow: none !important;
   }
 }
 

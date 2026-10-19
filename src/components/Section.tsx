@@ -1,23 +1,16 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { useReveal } from '../hooks/useReveal'
 
 type SectionProps = {
   id: string
   title: string
   subtitle?: string
-  /**
-   * 이 섹션의 증거(실제 코드·수치). 넓은 화면에서는 오른쪽 증거판에 뜨고,
-   * 좁은 화면에서는 제목 아래에 직접 놓입니다.
-   */
-  evidence?: ReactNode
-  className?: string
+  /** 제목 오른쪽에 둘 요약 (예: 총 경력) */
+  aside?: ReactNode
   children: ReactNode
 }
 
-/** 등장 순서. 섹션 안의 부분마다 붙여 차례로 올라오게 합니다. */
-export const order = (i: number) => ({ '--i': i }) as CSSProperties
-
-export function Section({ id, title, subtitle, evidence, className = '', children }: SectionProps) {
+export function Section({ id, title, subtitle, aside, children }: SectionProps) {
   const { ref, visible, animate } = useReveal<HTMLElement>()
 
   return (
@@ -26,25 +19,15 @@ export function Section({ id, title, subtitle, evidence, className = '', childre
       ref={ref}
       data-animate={animate ? 'true' : 'false'}
       data-revealed={visible ? 'true' : 'false'}
-      className={`section reveal ${className}`}
+      className="section reveal container-page"
     >
-      <header className="mb-12">
-        <h2 className="rise text-head font-semibold tracking-[-0.02em] text-ink" style={order(0)}>
-          {title}
-        </h2>
-        {subtitle && (
-          <p className="rise mt-3 text-body text-muted" style={order(1)}>
-            {subtitle}
-          </p>
-        )}
-      </header>
-
-      {evidence && (
-        <div className="evidence rise mb-12 lg:hidden" style={order(2)}>
-          {evidence}
+      <header className="section-head mb-8 flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-fg sm:text-[1.75rem]">{title}</h2>
+          {subtitle && <p className="mt-1.5 text-[0.9375rem] text-muted">{subtitle}</p>}
         </div>
-      )}
-
+        {aside}
+      </header>
       {children}
     </section>
   )

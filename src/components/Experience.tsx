@@ -1,46 +1,57 @@
 import { useState } from 'react'
 import { experiences } from '../data/profile'
 import type { Experience as ExperienceItem, Position } from '../data/profile'
-import { Section, order } from './Section'
+import { totalCareer } from '../lib/career'
+import { Section } from './Section'
 import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { HighlightList } from './HighlightList'
 import { StackTags } from './StackTags'
 import { MoreButton } from './MoreButton'
-import { ModulesEvidence } from './evidence/ModulesEvidence'
+import { Period } from './Period'
 
 export function Experience() {
   const [selected, setSelected] = useState<ExperienceItem | null>(null)
+  const career = totalCareer()
 
   return (
-    <Section id="experience" title="Experience" evidence={<ModulesEvidence />}>
-      <div className="space-y-24">
+    <Section
+      id="experience"
+      title="경력"
+      aside={career && <p className="num text-[0.9375rem] font-semibold text-fg">총 {career}</p>}
+    >
+      <ol className="card divide-y divide-line">
         {experiences.map((exp, i) => (
-          <article key={`${i}-${exp.company}`} className="company rise" style={order(2 + i)}>
-            <p className="text-small text-muted">
-              <time>{exp.period}</time>
-            </p>
-            <h3 className="mt-2 text-lead font-semibold text-ink">
-              {exp.company}
-              {exp.role && <span className="font-normal text-muted"> · {exp.role}</span>}
-            </h3>
-            <p className="mt-3 text-body text-ink">{exp.summary}</p>
+          <li
+            key={`${i}-${exp.company}`}
+            className="entry print-stack grid gap-4 p-6 sm:p-8 md:grid-cols-[12rem_minmax(0,1fr)] md:gap-8"
+          >
+            <Period period={exp.period} />
 
-            {/* 팀을 옮긴 회사는 팀별로: 선 대신 한 단계 밝은 면으로 나눕니다 */}
-            {exp.positions.length > 0 && (
-              <ol className="positions mt-10 space-y-3">
-                {exp.positions.map((pos, j) => (
-                  <PositionItem key={`${j}-${pos.team}`} position={pos} company={exp.company} />
-                ))}
-              </ol>
-            )}
+            <div className="min-w-0">
+              <h3 className="text-xl font-bold text-fg">{exp.company}</h3>
+              {exp.role && <p className="mt-0.5 font-medium text-fg">{exp.role}</p>}
+              {exp.summary && <p className="mt-2 text-[0.9375rem] text-muted">{exp.summary}</p>}
 
-            <HighlightList items={exp.highlights} context={exp.company} />
-            <StackTags stack={exp.stack} />
-            {exp.detail && <MoreButton onClick={() => setSelected(exp)} />}
-          </article>
+              {exp.positions.length > 0 && (
+                <ol className="positions mt-6 space-y-7 border-l-2 border-line pl-5">
+                  {exp.positions.map((pos, j) => (
+                    <PositionItem key={`${j}-${pos.team}`} position={pos} company={exp.company} />
+                  ))}
+                </ol>
+              )}
+
+              <HighlightList items={exp.highlights} context={exp.company} />
+              <StackTags stack={exp.stack} />
+              {exp.detail && (
+                <div className="mt-3">
+                  <MoreButton onClick={() => setSelected(exp)} />
+                </div>
+              )}
+            </div>
+          </li>
         ))}
-      </div>
+      </ol>
 
       <Modal
         open={selected !== null}
@@ -56,15 +67,15 @@ export function Experience() {
 
 function PositionItem({ position, company }: { position: Position; company: string }) {
   return (
-    <li className="surface bg-surface p-6 sm:p-8">
-      <p className="text-small text-muted">
-        <time>{position.period}</time>
-      </p>
-      <h4 className="mt-1 text-body font-semibold text-ink">
+    <li>
+      <h4 className="font-bold text-fg">
         {position.team}
-        {position.role && <span className="font-normal text-muted"> · {position.role}</span>}
+        {position.role && <span className="font-medium text-muted"> · {position.role}</span>}
       </h4>
-      {position.summary && <p className="mt-3 text-body text-ink">{position.summary}</p>}
+      <div className="mt-0.5">
+        <Period period={position.period} compact />
+      </div>
+      {position.summary && <p className="mt-2 text-[0.9375rem] text-muted">{position.summary}</p>}
       <HighlightList items={position.highlights} context={`${company} · ${position.team}`} />
       <StackTags stack={position.stack} />
     </li>

@@ -88,30 +88,29 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
     >
       {/* 배경 딤 — 클릭하면 닫힘 */}
       <div
-        className="absolute inset-0 bg-scrim"
+        className="absolute inset-0 bg-slate-950/60"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* 대화상자는 실제로 떠 있는 요소라 그림자를 둡니다 (house rule의 예외) */}
       <div
         ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
         tabIndex={-1}
-        className={'relative max-h-[85vh] w-full max-w-2xl overflow-y-auto bg-ground text-ink shadow-xl outline-none' /* taste-skill-ignore: 떠 있는 대화상자 */}
+        className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-card text-fg shadow-xl outline-none sm:rounded-2xl"
       >
-        <div className="sticky top-0 flex items-start justify-between gap-4 bg-surface px-6 py-5 sm:px-8">
+        <div className="sticky top-0 flex items-start justify-between gap-4 border-b border-line bg-card px-6 py-5 sm:px-8">
           <div>
             <h3
               id="modal-title"
-              className="text-lead font-semibold text-ink"
+              className="text-lg font-semibold text-fg"
             >
               {title}
             </h3>
             {meta && (
-              <p className="num mt-1 text-small text-muted">
+              <p className="num mt-1 text-sm text-muted">
                 {meta}
               </p>
             )}
@@ -121,7 +120,7 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
             type="button"
             onClick={onClose}
             aria-label="닫기"
-            className="-mr-3 grid size-11 shrink-0 place-items-center text-muted transition-colors hover:bg-ground hover:text-ink"
+            className="-mr-3 grid size-11 shrink-0 cursor-pointer place-items-center rounded-lg text-muted transition-colors hover:bg-chip hover:text-fg"
           >
             <svg
               width="18"

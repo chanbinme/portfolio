@@ -1,3 +1,5 @@
+import { Emphasis } from './Emphasis'
+
 type DetailTriggerProps = {
   text: string
   onClick: () => void
@@ -13,14 +15,14 @@ export function DetailTrigger({ text, onClick }: DetailTriggerProps) {
     <button
       type="button"
       onClick={onClick}
-      className="group -my-0.5 cursor-pointer py-0.5 text-left"
+      className="group -my-0.5 cursor-pointer py-0.5 text-left transition-colors hover:text-fg"
     >
-      <span className="underline decoration-muted decoration-dashed underline-offset-4 transition-colors group-hover:decoration-ink group-hover:decoration-solid">
-        {text}
+      <span className="underline decoration-muted decoration-dashed underline-offset-4 transition-colors group-hover:decoration-fg group-hover:decoration-solid">
+        <Emphasis text={text} />
       </span>
       {/* 클릭 가능하다는 신호 */}
       <svg
-        className="ml-1 inline-block align-[-0.1em] text-muted transition-colors group-hover:text-ink"
+        className="ml-1 inline-block align-[-0.1em] text-muted transition-colors group-hover:text-fg"
         width="13"
         height="13"
         viewBox="0 0 24 24"

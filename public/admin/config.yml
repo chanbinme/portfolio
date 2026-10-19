@@ -46,20 +46,9 @@ collections:
         file: src/content/profile.json
         fields:
           - { name: name, label: 이름, widget: string }
-          - { name: role, label: 역할, widget: string, hint: '이름 위 작은 글씨 (예: Backend Engineer)' }
+          - { name: role, label: 역할, widget: string, hint: '이름 위 파란 글씨 (예: Backend Engineer)' }
           - { name: headline, label: 한 줄 소개, widget: text, hint: 첫 화면 이름 아래. 무엇을 하는 개발자인지 }
-          - name: heroMetrics
-            label: 대표 성과 (첫 화면)
-            label_singular: 성과
-            widget: list
-            required: false
-            hint: 3개 안팎이 적당합니다
-            summary: '{{fields.value}} {{fields.label}}'
-            fields:
-              - { name: value, label: 수치, widget: string, hint: '예: 50%' }
-              - { name: label, label: 무엇이, widget: string, hint: '예: API 응답시간 단축' }
-              - { name: source, label: 출처, widget: string, required: false, hint: '예: 더즌 · 부하테스트 병목 개선' }
-          - { name: motto, label: 좌우명, widget: string, required: false, hint: About 제목 아래 }
+          - { name: motto, label: 좌우명, widget: string, required: false, hint: 소개의 '일하는 방식' 카드 아래 }
           - name: intro
             label: 자기소개 문단
             label_singular: 문단

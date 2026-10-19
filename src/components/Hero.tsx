@@ -1,84 +1,104 @@
-import { profile, socials } from '../data/profile'
-import { Stripe } from './Stripe'
-import { MetricsEvidence } from './evidence/MetricsEvidence'
+import { profile, skills, socials } from '../data/profile'
+import { currentRole, totalCareer } from '../lib/career'
+import { CopyButton } from './CopyButton'
+import { Tag } from './Tag'
 
 export function Hero() {
   const links = socials.filter((s) => s.href)
+  const career = totalCareer()
+  const current = currentRole()
+  // 첫 분류(예: Back-end)를 주요 기술로 보여줍니다
+  const coreStack = skills[0]?.items.slice(0, 10) ?? []
+
+  // 채용 담당자가 첫 화면에서 확인하는 사실들. 값이 없으면 그 줄은 빠집니다.
+  const facts = [
+    career && { label: '총 경력', value: career },
+    current && { label: '현재', value: current },
+    profile.location && { label: '위치', value: profile.location },
+  ].filter(Boolean) as { label: string; value: string }[]
 
   return (
-    <>
-      <section
-        id="top"
-        className="mx-3 flex min-h-[calc(100svh-4.75rem)] flex-col bg-surface lg:mx-0"
-      >
-        <Stripe height="h-10 sm:h-14" />
-
-        <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center sm:px-12">
-          {/* 첫 화면의 제목: 이름과 하는 일, 두 줄 */}
-          <h1 className="text-display font-semibold tracking-[-0.03em] text-ink">
-            {profile.name}
-            <span className="role mt-4 block text-lead font-medium tracking-normal text-muted">
-              {profile.role}
-            </span>
-          </h1>
-
-          <p className="headline mt-10 max-w-[30ch] text-lead text-ink">{profile.headline}</p>
-
-          {/*
-            인쇄물 상단의 연락처. 화면에서는 About·Contact에 있지만,
-            인쇄물에서는 그 둘을 빼고 여기 한곳에 모읍니다.
-          */}
-          <p className="print-only">
-            {[profile.email, profile.location].filter(Boolean).join(' · ')}
-            {links.length > 0 && (
-              <>
-                <br />
-                {links.map((s, i) => (
-                  <span key={`${i}-${s.label}`}>
-                    {i > 0 && ' · '}
-                    {/* 종이에서는 주소 자체가 정보라 프로토콜만 떼고 그대로 보여줍니다 */}
-                    <a href={s.href}>{s.href.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
-                  </span>
-                ))}
-              </>
-            )}
+    <section id="top" className="container-page pt-12 pb-6 sm:pt-16 sm:pb-8">
+      <div className="print-stack grid gap-10 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-14">
+        <div>
+          <p className="role text-sm font-semibold text-link">{profile.role}</p>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight text-fg sm:text-5xl">{profile.name}</h1>
+          <p className="headline mt-4 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl">
+            {profile.headline}
           </p>
 
-          <div className="no-print mt-10 flex flex-col items-center gap-7">
-            <a href={`mailto:${profile.email}`} className="btn">
+          <dl className="facts mt-8 grid max-w-2xl gap-x-8 gap-y-4 sm:grid-cols-2">
+            {facts.map((f) => (
+              <div key={f.label}>
+                <dt className="text-sm text-muted">{f.label}</dt>
+                <dd className="mt-0.5 font-semibold text-fg">{f.value}</dd>
+              </div>
+            ))}
+            <div>
+              <dt className="text-sm text-muted">이메일</dt>
+              <dd className="mt-0.5 flex flex-wrap items-center gap-x-1 font-semibold text-fg">
+                <a href={`mailto:${profile.email}`} className="hover:underline">
+                  {profile.email}
+                </a>
+                <span className="no-print">
+                  <CopyButton value={profile.email} />
+                </span>
+              </dd>
+            </div>
+          </dl>
+
+          {/* 인쇄물 머리글의 링크 줄. 종이에서는 주소 자체가 정보라 그대로 보여줍니다 */}
+          {links.length > 0 && (
+            <p className="print-only">
+              {links.map((s, i) => (
+                <span key={`${i}-${s.label}`}>
+                  {i > 0 && ' · '}
+                  <a href={s.href}>{s.href.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
+                </span>
+              ))}
+            </p>
+          )}
+
+          <div className="no-print mt-8 flex flex-wrap gap-2.5">
+            <a href={`mailto:${profile.email}`} className="btn btn-primary">
               메일 보내기
             </a>
-
-            <div className="flex flex-wrap justify-center gap-x-7 gap-y-2 text-body">
-              {/* 브라우저 인쇄 대화상자를 엽니다. "PDF로 저장"을 고르면 PDF가 됩니다. */}
-              <button type="button" onClick={() => window.print()} className="link min-h-11">
-                PDF 저장
-              </button>
-              {profile.resumeUrl && (
-                <a href={profile.resumeUrl} target="_blank" rel="noreferrer noopener" className="link inline-flex min-h-11 items-center">
-                  이력서
-                </a>
-              )}
-              {links.map((s, i) => (
-                <a
-                  key={`${i}-${s.label}`}
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="link inline-flex min-h-11 items-center"
-                >
-                  {s.label}
-                </a>
-              ))}
-            </div>
+            <button type="button" onClick={() => window.print()} className="btn btn-outline">
+              PDF로 저장
+            </button>
+            {profile.resumeUrl && (
+              <a href={profile.resumeUrl} target="_blank" rel="noreferrer noopener" className="btn btn-outline">
+                이력서
+              </a>
+            )}
+            {links.map((s, i) => (
+              <a
+                key={`${i}-${s.label}`}
+                href={s.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="btn btn-outline"
+              >
+                {s.label}
+              </a>
+            ))}
           </div>
         </div>
-      </section>
 
-      {/* 좁은 화면에서는 증거판이 없으므로 첫 화면 바로 아래에 둡니다 */}
-      <div className="evidence mx-3 mt-3 lg:hidden">
-        <MetricsEvidence />
+        {/* 오른쪽: 주요 기술 (인쇄물에서는 기술 스택 섹션과 겹쳐 뺍니다) */}
+        <aside className="hero-side space-y-4" aria-label="요약">
+          {coreStack.length > 0 && (
+            <div className="card p-6">
+              <h2 className="text-sm font-semibold text-muted">주요 기술</h2>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {coreStack.map((s, i) => (
+                  <Tag key={`${i}-${s}`}>{s}</Tag>
+                ))}
+              </div>
+            </div>
+          )}
+        </aside>
       </div>
-    </>
+    </section>
   )
 }

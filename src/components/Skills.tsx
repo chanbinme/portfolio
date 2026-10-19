@@ -1,31 +1,26 @@
 import { skills } from '../data/profile'
-import { Section, order } from './Section'
+import { Section } from './Section'
+import { Tag } from './Tag'
 
-/**
- * 이름을 칼럼으로 나열합니다. 상자·배지 없이, 분류마다 새 묶음을 시작하고
- * 첫 줄에 분류 이름을 보조 글자색으로 적습니다.
- */
 export function Skills() {
+  if (skills.length === 0) return null
   return (
-    <Section id="skills" title="Skills">
-      <div className="skill-columns gap-10 sm:columns-2">
+    <Section id="skills" title="기술 스택">
+      <dl className="card divide-y divide-line">
         {skills.map((group, i) => (
           <div
             key={`${i}-${group.category}`}
-            className="skill-group rise mb-10 break-inside-avoid"
-            style={order(2 + i)}
+            className="skill-group grid gap-2 px-6 py-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-6 sm:px-7"
           >
-            <h3 className="text-lead text-muted">{group.category}</h3>
-            <ul className="mt-1">
+            <dt className="pt-0.5 text-[0.9375rem] font-semibold text-fg">{group.category}</dt>
+            <dd className="flex flex-wrap gap-1.5">
               {group.items.map((item, j) => (
-                <li key={`${j}-${item}`} className="text-lead text-ink">
-                  {item}
-                </li>
+                <Tag key={`${j}-${item}`}>{item}</Tag>
               ))}
-            </ul>
+            </dd>
           </div>
         ))}
-      </div>
+      </dl>
     </Section>
   )
 }

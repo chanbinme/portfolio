@@ -4,9 +4,9 @@ export function MoreButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="group mt-6 inline-flex min-h-11 items-center gap-1.5 text-body font-semibold text-ink"
+      className="group inline-flex min-h-11 cursor-pointer items-center gap-1 text-[0.9375rem] font-semibold text-link"
     >
-      <span className="underline decoration-2 underline-offset-[0.3em]">자세히 보기</span>
+      <span>자세히 보기</span>
       <svg
         className="transition-transform group-hover:translate-x-0.5"
         width="16"
