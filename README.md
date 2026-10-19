@@ -188,6 +188,18 @@ Hero의 **"PDF 저장"** 버튼은 브라우저 인쇄 대화상자를 엽니다
   헤더의 토글 버튼을 누르면 선택이 `localStorage`에 저장됩니다.
   첫 페인트 깜빡임은 `index.html`의 인라인 스크립트로 막습니다.
 
+## Claude 스킬
+
+[`.claude/skills/design-taste-frontend/`](.claude/skills/design-taste-frontend)에
+[tasteskill v2](https://github.com/Leonxlnx/taste-skill)(MIT)가 들어 있습니다. 이 저장소에서 Claude Code를
+쓰면 페이지 디자인·리디자인·리뷰 요청에 자동으로 쓰이고, `/design-taste-frontend`로 직접 부를 수도 있습니다.
+
+- 강한 취향 규칙이 있습니다. 모노스페이스 글꼴, 가는 구분선, 제목 위 작은 라벨, 그림자, 보라색 계열 등을
+  금지하고 실제 사진을 4장 이상 요구합니다. 현재 사이트가 쓰는 요소가 많으므로, 리디자인을 맡길 때
+  유지할 것을 함께 알려주세요.
+- 검사 도구는 Node 22+와 Chrome/Edge/Chromium이 필요합니다. 결과물은 `.taste-skill/`에 생기고 커밋되지 않습니다.
+- 출처, 기준 커밋, 업데이트 방법은 [`UPSTREAM.md`](.claude/skills/design-taste-frontend/UPSTREAM.md)에 있습니다.
+
 ## 구조
 
 ```
