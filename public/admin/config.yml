@@ -261,7 +261,7 @@ collections:
                     label: 바뀐 코드 (diff)
                     widget: text
                     required: false
-                    hint: 줄 앞에 + (추가) · - (삭제) · 공백 (그대로)을 붙입니다. 화면 오른쪽 증거판에 표시됩니다
+                    hint: 줄 앞에 + (추가) · - (삭제) · 공백 (그대로)을 붙입니다. 상세 모달의 "바뀐 코드"에 표시됩니다
                   - name: detail
                     label: 상세 (문장 클릭 시 모달)
                     widget: object

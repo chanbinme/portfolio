@@ -7,7 +7,7 @@
  * ── 색 토큰 ──
  * 이력서·포트폴리오에 맞는 차분한 네이비와 흰 바탕 (ui-ux-pro-max: Minimalism & Swiss, Resume/CV).
  * 컴포넌트는 dark: 클래스 없이 토큰만 씁니다. 다크 모드는 아래 값만 바꿉니다.
- * 모든 글자 조합은 대비 4.5:1 이상입니다 (가장 낮은 조합 5.0:1).
+ * 모든 글자 조합은 대비 4.5:1 이상입니다 (화면 전체를 실측해 확인).
  */
 :root {
   --bg: #f8fafc;
@@ -19,7 +19,7 @@
   --primary: #1e3a5f;
   --on-primary: #ffffff;
   --link: #1d4ed8;
-  --success: #15803d;
+  --success: #166534;
   --mark: #dbeafe;
   color-scheme: light;
 }
@@ -322,6 +322,7 @@
 
   #top .facts > div {
     display: flex;
+    align-items: baseline;
     gap: 1.5mm;
   }
 
@@ -402,8 +403,33 @@
     border-top: 0 !important;
   }
 
+  /* 카드 안쪽 여백은 화면용 — 종이에서는 왼쪽 정렬을 맞춥니다 */
+  .section .card,
+  .section .card > *,
+  .section .card li,
+  .section .card li > a {
+    padding-inline: 0 !important;
+    min-height: 0 !important;
+  }
+
+  .section .card :is(.py-4, .py-5, .p-6, .p-8, .sm\:p-7, .sm\:p-8) {
+    padding-block: 1mm !important;
+  }
+
+  /* 성과 한 줄은 쪼개지 않되, 회사·팀·프로젝트 같은 큰 블록은 페이지에서 나뉠 수 있게 */
   li {
     break-inside: avoid;
+  }
+
+  .section .entry,
+  .section .positions > li {
+    break-inside: auto;
+  }
+
+  /* 기간과 근속 기간을 한 줄로 */
+  .section .entry > .num {
+    display: flex;
+    gap: 2mm;
   }
 
   /* About: 좌우명 카드는 화면용 */

@@ -1,4 +1,4 @@
-import { profile, skills, socials } from '../data/profile'
+import { experiences, openSource, posts, profile, projects, skills, socials } from '../data/profile'
 import { currentRole, totalCareer } from '../lib/career'
 import { CopyButton } from './CopyButton'
 import { Tag } from './Tag'
@@ -7,6 +7,27 @@ export function Hero() {
   const links = socials.filter((s) => s.href)
   const career = totalCareer()
   const current = currentRole()
+  // 한눈에 보기: 섹션별 분량을 데이터에서 세어 보여주고, 누르면 그 섹션으로 이동합니다
+  const prCount = openSource.reduce((n, p) => n + p.contributions.length, 0)
+  const mergedCount = openSource.reduce(
+    (n, p) => n + p.contributions.filter((c) => c.status === 'Merged').length,
+    0,
+  )
+  const overview = [
+    experiences.length > 0 && {
+      href: '#experience',
+      label: '경력',
+      value: `${experiences.length}곳${career ? ` · ${career}` : ''}`,
+    },
+    projects.length > 0 && { href: '#projects', label: '프로젝트', value: `${projects.length}개` },
+    prCount > 0 && {
+      href: '#opensource',
+      label: '오픈소스',
+      value: `PR ${prCount}건${mergedCount ? ` · 머지 ${mergedCount}건` : ''}`,
+    },
+    posts.length > 0 && { href: '#writing', label: '기술 블로그', value: `${posts.length}편` },
+  ].filter(Boolean) as { href: string; label: string; value: string }[]
+
   // 첫 분류(예: Back-end)를 주요 기술로 보여줍니다
   const coreStack = skills[0]?.items.slice(0, 10) ?? []
 
@@ -37,7 +58,7 @@ export function Hero() {
             <div>
               <dt className="text-sm text-muted">이메일</dt>
               <dd className="mt-0.5 flex flex-wrap items-center gap-x-1 font-semibold text-fg">
-                <a href={`mailto:${profile.email}`} className="hover:underline">
+                <a href={`mailto:${profile.email}`} className="inline-flex min-h-8 items-center hover:underline">
                   {profile.email}
                 </a>
                 <span className="no-print">
@@ -85,8 +106,42 @@ export function Hero() {
           </div>
         </div>
 
-        {/* 오른쪽: 주요 기술 (인쇄물에서는 기술 스택 섹션과 겹쳐 뺍니다) */}
+        {/* 오른쪽: 한눈에 보기와 주요 기술 (인쇄물에서는 아래 섹션과 겹쳐 뺍니다) */}
         <aside className="hero-side space-y-4" aria-label="요약">
+          {overview.length > 0 && (
+            <nav aria-label="한눈에 보기" className="card p-2">
+              <h2 className="px-4 pt-4 pb-1 text-sm font-semibold text-muted">한눈에 보기</h2>
+              <ul>
+                {overview.map((o) => (
+                  <li key={o.href}>
+                    <a
+                      href={o.href}
+                      className="group flex min-h-11 items-center justify-between gap-4 rounded-lg px-4 py-2 transition-colors hover:bg-chip"
+                    >
+                      <span className="text-[0.9375rem] text-muted">{o.label}</span>
+                      <span className="num flex items-center gap-1.5 font-semibold text-fg">
+                        {o.value}
+                        <svg
+                          className="text-muted transition-transform group-hover:translate-x-0.5"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M9 6l6 6-6 6" />
+                        </svg>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+
           {coreStack.length > 0 && (
             <div className="card p-6">
               <h2 className="text-sm font-semibold text-muted">주요 기술</h2>

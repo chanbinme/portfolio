@@ -8,7 +8,7 @@ export function Period({ period, compact = false }: { period: string; compact?: 
   return (
     <p className={`num text-sm text-muted ${compact ? 'flex flex-wrap items-center gap-x-2' : ''}`}>
       <time className="font-medium text-fg">
-        {ongoing && <span className="mr-1.5 inline-block size-2 rounded-full bg-success align-middle" aria-hidden="true" />}
+        {ongoing && <span className="no-print mr-1.5 inline-block size-2 rounded-full bg-success align-middle" aria-hidden="true" />}
         {period}
       </time>
       {months && (

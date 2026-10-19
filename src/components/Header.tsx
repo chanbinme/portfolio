@@ -38,7 +38,7 @@ export function Header() {
   return (
     <header id="site-header" className="sticky top-0 z-50 border-b border-line bg-bg/95 backdrop-blur">
       <div className="container-page flex h-16 items-center justify-between gap-4">
-        <a href="#top" className="shrink-0 font-bold text-fg">
+        <a href="#top" className="inline-flex min-h-11 shrink-0 items-center font-bold text-fg">
           {profile.name}
         </a>
 

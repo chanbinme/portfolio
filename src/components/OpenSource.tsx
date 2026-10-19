@@ -35,7 +35,7 @@ export function OpenSource() {
           <div key={`${i}-${project.name}`} className="entry card overflow-hidden">
             <h3 className="border-b border-line px-6 py-4 font-bold text-fg sm:px-7">
               {project.url ? (
-                <a href={project.url} target="_blank" rel="noreferrer noopener" className="no-url hover:underline">
+                <a href={project.url} target="_blank" rel="noreferrer noopener" className="no-url inline-flex min-h-8 items-center hover:underline">
                   {project.name}
                 </a>
               ) : (
