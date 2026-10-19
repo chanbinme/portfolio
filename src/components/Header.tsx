@@ -73,7 +73,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200/70 bg-white/80 backdrop-blur-md dark:border-neutral-800/70 dark:bg-neutral-950/80">
-      <div className="mx-auto flex h-16 w-full max-w-3xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-6">
         <a
           href="#top"
           className="font-mono text-sm font-medium text-neutral-900 transition-opacity hover:opacity-60 dark:text-neutral-100"

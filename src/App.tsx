@@ -28,7 +28,7 @@ export default function App() {
       </main>
 
       <footer className="border-t border-neutral-200 dark:border-neutral-800">
-        <div className="mx-auto w-full max-w-3xl px-6 py-8">
+        <div className="mx-auto w-full max-w-5xl px-6 py-8">
           <p className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
             © {new Date().getFullYear()} {profile.name}
           </p>

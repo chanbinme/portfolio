@@ -6,7 +6,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="mx-auto w-full max-w-3xl px-6 pt-20 pb-16 sm:pt-28 sm:pb-20"
+      className="mx-auto w-full max-w-5xl px-6 pt-16 pb-12 sm:pt-20 sm:pb-14"
     >
       <p className="font-mono text-sm text-accent dark:text-accent-dark">
         {profile.role}
