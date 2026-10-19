@@ -13,14 +13,14 @@ export function DetailTrigger({ text, onClick }: DetailTriggerProps) {
     <button
       type="button"
       onClick={onClick}
-      className="group -my-0.5 cursor-pointer py-0.5 text-left transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
+      className="group -my-0.5 cursor-pointer py-0.5 text-left"
     >
-      <span className="underline decoration-neutral-300 decoration-dashed underline-offset-4 transition-colors group-hover:decoration-accent dark:decoration-neutral-600 dark:group-hover:decoration-accent-dark">
+      <span className="underline decoration-muted decoration-dashed underline-offset-4 transition-colors group-hover:decoration-ink group-hover:decoration-solid">
         {text}
       </span>
       {/* 클릭 가능하다는 신호 */}
       <svg
-        className="ml-1 inline-block align-[-0.1em] text-neutral-400 transition-colors group-hover:text-accent dark:group-hover:text-accent-dark"
+        className="ml-1 inline-block align-[-0.1em] text-muted transition-colors group-hover:text-ink"
         width="13"
         height="13"
         viewBox="0 0 24 24"

@@ -5,13 +5,13 @@ export function DetailBody({ detail }: { detail: Detail }) {
   return (
     <div className="space-y-7">
       {detail.metrics && detail.metrics.length > 0 && (
-        <dl className="flex flex-wrap gap-x-10 gap-y-4 rounded-lg bg-neutral-50 px-5 py-4 dark:bg-neutral-800/50">
+        <dl className="flex flex-wrap gap-x-10 gap-y-4 bg-surface px-5 py-4">
           {detail.metrics.map((m, i) => (
             <div key={`${i}-${m.label}`}>
-              <dt className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+              <dt className="text-small text-muted">
                 {m.label}
               </dt>
-              <dd className="mt-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
+              <dd className="num mt-1 text-body font-semibold text-ink">
                 {m.value}
               </dd>
             </div>
@@ -21,7 +21,7 @@ export function DetailBody({ detail }: { detail: Detail }) {
 
       {detail.sections.map((section, i) => (
         <section key={`${i}-${section.heading}`}>
-          <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+          <h4 className="text-body font-semibold text-ink">
             {section.heading}
           </h4>
 
@@ -31,7 +31,7 @@ export function DetailBody({ detail }: { detail: Detail }) {
               {section.body.map((item, j) => (
                 <li
                   key={`${j}-${item}`}
-                  className="flex gap-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300"
+                  className="flex gap-3 text-body text-ink"
                 >
                   <Bullet />
                   <span>{item}</span>
@@ -43,7 +43,7 @@ export function DetailBody({ detail }: { detail: Detail }) {
               {section.body.map((paragraph, j) => (
                 <p
                   key={`${j}-${paragraph}`}
-                  className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-300"
+                  className="text-body text-ink"
                 >
                   {paragraph}
                 </p>

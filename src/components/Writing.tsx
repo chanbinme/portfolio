@@ -1,47 +1,35 @@
 import { posts } from '../data/profile'
-import { Section } from './Section'
+import { Section, order } from './Section'
 
+/** 장부형 목록: 줄 사이에 선 없이, 한 줄을 가리키면 나머지가 물러납니다 */
 export function Writing() {
   return (
-    <Section id="writing" title="Writing">
-      <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
-        {posts.map((post, i) => {
-          const titleNode = post.url ? (
+    <Section id="writing" title="Writing" subtitle="개발하며 겪은 문제를 블로그에 정리합니다.">
+      <ul className="ledger">
+        {posts.map((post, i) => (
+          <li key={`${i}-${post.title}`} className="rise" style={order(2 + i)}>
             <a
               href={post.url}
               target="_blank"
               rel="noreferrer noopener"
-              className="font-medium text-neutral-900 transition-colors group-hover:text-accent dark:text-neutral-100 dark:group-hover:text-accent-dark"
+              className="group flex min-h-14 items-baseline justify-between gap-6 py-3 text-ink transition-colors"
             >
-              {post.title}
-            </a>
-          ) : (
-            <span className="font-medium text-neutral-900 dark:text-neutral-100">
-              {post.title}
-            </span>
-          )
-
-          return (
-            <li key={`${i}-${post.title}`} className="group py-4 first:pt-0 last:pb-0">
-              <div className="flex items-baseline justify-between gap-4">
-                {titleNode}
-                {post.date && (
-                  <time
-                    dateTime={post.date}
-                    className="shrink-0 font-mono text-xs text-neutral-400 dark:text-neutral-500"
-                  >
-                    {post.date}
-                  </time>
-                )}
-              </div>
-              {post.excerpt && (
-                <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-                  {post.excerpt}
-                </p>
+              <span className="text-body group-hover:underline group-hover:underline-offset-4">
+                {post.title}
+              </span>
+              {post.date ? (
+                <time dateTime={post.date} className="shrink-0 text-small text-muted">
+                  {post.date}
+                </time>
+              ) : (
+                <span className="shrink-0 text-small text-muted" aria-hidden="true">
+                  ↗
+                </span>
               )}
-            </li>
-          )
-        })}
+            </a>
+            {post.excerpt && <p className="-mt-1 pb-3 text-small text-muted">{post.excerpt}</p>}
+          </li>
+        ))}
       </ul>
     </Section>
   )

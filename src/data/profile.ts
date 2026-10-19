@@ -125,6 +125,8 @@ export type Contribution = {
   merged?: string
   /** 반영된 릴리스 버전 (예: 3.4.7 · 3.5.1) */
   release?: string
+  /** 실제로 바뀐 코드 (diff). 줄 앞 +/-로 추가·삭제를 표시합니다 */
+  code?: string
   detail?: Detail
 }
 
@@ -167,6 +169,9 @@ const opt = (v: Maybe<string>) => v?.trim() || undefined
 /** 문자열 목록: 빈 줄 제거 */
 const lines = (v: Maybe<Maybe<string>[]>) =>
   (v ?? []).map((s) => req(s)).filter(Boolean)
+
+/** 코드 블록: 들여쓰기는 살리고 끝 공백만 정리 (비어 있으면 undefined) */
+const block = (v: Maybe<string>) => (v?.trim() ? v.replace(/\s+$/, '') : undefined)
 
 /** 객체 목록: null 항목 제거 */
 const list = <T>(v: Maybe<Maybe<T>[]>) =>
@@ -301,6 +306,7 @@ export const openSource: OpenSourceProject[] = list<Loose<OpenSourceProject>>(op
         status: c.status === 'Merged' ? ('Merged' as const) : ('Open' as const),
         merged: opt(c.merged),
         release: opt(c.release),
+        code: block(c.code),
         detail: toDetail(c.detail),
       }))
       .filter((c) => c.text),

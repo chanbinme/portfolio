@@ -268,6 +268,11 @@ collections:
                   - { name: status, label: 상태, widget: select, options: [Merged, Open], default: Merged }
                   - { name: merged, label: 머지 시점, widget: string, required: false, hint: '예: 2025.06' }
                   - { name: release, label: 반영 버전, widget: string, required: false, hint: '예: 3.4.7 · 3.5.1 · 4.0.0' }
+                  - name: code
+                    label: 바뀐 코드 (diff)
+                    widget: text
+                    required: false
+                    hint: 줄 앞에 + (추가) · - (삭제) · 공백 (그대로)을 붙입니다. 화면 오른쪽 증거판에 표시됩니다
                   - name: detail
                     label: 상세 (문장 클릭 시 모달)
                     widget: object

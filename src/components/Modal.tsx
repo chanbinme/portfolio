@@ -88,29 +88,30 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
     >
       {/* 배경 딤 — 클릭하면 닫힘 */}
       <div
-        className="absolute inset-0 bg-neutral-900/40 backdrop-blur-sm dark:bg-black/60"
+        className="absolute inset-0 bg-scrim"
         onClick={onClose}
         aria-hidden="true"
       />
 
+      {/* 대화상자는 실제로 떠 있는 요소라 그림자를 둡니다 (house rule의 예외) */}
       <div
         ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
         tabIndex={-1}
-        className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white shadow-xl outline-none sm:rounded-2xl dark:bg-neutral-900"
+        className={'relative max-h-[85vh] w-full max-w-2xl overflow-y-auto bg-ground text-ink shadow-xl outline-none' /* taste-skill-ignore: 떠 있는 대화상자 */}
       >
-        <div className="sticky top-0 flex items-start justify-between gap-4 border-b border-neutral-200 bg-white/95 px-6 py-4 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/95">
+        <div className="sticky top-0 flex items-start justify-between gap-4 bg-surface px-6 py-5 sm:px-8">
           <div>
             <h3
               id="modal-title"
-              className="text-lg font-semibold text-neutral-900 dark:text-neutral-50"
+              className="text-lead font-semibold text-ink"
             >
               {title}
             </h3>
             {meta && (
-              <p className="mt-0.5 font-mono text-xs text-neutral-400 dark:text-neutral-500">
+              <p className="num mt-1 text-small text-muted">
                 {meta}
               </p>
             )}
@@ -120,7 +121,7 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
             type="button"
             onClick={onClose}
             aria-label="닫기"
-            className="-mr-2 shrink-0 rounded-md p-2 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+            className="-mr-3 grid size-11 shrink-0 place-items-center text-muted transition-colors hover:bg-ground hover:text-ink"
           >
             <svg
               width="18"
@@ -137,7 +138,7 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
           </button>
         </div>
 
-        <div className="px-6 py-5">{children}</div>
+        <div className="px-6 py-7 sm:px-8">{children}</div>
       </div>
     </div>
   )

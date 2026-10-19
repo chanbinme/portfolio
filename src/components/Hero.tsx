@@ -1,127 +1,84 @@
-import { heroMetrics, profile, socials } from '../data/profile'
+import { profile, socials } from '../data/profile'
+import { Stripe } from './Stripe'
+import { MetricsEvidence } from './evidence/MetricsEvidence'
 
 export function Hero() {
   const links = socials.filter((s) => s.href)
 
   return (
-    <section
-      id="top"
-      className="mx-auto w-full max-w-3xl px-6 pt-20 pb-16 sm:pt-28 sm:pb-20"
-    >
-      <p className="font-mono text-sm text-accent dark:text-accent-dark">
-        {profile.role}
-      </p>
+    <>
+      <section
+        id="top"
+        className="mx-3 flex min-h-[calc(100svh-4.75rem)] flex-col bg-surface lg:mx-0"
+      >
+        <Stripe height="h-10 sm:h-14" />
 
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight text-neutral-900 sm:text-5xl dark:text-neutral-50">
-        {profile.name}
-      </h1>
+        <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center sm:px-12">
+          {/* 첫 화면의 제목: 이름과 하는 일, 두 줄 */}
+          <h1 className="text-display font-semibold tracking-[-0.03em] text-ink">
+            {profile.name}
+            <span className="role mt-4 block text-lead font-medium tracking-normal text-muted">
+              {profile.role}
+            </span>
+          </h1>
 
-      <p className="mt-5 text-lg leading-relaxed text-neutral-600 dark:text-neutral-300">
-        {profile.headline}
-      </p>
+          <p className="headline mt-10 max-w-[30ch] text-lead text-ink">{profile.headline}</p>
 
-      {/*
-        인쇄물 상단의 연락처. 화면에서는 About·Contact에 있지만,
-        인쇄물에서는 그 둘을 빼고 여기 한곳에 모읍니다.
-      */}
-      <p className="print-only mt-3 font-mono text-xs text-neutral-500">
-        {[profile.email, profile.location].filter(Boolean).join(' · ')}
-        {links.length > 0 && (
-          <>
-            <br />
-            {links.map((s, i) => (
-              <span key={`${i}-${s.label}`}>
-                {i > 0 && ' · '}
-                {/* 종이에서는 주소 자체가 정보라 프로토콜만 떼고 그대로 보여줍니다 */}
-                <a href={s.href}>{s.href.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
-              </span>
-            ))}
-          </>
-        )}
-      </p>
+          {/*
+            인쇄물 상단의 연락처. 화면에서는 About·Contact에 있지만,
+            인쇄물에서는 그 둘을 빼고 여기 한곳에 모읍니다.
+          */}
+          <p className="print-only">
+            {[profile.email, profile.location].filter(Boolean).join(' · ')}
+            {links.length > 0 && (
+              <>
+                <br />
+                {links.map((s, i) => (
+                  <span key={`${i}-${s.label}`}>
+                    {i > 0 && ' · '}
+                    {/* 종이에서는 주소 자체가 정보라 프로토콜만 떼고 그대로 보여줍니다 */}
+                    <a href={s.href}>{s.href.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
+                  </span>
+                ))}
+              </>
+            )}
+          </p>
 
-      <div className="no-print mt-8 flex flex-wrap items-center gap-3">
-        <a
-          href="#contact"
-          className="rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"
-        >
-          연락하기
-        </a>
+          <div className="no-print mt-10 flex flex-col items-center gap-7">
+            <a href={`mailto:${profile.email}`} className="btn">
+              메일 보내기
+            </a>
 
-        {/* 브라우저 인쇄 대화상자를 엽니다. "PDF로 저장"을 고르면 PDF가 됩니다. */}
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-900"
-        >
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
-          </svg>
-          PDF 저장
-        </button>
-
-        {profile.resumeUrl && (
-          <a
-            href={profile.resumeUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-900"
-          >
-            이력서
-          </a>
-        )}
-
-        {links.length > 0 && (
-          <div className="flex items-center gap-4 sm:ml-2">
-            {links.map((s, i) => (
-              <a
-                key={`${i}-${s.label}`}
-                href={s.href}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="text-sm text-neutral-500 underline decoration-neutral-300 underline-offset-4 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:decoration-neutral-700 dark:hover:text-neutral-100"
-              >
-                {s.label}
-              </a>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* 대표 성과. 인쇄물에서는 Experience와 겹치므로 뺍니다. */}
-      {heroMetrics.length > 0 && (
-        <dl className="no-print mt-14 grid gap-5 border-t border-neutral-200 pt-8 sm:grid-cols-3 sm:gap-6 dark:border-neutral-800">
-          {heroMetrics.map((m, i) => (
-            <div
-              key={`${i}-${m.label}`}
-              className="flex items-baseline gap-4 sm:flex-col sm:gap-1.5"
-            >
-              {/* 읽는 순서는 "무엇이 → 얼마나", 보이는 순서는 숫자가 먼저 */}
-              <dt className="order-last">
-                <span className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                  {m.label}
-                </span>
-                <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-                  {m.source}
-                </span>
-              </dt>
-              <dd className="order-first w-16 shrink-0 text-3xl font-semibold tracking-tight text-accent sm:w-auto dark:text-accent-dark">
-                {m.value}
-              </dd>
+            <div className="flex flex-wrap justify-center gap-x-7 gap-y-2 text-body">
+              {/* 브라우저 인쇄 대화상자를 엽니다. "PDF로 저장"을 고르면 PDF가 됩니다. */}
+              <button type="button" onClick={() => window.print()} className="link min-h-11">
+                PDF 저장
+              </button>
+              {profile.resumeUrl && (
+                <a href={profile.resumeUrl} target="_blank" rel="noreferrer noopener" className="link inline-flex min-h-11 items-center">
+                  이력서
+                </a>
+              )}
+              {links.map((s, i) => (
+                <a
+                  key={`${i}-${s.label}`}
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="link inline-flex min-h-11 items-center"
+                >
+                  {s.label}
+                </a>
+              ))}
             </div>
-          ))}
-        </dl>
-      )}
-    </section>
+          </div>
+        </div>
+      </section>
+
+      {/* 좁은 화면에서는 증거판이 없으므로 첫 화면 바로 아래에 둡니다 */}
+      <div className="evidence mx-3 mt-3 lg:hidden">
+        <MetricsEvidence />
+      </div>
+    </>
   )
 }

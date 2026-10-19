@@ -181,9 +181,27 @@ Hero의 **"PDF 저장"** 버튼은 브라우저 인쇄 대화상자를 엽니다
 
 ## 디자인 커스터마이징
 
-- **포인트 색상**: [`src/index.css`](src/index.css)의 `@theme` 안 `--color-accent` 계열 3개 값
-- **폰트**: 본문은 npm `pretendard` 패키지(`src/main.tsx`에서 import), 코드체는 `index.html`의 Google Fonts 링크.
-  적용은 `index.css`의 `--font-sans` / `--font-mono`
+- **색**: [`src/index.css`](src/index.css) 맨 위의 토큰. 바탕(`--ground`)·면(`--surface`)·글자(`--ink`)·
+  보조 글자(`--muted`)·강조(`--accent`)·표시(`--marker`) 하나씩이고, `:root`는 라이트, `:root.dark`는 다크 값입니다.
+  컴포넌트는 `bg-ground`, `text-ink`처럼 토큰만 쓰므로 여기만 바꾸면 전체가 바뀝니다.
+  (본문 대비 4.5:1 이상을 유지하세요. 현재 값은 라이트·다크 모두 5.3:1 이상입니다)
+- **글자 크기**: 같은 파일의 `--text-small / body / lead / head / display` 다섯 단계만 씁니다.
+- **폰트**: 하나(Pretendard, npm 패키지를 `src/main.tsx`에서 import). 고정폭(`--font-code`)은 실제 코드(diff, SQL)에만 씁니다.
+- **모양**: 모서리는 모두 직각, 버튼은 단색 한 가지(`.btn`). 선과 그림자 대신 면의 톤 차이로 영역을 나눕니다.
+
+### 레이아웃: 읽는 칼럼 + 증거판
+
+넓은 화면(1024px 이상)은 두 칸입니다. 왼쪽은 읽는 칼럼이고, 오른쪽은 스크롤해도 제자리에 있는
+**증거판**([`src/components/evidence/`](src/components/evidence))입니다. 왼쪽에서 읽는 섹션에 맞춰
+증거가 바뀝니다: 첫 화면은 측정 수치, 경력은 DBP 모듈 구성, 오픈소스는 가리키는 PR의 실제 diff,
+프로젝트는 Offset/No Offset 페이지네이션 비교(직접 움직여 볼 수 있음). 좁은 화면에서는 각 증거가
+해당 섹션 안에 직접 놓입니다.
+
+오픈소스 diff는 `opensource.json`의 `code` 필드(관리자 페이지의 "바뀐 코드")에서 읽습니다.
+DBP 모듈 구성은 [`ModulesEvidence.tsx`](src/components/evidence/ModulesEvidence.tsx)에 직접 적혀 있습니다.
+
+디자인은 프로젝트 스킬 tasteskill(`.claude/skills/design-taste-frontend`)의 split-stage 방향을 따랐습니다.
+방향 시트는 `.taste-skill/direction.json`에 저장되지만 커밋되지 않습니다.
 - **다크 모드**: `html` 요소의 `.dark` 클래스로 제어. 최초 진입 시 OS 설정을 따르고,
   헤더의 토글 버튼을 누르면 선택이 `localStorage`에 저장됩니다.
   첫 페인트 깜빡임은 `index.html`의 인라인 스크립트로 막습니다.
@@ -211,18 +229,20 @@ src/
   data/profile.ts     JSON을 읽어 타입 보장 + 빈 값 정리
   hooks/
     useTheme.ts       라이트/다크 토글 + 저장
-    useReveal.ts      스크롤 진입 시 fade-up
+    useReveal.ts      스크롤 진입 시 섹션의 부분이 차례로 올라옴
+    useActiveSection.ts 지금 보고 있는 섹션 (메뉴 강조·증거판 전환)
   components/
     Header.tsx        sticky 내비게이션, 현재 섹션 표시, 테마 토글, 모바일 메뉴
     Section.tsx       섹션 공통 래퍼 (제목 + 진입 애니메이션)
     Modal.tsx         상세 모달 (Esc·배경 클릭 닫기, 포커스 트랩)
     HighlightList.tsx 성과 목록 — detail이 있는 문장만 클릭 가능하게
+    evidence/         오른쪽 증거판(Stage)과 증거 조각들, 오픈소스 행 ↔ 증거판 연결(StageContext)
     DetailBody.tsx    detail 데이터를 모달 본문으로 렌더링
     Tag.tsx           기술 스택 배지
     DetailTrigger.tsx 클릭하면 상세 모달이 열리는 문장 (점선 밑줄 + ⓘ)
     Bullet.tsx        목록 앞 점 (인쇄 시 텍스트 •로 대체)
     Hero / About / Skills / Experience / Projects / OpenSource / Writing / More / Contact
-  App.tsx             섹션 조립 + 푸터
+  App.tsx             두 칸 배치 + 섹션 조립
 ```
 
 ## 배포

@@ -10,6 +10,7 @@
         "status": "Merged",
         "merged": "2025.06",
         "release": "3.4.7 · 3.5.1 · 4.0.0",
+        "code": "  }\n  \n  private String convertToString(V value) {\n+   if (value == null) {\n+     return null;\n+   }\n    if (String.class.equals(this.type)) {\n      return (String) value;\n    }\n…\n  @SuppressWarnings(\"unchecked\")\n  SimpleDataSourceProperties() {\n    add(DataSourceProperty.URL, SimpleDriverDataSource::getUrl, SimpleDriverDataSource::setUrl);\n-   add(DataSourceProperty.DRIVER_CLASS_NAME, Class.class, (dataSource) -> dataSource.getDriver().getClass(),\n+   add(DataSourceProperty.DRIVER_CLASS_NAME, Class.class,\n+       (dataSource) -> (dataSource.getDriver() != null) ? dataSource.getDriver().getClass() : null,\n        SimpleDriverDataSource::setDriverClass);\n    add(DataSourceProperty.USERNAME, SimpleDriverDataSource::getUsername, SimpleDriverDataSource::setUsername);\n    add(DataSourceProperty.PASSWORD, SimpleDriverDataSource::getPassword, SimpleDriverDataSource::setPassword);",
         "detail": {
           "metrics": [
             {
@@ -41,6 +42,7 @@
               "list": true,
               "body": [
                 "드라이버가 없으면 드라이버 클래스 속성을 null로 다루도록 null 검사 추가",
+                "속성 값을 문자열로 바꾸는 convertToString에서도 null을 그대로 돌려주도록 처리",
                 "드라이버 없이 URL·계정만 설정한 경우를 재현하는 테스트 작성"
               ]
             },
@@ -67,6 +69,7 @@
         "status": "Merged",
         "merged": "2025.06",
         "release": "7.0.0",
+        "code": "  BearerTokenAuthenticationToken bearer = (BearerTokenAuthenticationToken) authentication;\n  Jwt jwt = getJwt(bearer);\n  AbstractAuthenticationToken token = this.jwtAuthenticationConverter.convert(jwt);\n+ Assert.notNull(token, \"token cannot be null\");\n  if (token.getDetails() == null) {\n    token.setDetails(bearer.getDetails());\n  }",
         "detail": {
           "metrics": [
             {
@@ -118,6 +121,7 @@
         "status": "Merged",
         "merged": "2025.08",
         "release": "7.0.0",
+        "code": "  \n  private String authoritiesClaimDelimiter = DEFAULT_AUTHORITIES_CLAIM_DELIMITER;\n  \n- private String authoritiesClaimName;\n+ private Collection<String> authoritiesClaimNames = WELL_KNOWN_AUTHORITIES_CLAIM_NAMES;\n  \n  /**\n   * Extract {@link GrantedAuthority}s from the given {@link Jwt}.\n…\n   */\n  public void setAuthoritiesClaimName(String authoritiesClaimName) {\n    Assert.hasText(authoritiesClaimName, \"authoritiesClaimName cannot be empty\");\n-   this.authoritiesClaimName = authoritiesClaimName;\n+   this.authoritiesClaimNames = Collections.singletonList(authoritiesClaimName);\n  }\n  \n  private String getAuthoritiesClaimName(Jwt jwt) {\n-   if (this.authoritiesClaimName != null) {\n-     return this.authoritiesClaimName;\n-   }\n-   for (String claimName : WELL_KNOWN_AUTHORITIES_CLAIM_NAMES) {\n+   for (String claimName : this.authoritiesClaimNames) {\n      if (jwt.hasClaim(claimName)) {\n        return claimName;\n      }",
         "detail": {
           "metrics": [
             {

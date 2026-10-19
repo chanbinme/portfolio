@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { projects } from '../data/profile'
 import type { Project } from '../data/profile'
-import { Section } from './Section'
-import { Tag } from './Tag'
+import { Section, order } from './Section'
 import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { HighlightList } from './HighlightList'
+import { StackTags } from './StackTags'
+import { MoreButton } from './MoreButton'
+import { PagingEvidence } from './evidence/PagingEvidence'
 
 export function Projects() {
   const [selected, setSelected] = useState<Project | null>(null)
@@ -15,83 +17,33 @@ export function Projects() {
       id="projects"
       title="Projects"
       subtitle="직접 설계하고 만든 것들입니다."
+      evidence={<PagingEvidence />}
     >
-      <div className="space-y-4">
+      <div className="space-y-24">
         {projects.map((project, i) => (
-          <article
-            key={`${i}-${project.title}`}
-            className="rounded-xl border border-neutral-200 p-5 transition-colors hover:border-neutral-300 dark:border-neutral-800 dark:hover:border-neutral-700"
-          >
-            <div className="flex items-baseline justify-between gap-4">
-              <h3 className="font-medium text-neutral-900 dark:text-neutral-100">
-                {project.title}
-                {project.featured && (
-                  <span className="ml-2 align-middle font-mono text-[10px] tracking-wide text-accent uppercase dark:text-accent-dark">
-                    featured
-                  </span>
-                )}
-              </h3>
-              <span className="shrink-0 font-mono text-xs text-neutral-400 dark:text-neutral-500">
-                {project.period}
-              </span>
+          <article key={`${i}-${project.title}`} className="rise" style={order(3 + i)}>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+              <h3 className="text-lead font-semibold text-ink">{project.title}</h3>
+              <p className="text-small text-muted">
+                <time>{project.period}</time>
+              </p>
             </div>
 
-            <p className="mt-2.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-              {project.description}
-            </p>
+            <p className="mt-3 text-body text-ink">{project.description}</p>
 
-            <HighlightList
-              items={project.points}
-              context={project.title}
-              tone="muted"
-            />
-
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              {project.stack.map((s, j) => (
-                <Tag key={`${j}-${s}`}>{s}</Tag>
-              ))}
-            </div>
+            <HighlightList items={project.points} context={project.title} />
+            <StackTags stack={project.stack} />
 
             {(project.detail || project.repoUrl || project.liveUrl) && (
-              <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
-                {project.detail && (
-                  <button
-                    type="button"
-                    onClick={() => setSelected(project)}
-                    className="inline-flex items-center gap-1 font-medium text-accent transition-opacity hover:opacity-70 dark:text-accent-dark"
-                  >
-                    자세히 보기
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M9 6l6 6-6 6" />
-                    </svg>
-                  </button>
-                )}
+              <div className="mt-2 flex flex-wrap items-center gap-x-7">
+                {project.detail && <MoreButton onClick={() => setSelected(project)} />}
                 {project.repoUrl && (
-                  <a
-                    href={project.repoUrl}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="link"
-                  >
+                  <a href={project.repoUrl} target="_blank" rel="noreferrer noopener" className="link mt-6 inline-flex min-h-11 items-center text-body">
                     Code
                   </a>
                 )}
                 {project.liveUrl && (
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="link"
-                  >
+                  <a href={project.liveUrl} target="_blank" rel="noreferrer noopener" className="link mt-6 inline-flex min-h-11 items-center text-body">
                     Live
                   </a>
                 )}

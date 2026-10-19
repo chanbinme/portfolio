@@ -9,29 +9,22 @@ type HighlightListProps = {
   items: Highlight[]
   /** 모달 제목 앞에 붙일 맥락 (회사명·프로젝트명) */
   context: string
-  /** 목록 텍스트 색. 프로젝트 카드는 조금 더 옅게 씁니다. */
-  tone?: 'default' | 'muted'
 }
 
-export function HighlightList({ items, context, tone = 'default' }: HighlightListProps) {
+export function HighlightList({ items, context }: HighlightListProps) {
   // 열려 있는 성과 (null이면 닫힘)
   const [selected, setSelected] = useState<(Highlight & { detail: Detail }) | null>(null)
 
   if (items.length === 0) return null
 
-  const textColor =
-    tone === 'muted'
-      ? 'text-neutral-500 dark:text-neutral-400'
-      : 'text-neutral-600 dark:text-neutral-300'
-
   return (
     <>
-      <ul className="mt-3 space-y-1.5">
+      <ul className="mt-5 space-y-2.5">
         {items.map((item, i) => {
           const { text, detail } = item
 
           return (
-            <li key={`${i}-${text}`} className={`flex gap-2 text-sm leading-relaxed ${textColor}`}>
+            <li key={`${i}-${text}`} className="flex gap-3 text-body text-ink">
               <Bullet />
 
               {detail ? (

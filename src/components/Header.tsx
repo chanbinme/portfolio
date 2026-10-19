@@ -1,65 +1,26 @@
 import { useEffect, useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
+import { useActiveSection } from '../hooks/useActiveSection'
 import { openSource, profile } from '../data/profile'
 
+// 메뉴는 다섯 개만. About·Skills·More는 스크롤로 자연스럽게 지나갑니다.
 const NAV = [
-  { id: 'about', label: 'About' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'opensource', label: 'Open Source' },
-  { id: 'writing', label: 'Writing' },
-  { id: 'more', label: 'More' },
-  { id: 'contact', label: 'Contact' },
+  { id: 'experience', label: '경력' },
+  { id: 'opensource', label: '오픈소스' },
+  { id: 'projects', label: '프로젝트' },
+  { id: 'writing', label: '글' },
+  { id: 'contact', label: '연락' },
 ].filter(
   // 내용이 비어 섹션이 그려지지 않으면 메뉴에서도 뺍니다
   (n) => n.id !== 'opensource' || openSource.length > 0,
 )
 
+const NAV_IDS = NAV.map((n) => n.id)
+
 export function Header() {
   const { theme, toggle } = useTheme()
-  const [active, setActive] = useState<string>('')
+  const active = useActiveSection(NAV_IDS)
   const [menuOpen, setMenuOpen] = useState(false)
-
-  // 현재 보고 있는 섹션을 내비게이션에 표시.
-  // 화면 위에서 20% 지점을 지나간 마지막 섹션이 현재 섹션입니다.
-  // 단, 맨 아래에 닿으면 마지막 섹션(Contact)으로 칩니다. 마지막 섹션은
-  // 짧아서 끝까지 스크롤해도 20% 지점까지 올라오지 못하기 때문입니다.
-  // 첫 섹션보다 위(첫 화면)에서는 아무것도 강조하지 않습니다.
-  useEffect(() => {
-    const sections = NAV.map((n) => document.getElementById(n.id)).filter(
-      (el): el is HTMLElement => el !== null,
-    )
-
-    let frame = 0
-    const update = () => {
-      frame = 0
-      const { innerHeight, scrollY } = window
-      const atBottom =
-        scrollY > 0 &&
-        Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 2
-      if (atBottom) {
-        setActive(sections.at(-1)?.id ?? '')
-        return
-      }
-      const line = innerHeight * 0.2
-      const current = sections.filter((el) => el.getBoundingClientRect().top <= line).at(-1)
-      setActive(current?.id ?? '')
-    }
-    // 스크롤마다 레이아웃을 읽지 않도록 프레임당 한 번만 계산합니다
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(update)
-    }
-
-    update()
-    window.addEventListener('scroll', schedule, { passive: true })
-    window.addEventListener('resize', schedule)
-    return () => {
-      window.removeEventListener('scroll', schedule)
-      window.removeEventListener('resize', schedule)
-      cancelAnimationFrame(frame)
-    }
-  }, [])
 
   // 모바일 메뉴가 열려 있을 때 Esc로 닫기
   useEffect(() => {
@@ -71,39 +32,35 @@ export function Header() {
     return () => window.removeEventListener('keydown', onKey)
   }, [menuOpen])
 
+  const linkClass = (id: string) =>
+    [
+      'transition-colors',
+      active === id
+        ? 'text-ink underline decoration-2 underline-offset-8'
+        : 'text-muted hover:text-ink',
+    ].join(' ')
+
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-200/70 bg-white/80 backdrop-blur-md dark:border-neutral-800/70 dark:bg-neutral-950/80">
-      <div className="mx-auto flex h-16 w-full max-w-3xl items-center justify-between px-6">
-        <a
-          href="#top"
-          className="font-mono text-sm font-medium text-neutral-900 transition-opacity hover:opacity-60 dark:text-neutral-100"
-        >
+    <header id="site-header" className="sticky top-0 z-50 bg-ground">
+      <div className="flex h-16 w-full items-center justify-between px-6 sm:px-12 lg:px-[calc(0.75rem+3rem)]">
+        <a href="#top" className="text-body font-semibold text-ink transition-opacity hover:opacity-70">
           {profile.name}
         </a>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav aria-label="주요 섹션" className="hidden items-center gap-7 text-small md:flex">
           {NAV.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className={[
-                'rounded-md px-2.5 py-1.5 text-sm transition-colors',
-                active === item.id
-                  ? 'text-accent dark:text-accent-dark'
-                  : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100',
-              ].join(' ')}
-            >
+            <a key={item.id} href={`#${item.id}`} className={linkClass(item.id)}>
               {item.label}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center">
           <button
             type="button"
             onClick={toggle}
             aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
-            className="rounded-md p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+            className="grid size-11 place-items-center text-muted transition-colors hover:bg-surface hover:text-ink"
           >
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
           </button>
@@ -112,33 +69,25 @@ export function Header() {
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
-            aria-label="메뉴 열기"
+            aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
-            className="rounded-md p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 md:hidden dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+            className="grid size-11 place-items-center text-muted transition-colors hover:bg-surface hover:text-ink md:hidden"
           >
             {menuOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
         </div>
       </div>
 
-      {/* 모바일 드롭다운 */}
+      {/* 모바일 드롭다운: 선 대신 한 단계 밝은 면으로 구분 */}
       {menuOpen && (
-        <nav
-          id="mobile-nav"
-          className="border-t border-neutral-200 bg-white px-6 py-2 md:hidden dark:border-neutral-800 dark:bg-neutral-950"
-        >
+        <nav id="mobile-nav" aria-label="주요 섹션" className="bg-surface px-6 py-2 md:hidden">
           {NAV.map((item) => (
             <a
               key={item.id}
               href={`#${item.id}`}
               onClick={() => setMenuOpen(false)}
-              className={[
-                'block rounded-md px-2 py-2.5 text-sm transition-colors',
-                active === item.id
-                  ? 'text-accent dark:text-accent-dark'
-                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100',
-              ].join(' ')}
+              className={`flex min-h-11 items-center text-body ${active === item.id ? 'font-semibold text-ink' : 'text-muted hover:text-ink'}`}
             >
               {item.label}
             </a>
