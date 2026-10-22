@@ -200,6 +200,12 @@ Hero의 **"PDF 저장"** 버튼은 브라우저 인쇄 대화상자를 엽니다
 - 검사 도구는 Node 22+와 Chrome/Edge/Chromium이 필요합니다. 결과물은 `.taste-skill/`에 생기고 커밋되지 않습니다.
 - 출처, 기준 커밋, 업데이트 방법은 [`UPSTREAM.md`](.claude/skills/design-taste-frontend/UPSTREAM.md)에 있습니다.
 
+[`.claude/skills/apple-design/`](.claude/skills/apple-design)에는
+[emilkowalski/skills](https://github.com/emilkowalski/skills)의 apple-design(MIT)이 들어 있습니다.
+Apple WWDC 디자인 세션(Designing Fluid Interfaces 등)의 원칙을 웹으로 옮긴 스킬로, 버튼 반응, 스프링 애니메이션,
+반투명 재질, 타이포그래피, 모션 줄이기 대응을 다룹니다. `/apple-design`으로 부를 수 있습니다.
+출처와 업데이트 방법은 [`UPSTREAM.md`](.claude/skills/apple-design/UPSTREAM.md)에 있습니다.
+
 ## 구조
 
 ```
@@ -212,10 +218,12 @@ src/
   hooks/
     useTheme.ts       라이트/다크 토글 + 저장
     useReveal.ts      스크롤 진입 시 fade-up
+  lib/
+    spring.ts         임계 감쇠 스프링 · 관성 예측 · 경계 저항 (바텀시트 드래그용)
   components/
     Header.tsx        sticky 내비게이션, 현재 섹션 표시, 테마 토글, 모바일 메뉴
     Section.tsx       섹션 공통 래퍼 (제목 + 진입 애니메이션)
-    Modal.tsx         상세 모달 (Esc·배경 클릭 닫기, 포커스 트랩)
+    Modal.tsx         상세 모달 (Esc·배경 클릭 닫기, 포커스 트랩). 좁은 화면에서는 끌어내려 닫는 바텀시트
     HighlightList.tsx 성과 목록 — detail이 있는 문장만 클릭 가능하게
     DetailBody.tsx    detail 데이터를 모달 본문으로 렌더링
     Tag.tsx           기술 스택 배지
