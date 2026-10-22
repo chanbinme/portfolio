@@ -58,7 +58,7 @@ export function Projects() {
                   <button
                     type="button"
                     onClick={() => setSelected(project)}
-                    className="inline-flex items-center gap-1 font-medium text-accent transition-opacity hover:opacity-70 dark:text-accent-dark"
+                    className="press inline-flex items-center gap-1 font-medium text-accent hover:opacity-70 dark:text-accent-dark"
                   >
                     자세히 보기
                     <svg

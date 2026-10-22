@@ -12,7 +12,7 @@ export function Hero() {
         {profile.role}
       </p>
 
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight text-neutral-900 sm:text-5xl dark:text-neutral-50">
+      <h1 className="mt-4 text-[clamp(2.25rem,5vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.02em] text-neutral-900 dark:text-neutral-50">
         {profile.name}
       </h1>
 
@@ -43,7 +43,7 @@ export function Hero() {
       <div className="no-print mt-8 flex flex-wrap items-center gap-3">
         <a
           href="#contact"
-          className="rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"
+          className="press rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"
         >
           연락하기
         </a>
@@ -52,7 +52,7 @@ export function Hero() {
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-900"
+          className="inline-flex items-center gap-2 press rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-900"
         >
           <svg
             width="15"
@@ -75,7 +75,7 @@ export function Hero() {
             href={profile.resumeUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-900"
+            className="press rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-900"
           >
             이력서
           </a>
