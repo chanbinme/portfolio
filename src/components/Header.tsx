@@ -20,6 +20,8 @@ export function Header() {
   const { theme, toggle } = useTheme()
   const [active, setActive] = useState<string>('')
   const [menuOpen, setMenuOpen] = useState(false)
+  // 내용이 헤더 밑으로 지나갈 때만 경계를 그립니다 (맨 위에서는 경계선 없이)
+  const [scrolled, setScrolled] = useState(false)
 
   // 현재 보고 있는 섹션을 내비게이션에 표시.
   // 화면 위에서 20% 지점을 지나간 마지막 섹션이 현재 섹션입니다.
@@ -35,6 +37,7 @@ export function Header() {
     const update = () => {
       frame = 0
       const { innerHeight, scrollY } = window
+      setScrolled(scrollY > 4)
       const atBottom =
         scrollY > 0 &&
         Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 2
@@ -72,11 +75,20 @@ export function Header() {
   }, [menuOpen])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-200/70 bg-white/80 backdrop-blur-md dark:border-neutral-800/70 dark:bg-neutral-950/80">
+    <header
+      className={[
+        'material sticky top-0 z-50 border-b backdrop-blur-xl backdrop-saturate-150 transition-[border-color,box-shadow,background-color] duration-300 [--material-solid:var(--color-white)] dark:[--material-solid:var(--color-neutral-950)]',
+        // 메뉴가 펼쳐져 면이 커지면 더 두꺼운 재질로 — 아래 글자가 비쳐 읽기 어렵지 않게
+        menuOpen ? 'bg-white/95 dark:bg-neutral-950/95' : 'bg-white/70 dark:bg-neutral-950/70',
+        scrolled || menuOpen
+          ? 'border-neutral-200/70 shadow-[0_1px_12px_-6px_rgb(0_0_0/0.12)] dark:border-neutral-800/70'
+          : 'border-transparent',
+      ].join(' ')}
+    >
       <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-6">
         <a
           href="#top"
-          className="font-mono text-sm font-medium text-neutral-900 transition-opacity hover:opacity-60 dark:text-neutral-100"
+          className="press font-mono text-sm font-medium text-neutral-900 hover:opacity-60 dark:text-neutral-100"
         >
           {profile.name}
         </a>
@@ -87,7 +99,7 @@ export function Header() {
               key={item.id}
               href={`#${item.id}`}
               className={[
-                'rounded-md px-2.5 py-1.5 text-sm transition-colors',
+                'press rounded-md px-2.5 py-1.5 text-sm',
                 active === item.id
                   ? 'text-accent dark:text-accent-dark'
                   : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100',
@@ -103,7 +115,7 @@ export function Header() {
             type="button"
             onClick={toggle}
             aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
-            className="rounded-md p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+            className="press rounded-md p-2 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
           >
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
           </button>
@@ -115,7 +127,7 @@ export function Header() {
             aria-label="메뉴 열기"
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
-            className="rounded-md p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 md:hidden dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+            className="press rounded-md p-2 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 md:hidden dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
           >
             {menuOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
@@ -126,7 +138,7 @@ export function Header() {
       {menuOpen && (
         <nav
           id="mobile-nav"
-          className="border-t border-neutral-200 bg-white px-6 py-2 md:hidden dark:border-neutral-800 dark:bg-neutral-950"
+          className="menu-in border-t border-neutral-200/70 px-6 py-2 md:hidden dark:border-neutral-800/70"
         >
           {NAV.map((item) => (
             <a
@@ -134,7 +146,7 @@ export function Header() {
               href={`#${item.id}`}
               onClick={() => setMenuOpen(false)}
               className={[
-                'block rounded-md px-2 py-2.5 text-sm transition-colors',
+                'press block rounded-md px-2 py-2.5 text-sm',
                 active === item.id
                   ? 'text-accent dark:text-accent-dark'
                   : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100',

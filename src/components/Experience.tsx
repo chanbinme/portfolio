@@ -58,7 +58,7 @@ export function Experience() {
               <button
                 type="button"
                 onClick={() => setSelected(exp)}
-                className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent transition-opacity hover:opacity-70 dark:text-accent-dark"
+                className="mt-4 press inline-flex items-center gap-1 text-sm font-medium text-accent hover:opacity-70 dark:text-accent-dark"
               >
                 자세히 보기
                 <svg

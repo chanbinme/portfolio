@@ -34,6 +34,10 @@ export function useTheme() {
   }, [])
 
   const toggle = useCallback(() => {
+    // 밝기가 한 번에 뒤집히지 않도록 전환하는 동안만 색을 이어줍니다 (index.css의 .theme-fade)
+    const root = document.documentElement
+    root.classList.add('theme-fade')
+    window.setTimeout(() => root.classList.remove('theme-fade'), 320)
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
   }, [])
 
