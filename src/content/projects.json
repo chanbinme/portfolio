@@ -1,189 +1,145 @@
 [
   {
-    "title": "66 챌린지",
-    "period": "2023.01 — 2023.02",
-    "description": "66일 동안 올바른 습관을 만들 수 있도록 도와주는 하드코어 목표 달성 서비스. 백엔드를 담당했습니다.",
+    "title": "HappyTools Kit",
+    "period": "2026.10 — 진행 중",
+    "description": "인터넷이 차단된 내부망에서 AI 없이도 반복 작업을 처리하려고 만든 오프라인 크롬 확장 프로그램. 기획부터 개발, 테스트 하네스까지 혼자 만들고 있습니다.",
     "points": [
       {
-        "text": "Offset Pagination을 No Offset Pagination으로 전환해 페이징 성능 약 100배 개선",
+        "text": "Entity ↔ DDL, JSON → DTO, ERD, Base64, 스니펫, 시크릿 보관함까지 개발 반복 작업 6가지를 한 곳에서 처리",
         "detail": {
           "metrics": [
             {
-              "label": "성능 개선",
-              "value": "약 100배"
+              "label": "기능 탭",
+              "value": "6개"
             },
             {
-              "label": "측정 데이터",
-              "value": "15만 건"
-            },
-            {
-              "label": "조회 시간",
-              "value": "0.058s → 0.00032s"
+              "label": "버전",
+              "value": "v1.5.0"
             }
           ],
           "sections": [
             {
-              "heading": "측정 결과",
+              "heading": "만든 이유",
               "list": false,
               "body": [
-                "데이터 15만 건을 기준으로 측정했을 때 기존 Offset 방식은 0.058초, No Offset 방식은 0.00032초가 걸렸습니다."
+                "사내 내부망에서는 ChatGPT, Claude 같은 외부 AI 도구를 쓸 수 없어, 엔티티를 DDL로 바꾸는 것처럼 단순하지만 시간이 걸리는 일을 손으로 해야 했습니다. 이런 반복 작업을 브라우저 확장으로 해결하려고 시작했습니다."
               ]
             },
             {
-              "heading": "기록",
-              "list": false,
+              "heading": "기능",
+              "list": true,
               "body": [
-                "전환 과정은 블로그(green-bin.tistory.com/23)에 정리해 두었습니다."
+                "Entity ↔ DDL: JPA 엔티티(Java/Kotlin)와 MySQL DDL을 양방향 변환. jakarta/javax 네임스페이스 지원",
+                "JSON → DTO: 중첩 객체와 배열을 포함한 JSON을 Java DTO·Record 또는 Kotlin Data Class로 생성",
+                "ERD 뷰어: DDL 또는 엔티티에서 테이블 관계를 추출해 SVG 다이어그램으로 시각화. 테이블 드래그, 확대/축소, PNG 저장",
+                "Base64: 표준·URL-safe 인코딩과 디코딩",
+                "스니펫: 자주 쓰는 SQL과 설정 템플릿을 카테고리별로 저장하고 한 번에 복사",
+                "시크릿 보관함: 비밀번호·API Key를 AES-GCM 256bit로 암호화해 저장"
               ]
             }
           ]
         }
       },
       {
-        "text": "스케줄링을 통해 사용자의 당일 인증 여부를 체크하는 시스템 구현"
+        "text": "외부 CDN·npm 패키지·네트워크 호출 없이 Vanilla JS만으로 구현해, 완전 오프라인에서 동작하도록 제약을 코드와 검사기로 강제",
+        "detail": {
+          "sections": [
+            {
+              "heading": "제약",
+              "list": false,
+              "body": [
+                "내부망에서 쓰는 도구라 외부 의존성이 하나라도 있으면 쓸 수 없습니다. Manifest V3의 CSP 때문에 eval, new Function, 인라인 스크립트도 쓸 수 없습니다."
+              ]
+            },
+            {
+              "heading": "적용",
+              "list": true,
+              "body": [
+                "프레임워크와 번들러 없이 Vanilla JS로 작성하고, 테스트·검사 스크립트도 Node 내장 모듈만 사용",
+                "정적 검사기로 외부 URL, CSP 위반, 파일 간 전역 이름 충돌, DOM id 정합성을 검사",
+                "classic script의 전역 스코프를 공유하는 구조라 이름이 겹치면 페이지 전체가 죽습니다. 모듈을 IIFE나 접두어로 구분하고, 충돌을 검사기가 잡도록 했습니다."
+              ]
+            }
+          ]
+        }
       },
       {
-        "text": "OAuth 2.0 소셜 로그인 구현 (Google, Naver, Kakao)"
+        "text": "변환 로직을 DOM에 의존하지 않는 순수 함수로 분리하고, 단위·골든 테스트 41개와 타입 매핑 양방향 검사로 변환 정확성 보장",
+        "detail": {
+          "metrics": [
+            {
+              "label": "테스트",
+              "value": "41개 통과"
+            }
+          ],
+          "sections": [
+            {
+              "heading": "구조",
+              "list": false,
+              "body": [
+                "Entity ↔ DDL, DTO, ERD 파서 같은 변환 로직은 DOM과 chrome API에 의존하지 않는 순수 함수로 두고, DOM 접근은 UI 레이어 한 곳으로 모았습니다. 덕분에 브라우저 없이 Node에서 로직만 테스트할 수 있습니다."
+              ]
+            },
+            {
+              "heading": "테스트",
+              "list": true,
+              "body": [
+                "node:test 단위 테스트와 입력/기대 출력 파일을 비교하는 골든 테스트를 함께 사용. 기대값은 손으로 고치지 않고 재생성 후 diff를 검토",
+                "Java/Kotlin → SQL, SQL → Java/Kotlin 타입 매핑을 양방향으로 함께 고치도록 테스트가 강제",
+                "알려진 버그는 todo 테스트로 목록화하고, 고치면 표시를 제거"
+              ]
+            }
+          ]
+        }
       },
       {
-        "text": "S3 이미지 서버 구축 및 웹 성능 개선을 위한 이미지 최적화"
-      },
-      {
-        "text": "협업 생산성을 높이기 위한 Git Flow · Commit Convention 정립"
-      },
-      {
-        "text": "CI/CD 구성 및 RDS 세팅"
+        "text": "편집 시 정적 검사, 종료 시 테스트 게이트를 거는 Claude Code 하네스(훅·스킬·리뷰 에이전트)를 구성해 AI 협업 개발 흐름 정립",
+        "detail": {
+          "sections": [
+            {
+              "heading": "구성",
+              "list": true,
+              "body": [
+                "훅: 파일 편집 직후 정적 검사를 자동 실행하고, 작업 종료 시 변경이 있으면 전체 테스트를 통과해야 끝나도록 게이트",
+                "스킬: 새 변환 탭 추가, 타입 매핑 추가, 검증, 릴리스 같은 반복 절차를 문서화",
+                "서브에이전트: 커밋 전에 오프라인 제약, CSP, XSS, 변환 정확성 관점으로 리뷰",
+                "UI 변경은 헤드리스 브라우저 스모크 테스트로 전 탭을 순회하며 콘솔 에러를 감지"
+              ]
+            }
+          ]
+        }
       }
     ],
     "stack": [
-      "Java 11",
-      "Spring Boot",
-      "Spring Security",
-      "MySQL",
-      "QueryDSL",
-      "AWS (EC2, S3, RDS)",
-      "GitHub Actions"
+      "JavaScript (Vanilla)",
+      "Chrome Extension (Manifest V3)",
+      "HTML/CSS",
+      "Node.js (node:test)",
+      "Playwright",
+      "Claude Code"
     ],
-    "repoUrl": "https://github.com/codestates-seb/66Challenge",
-    "liveUrl": "https://66challenge.shop",
     "featured": true,
     "detail": {
       "metrics": [
         {
           "label": "개발 인원",
-          "value": "7명 (백엔드 3 · 프론트 4)"
+          "value": "1명 (개인 프로젝트)"
         },
         {
           "label": "담당",
-          "value": "백엔드"
+          "value": "기획 · 개발 · 테스트"
         },
         {
           "label": "기간",
-          "value": "2023.01 — 2023.02"
+          "value": "2026.10 — 진행 중"
         }
       ],
       "sections": [
         {
-          "heading": "담당 역할",
-          "list": true,
-          "body": [
-            "API 개발 (습관, 인증 게시물)",
-            "S3 이미지 서버 구축",
-            "Git Flow · Git Convention 정립",
-            "알림 서비스 구축",
-            "CI/CD 구성 및 RDS DB 세팅",
-            "OAuth 로그인 (Google, Kakao, Naver)"
-          ]
-        },
-        {
-          "heading": "기여한 내용",
-          "list": true,
-          "body": [
-            "Offset Pagination을 No Offset Pagination으로 전환하여 약 100배의 페이징 성능 개선 (데이터 15만 건 기준, 0.058sec → 0.00032sec)",
-            "웹 성능 개선을 위한 이미지 최적화",
-            "스케줄링을 통해 사용자의 당일 인증 여부를 체크하는 시스템 구현",
-            "Spring Data JPA Auditing 기능으로 엔티티 생성/수정 시간 기록 자동화",
-            "Commit Message Convention 정립 및 Template 작성"
-          ]
-        },
-        {
-          "heading": "체험 계정",
+          "heading": "배경",
           "list": false,
           "body": [
-            "Guest ID : guest@mail.com / Guest PW : guest123!"
-          ]
-        }
-      ]
-    }
-  },
-  {
-    "title": "소셜미디어를 담은 여행 동행 모집 서비스",
-    "period": "2023.03",
-    "description": "여행 동행을 모집하고 피드로 기록을 남기는 사이드 팀 프로젝트. 백엔드를 담당했습니다.",
-    "points": [
-      {
-        "text": "Spring Security + JWT를 이용한 로그인·로그아웃 구현"
-      },
-      {
-        "text": "회원·피드·인증 API 개발 및 이메일 인증 구현"
-      },
-      {
-        "text": "AOP를 통한 Logging 구현"
-      },
-      {
-        "text": "Rest Docs를 이용한 API 문서 자동화"
-      },
-      {
-        "text": "추상화를 통한 통합 테스트 구조 개선, 제네릭을 이용한 코드 리팩토링"
-      }
-    ],
-    "stack": [
-      "Java 11",
-      "Spring Boot",
-      "Spring Security",
-      "MySQL",
-      "QueryDSL",
-      "AWS (EC2, S3, RDS)",
-      "GitHub Actions"
-    ],
-    "repoUrl": "https://github.com/Travel-WithMe/TravelWithMe-sever/tree/develop",
-    "featured": true,
-    "detail": {
-      "metrics": [
-        {
-          "label": "개발 인원",
-          "value": "4명 (백엔드 2 · 프론트 2)"
-        },
-        {
-          "label": "담당",
-          "value": "백엔드"
-        },
-        {
-          "label": "시작",
-          "value": "2023.03"
-        }
-      ],
-      "sections": [
-        {
-          "heading": "담당 역할",
-          "list": true,
-          "body": [
-            "API 개발 (회원, 피드, 인증)",
-            "Spring Security Auth · Email 인증",
-            "알림 서비스 구축",
-            "AOP를 통한 Logging 구현",
-            "Rest Docs API 문서 자동화"
-          ]
-        },
-        {
-          "heading": "기여한 내용",
-          "list": true,
-          "body": [
-            "Spring Security + JWT를 이용한 로그인, 로그아웃",
-            "추상화를 통한 효율적인 통합 테스트",
-            "제네릭(Generic)을 이용한 코드 리팩토링",
-            "이메일 인증 구현",
-            "ConcurrentModificationException · 순환 참조 등 운영 중 마주친 문제 해결"
+            "폐쇄망에서 개발하면서 AI 도구 없이 반복 작업을 손으로 처리하는 비효율을 직접 겪었고, 같은 환경의 개발자에게도 쓸모 있는 도구를 만들고 싶었습니다. 소스 코드와 데이터가 외부로 나가지 않아야 해서, 설계의 출발점을 '완전 오프라인, 외부 의존성 0'으로 잡았습니다."
           ]
         }
       ]
