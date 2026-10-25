@@ -79,7 +79,7 @@ export function OpenSource() {
 /** PR 번호(링크) · 상태 · 머지 시점 · 반영 버전 */
 function ContributionMeta({ contribution: c }: { contribution: Contribution }) {
   return (
-    <p className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-xs text-neutral-400 dark:text-neutral-500">
+    <p className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-xs text-neutral-500 dark:text-neutral-400">
       <a
         href={c.url}
         target="_blank"

@@ -8,7 +8,7 @@ export function DetailBody({ detail }: { detail: Detail }) {
         <dl className="flex flex-wrap gap-x-10 gap-y-4 rounded-lg bg-neutral-50 px-5 py-4 dark:bg-neutral-800/50">
           {detail.metrics.map((m, i) => (
             <div key={`${i}-${m.label}`}>
-              <dt className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+              <dt className="font-mono text-xs text-neutral-500 dark:text-neutral-400">
                 {m.label}
               </dt>
               <dd className="mt-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">

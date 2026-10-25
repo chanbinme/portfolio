@@ -28,7 +28,7 @@ export function Writing() {
                 {post.date && (
                   <time
                     dateTime={post.date}
-                    className="shrink-0 font-mono text-xs text-neutral-400 dark:text-neutral-500"
+                    className="shrink-0 font-mono text-xs text-neutral-500 dark:text-neutral-400"
                   >
                     {post.date}
                   </time>

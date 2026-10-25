@@ -30,6 +30,16 @@
     overflow-wrap: break-word;
   }
 
+  /* 키보드 포커스 링도 사이트 색으로 */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  .dark :focus-visible {
+    outline-color: var(--color-accent-dark);
+  }
+
   ::selection {
     @apply bg-accent/20 dark:bg-accent-dark/25;
   }
@@ -38,7 +48,7 @@
 @layer utilities {
   /* 섹션 공통 여백 */
   .section {
-    @apply mx-auto w-full max-w-5xl px-6 py-12 sm:py-14;
+    @apply mx-auto w-full max-w-5xl px-6 py-14 sm:py-20;
   }
 
   /*
