@@ -304,7 +304,7 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
               {content.title}
             </h3>
             {content.meta && (
-              <p className="mt-0.5 font-mono text-xs text-neutral-400 dark:text-neutral-500">
+              <p className="mt-0.5 font-mono text-xs text-neutral-500 dark:text-neutral-400">
                 {content.meta}
               </p>
             )}

@@ -26,7 +26,7 @@ export function About() {
       <dl className="mt-8 grid gap-4 text-sm sm:grid-cols-2">
         {profile.location && (
           <div>
-            <dt className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+            <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
               Location
             </dt>
             <dd className="mt-1 text-neutral-700 dark:text-neutral-300">
@@ -35,7 +35,7 @@ export function About() {
           </div>
         )}
         <div>
-          <dt className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+          <dt className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
             Email
           </dt>
           <dd className="mt-1">

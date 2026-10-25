@@ -16,7 +16,7 @@ export function Projects() {
       title="Projects"
       subtitle="직접 설계하고 만든 것들입니다."
     >
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className={`grid gap-4 ${projects.length > 1 ? 'lg:grid-cols-2' : ''}`}>
         {projects.map((project, i) => (
           <article
             key={`${i}-${project.title}`}
@@ -31,7 +31,7 @@ export function Projects() {
                   </span>
                 )}
               </h3>
-              <span className="shrink-0 font-mono text-xs text-neutral-400 dark:text-neutral-500">
+              <span className="shrink-0 font-mono text-xs text-neutral-500 dark:text-neutral-400">
                 {project.period}
               </span>
             </div>
@@ -46,7 +46,7 @@ export function Projects() {
               tone="muted"
             />
 
-            <div className="mt-4 flex flex-wrap items-center gap-2">
+            <div className="mt-4 flex flex-wrap items-center gap-1.5">
               {project.stack.map((s, j) => (
                 <Tag key={`${j}-${s}`}>{s}</Tag>
               ))}

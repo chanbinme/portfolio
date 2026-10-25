@@ -6,17 +6,17 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="mx-auto w-full max-w-5xl px-6 pt-16 pb-12 sm:pt-20 sm:pb-14"
+      className="mx-auto w-full max-w-5xl px-6 pt-16 pb-12 sm:pt-24 sm:pb-14"
     >
-      <p className="font-mono text-sm text-accent dark:text-accent-dark">
-        {profile.role}
-      </p>
-
-      <h1 className="mt-4 text-[clamp(2.25rem,5vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.02em] text-neutral-900 dark:text-neutral-50">
+      <h1 className="text-[clamp(2.75rem,7vw,4.5rem)] leading-[1.02] font-bold tracking-[-0.035em] text-neutral-900 dark:text-neutral-50">
         {profile.name}
       </h1>
 
-      <p className="mt-5 text-lg leading-relaxed text-neutral-600 dark:text-neutral-300">
+      <p className="mt-3 text-lg font-medium text-accent dark:text-accent-dark">
+        {profile.role}
+      </p>
+
+      <p className="mt-8 max-w-2xl text-[clamp(1.25rem,2.4vw,1.5rem)] leading-snug text-balance text-neutral-700 dark:text-neutral-200">
         {profile.headline}
       </p>
 
@@ -40,7 +40,7 @@ export function Hero() {
         )}
       </p>
 
-      <div className="no-print mt-8 flex flex-wrap items-center gap-3">
+      <div className="no-print mt-10 flex flex-wrap items-center gap-3">
         <a
           href="#contact"
           className="press rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"

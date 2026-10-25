@@ -30,6 +30,16 @@
     overflow-wrap: break-word;
   }
 
+  /* 키보드 포커스 링도 사이트 색으로 */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  .dark :focus-visible {
+    outline-color: var(--color-accent-dark);
+  }
+
   ::selection {
     @apply bg-accent/20 dark:bg-accent-dark/25;
   }

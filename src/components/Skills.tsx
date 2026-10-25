@@ -8,10 +8,10 @@ export function Skills() {
       <div className="space-y-6">
         {skills.map((group, i) => (
           <div key={`${i}-${group.category}`} className="sm:flex sm:gap-6">
-            <h3 className="shrink-0 font-mono text-xs text-neutral-400 sm:w-32 sm:pt-1.5 dark:text-neutral-500">
+            <h3 className="shrink-0 text-sm font-medium text-neutral-500 sm:w-32 sm:pt-0.5 dark:text-neutral-400">
               {group.category}
             </h3>
-            <div className="mt-2 flex flex-wrap content-start items-start gap-2 sm:mt-0">
+            <div className="mt-2 flex flex-wrap content-start items-start gap-1.5 sm:mt-0">
               {group.items.map((item, j) => (
                 <Tag key={`${j}-${item}`}>{item}</Tag>
               ))}

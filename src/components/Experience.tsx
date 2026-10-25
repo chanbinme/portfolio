@@ -21,11 +21,11 @@ export function Experience() {
               aria-hidden="true"
             />
 
-            <p className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+            <p className="font-mono text-xs text-neutral-500 dark:text-neutral-400">
               {exp.period}
             </p>
 
-            <h3 className="mt-1.5 font-medium text-neutral-900 dark:text-neutral-100">
+            <h3 className="mt-1.5 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
               {exp.company}
               {exp.role && (
                 <span className="ml-2 font-normal text-neutral-500 dark:text-neutral-400">
@@ -100,11 +100,11 @@ function PositionItem({ position, company }: { position: Position; company: stri
         aria-hidden="true"
       />
 
-      <p className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+      <p className="font-mono text-xs text-neutral-500 dark:text-neutral-400">
         {position.period}
       </p>
 
-      <h4 className="mt-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
+      <h4 className="mt-1 font-medium text-neutral-900 dark:text-neutral-100">
         {position.team}
         {position.role && (
           <span className="ml-2 font-normal text-neutral-500 dark:text-neutral-400">
@@ -131,7 +131,7 @@ function PositionItem({ position, company }: { position: Position; company: stri
 function StackTags({ stack }: { stack: string[] }) {
   if (stack.length === 0) return null
   return (
-    <div className="mt-4 flex flex-wrap gap-2">
+    <div className="mt-4 flex flex-wrap gap-1.5">
       {stack.map((s, i) => (
         <Tag key={`${i}-${s}`}>{s}</Tag>
       ))}
