@@ -2,6 +2,8 @@ import { posts } from '../data/profile'
 import { Section } from './Section'
 
 export function Writing() {
+  if (posts.length === 0) return null
+
   return (
     <Section id="writing" title="Writing">
       <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
