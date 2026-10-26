@@ -4,6 +4,7 @@ import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { Bullet } from './Bullet'
 import { DetailTrigger } from './DetailTrigger'
+import { PrintDetail } from './PrintDetail'
 
 type HighlightListProps = {
   items: Highlight[]
@@ -35,7 +36,10 @@ export function HighlightList({ items, context, tone = 'default' }: HighlightLis
               <Bullet />
 
               {detail ? (
-                <DetailTrigger text={text} onClick={() => setSelected({ text, detail })} />
+                <div className="min-w-0 flex-1">
+                  <DetailTrigger text={text} onClick={() => setSelected({ text, detail })} />
+                  <PrintDetail detail={detail} />
+                </div>
               ) : (
                 <span>{text}</span>
               )}

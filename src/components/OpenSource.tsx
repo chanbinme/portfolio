@@ -6,6 +6,7 @@ import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { Bullet } from './Bullet'
 import { DetailTrigger } from './DetailTrigger'
+import { PrintDetail } from './PrintDetail'
 
 type Selected = { project: string; contribution: Contribution }
 
@@ -44,6 +45,7 @@ export function OpenSource() {
                       <span>{c.text}</span>
                     )}
                     <ContributionMeta contribution={c} />
+                    {c.detail && <PrintDetail detail={c.detail} />}
                   </div>
                 </li>
               ))}

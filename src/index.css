@@ -153,11 +153,20 @@
   display: none;
 }
 
+/* 경력기술서 PDF에만 나오는 상세 본문 (아래 @media print 참고) */
+.print-detail {
+  display: none;
+}
+
 /* ── 인쇄 / PDF 저장 ───────────────────────────────────────
  *
  * 화면은 포트폴리오, 인쇄물은 이력서입니다.
  * 카드·타임라인 같은 화면용 장식을 걷어내고, 한 줄에 정보가 모이는
  * 이력서 문서 형태로 재배치합니다.
+ *
+ * 인쇄물은 두 가지입니다. 기본(이력서)은 요약본이고, 경력기술서는
+ * PdfMenu가 `<html data-print="career">`를 붙여 클릭하면 열리는 상세
+ * 본문(.print-detail)까지 함께 냅니다.
  */
 @media print {
   @page {
@@ -460,6 +469,55 @@
   .print-only a::after {
     /* 머리글 연락처는 이미 주소를 그대로 보여주므로 덧붙이지 않습니다 */
     content: '';
+  }
+
+  /* ── 경력기술서: 상세 본문을 항목 아래에 이어 붙임 ── */
+
+  html[data-print='career'] .print-detail {
+    display: block;
+    margin: 1.5mm 0 3mm;
+    padding-left: 3mm;
+    border-left: 0.75pt solid #ccc;
+    font-size: 9pt;
+    line-height: 1.5;
+  }
+
+  /* 상세가 붙은 블록은 길어서, 통째로 넘기면 앞 장에 큰 빈칸이 남습니다 */
+  html[data-print='career'] ol > li,
+  html[data-print='career'] li:has(.print-detail) {
+    break-inside: auto;
+  }
+
+  .pd-metrics {
+    margin: 0 0 1.5mm;
+    font-size: 8.5pt;
+    color: #555 !important;
+  }
+
+  .pd-section {
+    break-inside: avoid;
+  }
+
+  .pd-heading {
+    margin: 1.5mm 0 0.5mm;
+    font-size: 9pt;
+    font-weight: 600;
+    color: #111 !important;
+    break-after: avoid;
+  }
+
+  .print-detail p {
+    margin: 0 0 1mm;
+  }
+
+  .print-detail ul {
+    margin: 0 0 1mm;
+    padding-left: 4mm;
+    list-style: disc;
+  }
+
+  .print-detail li {
+    margin: 0;
   }
 
   /*

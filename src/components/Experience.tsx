@@ -6,6 +6,7 @@ import { Tag } from './Tag'
 import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { HighlightList } from './HighlightList'
+import { PrintDetail } from './PrintDetail'
 
 export function Experience() {
   const [selected, setSelected] = useState<ExperienceItem | null>(null)
@@ -53,6 +54,8 @@ export function Experience() {
 
             <HighlightList items={exp.highlights} context={exp.company} />
             <StackTags stack={exp.stack} />
+
+            {exp.detail && <PrintDetail detail={exp.detail} />}
 
             {exp.detail && (
               <button
