@@ -1,4 +1,5 @@
 import { heroMetrics, profile, socials } from '../data/profile'
+import { PdfMenu } from './PdfMenu'
 
 export function Hero() {
   const links = socials.filter((s) => s.href)
@@ -40,7 +41,7 @@ export function Hero() {
         )}
       </p>
 
-      <div className="no-print mt-10 flex flex-wrap items-center gap-3">
+      <div className="no-print relative mt-10 flex flex-wrap items-center gap-3">
         <a
           href="#contact"
           className="press rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"
@@ -48,27 +49,7 @@ export function Hero() {
           연락하기
         </a>
 
-        {/* 브라우저 인쇄 대화상자를 엽니다. "PDF로 저장"을 고르면 PDF가 됩니다. */}
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="inline-flex items-center gap-2 press rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-900"
-        >
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
-          </svg>
-          PDF 저장
-        </button>
+        <PdfMenu />
 
         {profile.resumeUrl && (
           <a

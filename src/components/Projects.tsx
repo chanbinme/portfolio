@@ -6,6 +6,7 @@ import { Tag } from './Tag'
 import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { HighlightList } from './HighlightList'
+import { PrintDetail } from './PrintDetail'
 
 export function Projects() {
   const [selected, setSelected] = useState<Project | null>(null)
@@ -51,6 +52,8 @@ export function Projects() {
                 <Tag key={`${j}-${s}`}>{s}</Tag>
               ))}
             </div>
+
+            {project.detail && <PrintDetail detail={project.detail} />}
 
             {(project.detail || project.repoUrl || project.liveUrl) && (
               <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
