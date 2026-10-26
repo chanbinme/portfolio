@@ -28,7 +28,7 @@ npm run preview  # 빌드 결과 로컬 확인
 | `experiences.json` | 경력 타임라인 |
 | `projects.json` | 프로젝트 카드 (`featured: true` → 배지 표시) |
 | `opensource.json` | 오픈소스 기여 (프로젝트별 PR 목록, 비우면 섹션·메뉴가 사라짐) |
-| `posts.json` | 글 목록 |
+| `posts.json` | 글 목록 (비우면 섹션·메뉴가 사라짐) |
 | `others.json` | 자격증·활동·학력 |
 
 [`src/data/profile.ts`](src/data/profile.ts)는 이 JSON을 읽어 타입을 보장하는 계층입니다.

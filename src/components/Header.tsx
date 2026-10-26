@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
-import { openSource, profile } from '../data/profile'
+import { openSource, posts, profile } from '../data/profile'
 
 const NAV = [
   { id: 'about', label: 'About' },
@@ -13,7 +13,9 @@ const NAV = [
   { id: 'contact', label: 'Contact' },
 ].filter(
   // 내용이 비어 섹션이 그려지지 않으면 메뉴에서도 뺍니다
-  (n) => n.id !== 'opensource' || openSource.length > 0,
+  (n) =>
+    (n.id !== 'opensource' || openSource.length > 0) &&
+    (n.id !== 'writing' || posts.length > 0),
 )
 
 export function Header() {
