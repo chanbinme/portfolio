@@ -135,7 +135,12 @@ export type OpenSourceProject = {
   contributions: Contribution[]
 }
 
+/** More 섹션의 소제목 묶음. 이 순서대로 보여줍니다. (관리자 페이지 선택지와 같아야 합니다) */
+export const otherCategories = ['자격·교육', '학력', '활동', '그 외 경력'] as const
+
 export type OtherItem = {
+  /** 묶음 이름. otherCategories에 없거나 비어 있으면 맨 아래 '기타'로 모읍니다. */
+  category: string
   title: string
   issuer: string
   date: string
@@ -282,6 +287,7 @@ export const posts: Post[] = list<Loose<Post>>(postsJson)
   .filter((po) => po.title)
 
 export const others: OtherItem[] = list<Loose<OtherItem>>(othersJson).map((o) => ({
+  category: req(o.category),
   title: req(o.title),
   issuer: req(o.issuer),
   date: req(o.date),
