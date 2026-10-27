@@ -148,6 +148,54 @@
   }
 }
 
+/*
+ * 모달 본문 스크롤바.
+ * 기본 스크롤바는 화살표 버튼까지 달고 모서리 곡선과 겹쳐 보이므로,
+ * 얇은 알약 모양으로 바꾸고 위아래를 띄워 둥근 모서리와 부딪히지 않게 합니다.
+ * (Chrome·Safari는 ::-webkit-scrollbar, Firefox는 표준 속성을 씁니다.
+ *  표준 속성을 함께 쓰면 Chrome이 webkit 스타일을 무시하므로 @supports로 나눕니다)
+ * 스크롤바가 생겨도 본문이 한쪽으로 쏠리지 않게 양쪽에 같은 폭을 비워 둡니다.
+ */
+.modal-scroll {
+  scrollbar-gutter: stable both-edges;
+  --scroll-thumb: oklch(0.87 0 0);
+  --scroll-thumb-hover: oklch(0.708 0 0);
+}
+
+.dark .modal-scroll {
+  --scroll-thumb: oklch(0.371 0 0);
+  --scroll-thumb-hover: oklch(0.439 0 0);
+}
+
+.modal-scroll::-webkit-scrollbar {
+  width: 12px;
+}
+
+.modal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 12px;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb);
+  /* 투명 테두리로 12px 중 가운데 6px만 보이게 합니다 */
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 9999px;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scroll-thumb-hover);
+  background-clip: padding-box;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .modal-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) transparent;
+  }
+}
+
 /* 화면에서는 숨기고 인쇄할 때만 보이는 요소 */
 .print-only {
   display: none;

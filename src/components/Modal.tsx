@@ -281,7 +281,7 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
         aria-modal="true"
         aria-labelledby="modal-title"
         tabIndex={-1}
-        className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white shadow-2xl outline-none will-change-transform sm:rounded-2xl dark:bg-neutral-900"
+        className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl outline-none will-change-transform sm:rounded-2xl dark:bg-neutral-900"
       >
         {/* 머리 부분: 시트에서는 잡고 끌어내려 닫을 수 있습니다 */}
         <div
@@ -289,7 +289,7 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
-          className="sticky top-0 z-10 flex touch-none items-start justify-between gap-4 border-b border-neutral-200 bg-white/95 px-6 pt-5 pb-4 backdrop-blur sm:touch-auto sm:pt-4 dark:border-neutral-800 dark:bg-neutral-900/95"
+          className="relative flex flex-none touch-none items-start justify-between gap-4 border-b border-neutral-200 bg-white px-6 pt-5 pb-4 sm:touch-auto sm:pt-4 dark:border-neutral-800 dark:bg-neutral-900"
         >
           {/* 끌 수 있다는 표시 (시트에서만) */}
           <span
@@ -331,7 +331,9 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
           </button>
         </div>
 
-        <div className="px-6 py-5">{content.children}</div>
+        <div className="modal-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5">
+          {content.children}
+        </div>
       </div>
     </div>
   )
