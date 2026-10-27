@@ -6,21 +6,19 @@
       "Spring Boot",
       "Spring MVC",
       "Spring Data JPA",
-      "Spring Security",
-      "Spring WebFlux",
-      "QueryDSL",
-      "Gradle",
-      "AWS EC2, S3, RDS",
-      "Kafka"
+      "Spring Security (오픈소스 PR)",
+      "Spring WebFlux (Gateway)",
+      "QueryDSL (벌크 연산)",
+      "Gradle (멀티모듈)"
     ]
   },
   {
     "category": "Database",
     "items": [
       "MySQL",
-      "Redis",
-      "H2",
-      "Oracle"
+      "Oracle (실행 계획 튜닝)",
+      "Redis (토큰 캐싱)",
+      "H2"
     ]
   },
   {
@@ -33,13 +31,13 @@
     ]
   },
   {
-    "category": "Etc",
+    "category": "Infra · Tools",
     "items": [
-      "Git",
-      "Gradle Multi-module",
-      "IntelliJ",
-      "Vim",
-      "Slack"
+      "RabbitMQ",
+      "ELK",
+      "Docker Swarm",
+      "Drone CI",
+      "Git"
     ]
   }
 ]
