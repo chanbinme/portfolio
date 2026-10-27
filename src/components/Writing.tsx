@@ -5,7 +5,7 @@ export function Writing() {
   if (posts.length === 0) return null
 
   return (
-    <Section id="writing" title="Writing">
+    <Section id="writing" title="Writing" subtitle="겪은 문제와 해결 과정을 정리합니다.">
       <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
         {posts.map((post, i) => {
           const titleNode = post.url ? (

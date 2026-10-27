@@ -4,7 +4,7 @@ import { Tag } from './Tag'
 
 export function Skills() {
   return (
-    <Section id="skills" title="Skills">
+    <Section id="skills" title="Skills" subtitle="주로 다뤄 온 기술들입니다.">
       <div className="space-y-6">
         {skills.map((group, i) => (
           <div key={`${i}-${group.category}`} className="sm:flex sm:gap-6">
