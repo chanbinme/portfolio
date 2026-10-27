@@ -295,7 +295,7 @@ collections:
 
       # ── More ──────────────────────────────────────────────
       - name: others
-        label: More (자격증 · 활동 · 학력)
+        label: More (자격·교육 · 학력 · 활동 · 그 외 경력)
         file: src/content/others.json
         fields:
           - name: items
@@ -305,6 +305,7 @@ collections:
             root: true
             summary: '{{fields.title}} · {{fields.date}}'
             fields:
+              - { name: category, label: 묶음, widget: select, options: ['자격·교육', '학력', '활동', '그 외 경력'], default: '활동', hint: 'More 안의 소제목입니다. 같은 묶음끼리 모아 보여줍니다.' }
               - { name: title, label: 이름, widget: string }
               - { name: issuer, label: 기관 · 설명, widget: string }
               - { name: date, label: 기간, widget: string }

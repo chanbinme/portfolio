@@ -29,7 +29,7 @@ npm run preview  # 빌드 결과 로컬 확인
 | `projects.json` | 프로젝트 카드 (`featured: true` → 배지 표시) |
 | `opensource.json` | 오픈소스 기여 (프로젝트별 PR 목록, 비우면 섹션·메뉴가 사라짐) |
 | `posts.json` | 글 목록 (비우면 섹션·메뉴가 사라짐) |
-| `others.json` | 자격증·활동·학력 |
+| `others.json` | More: 자격·교육 · 학력 · 활동 · 그 외 경력 (항목마다 `category`로 묶음 지정) |
 
 [`src/data/profile.ts`](src/data/profile.ts)는 이 JSON을 읽어 타입을 보장하는 계층입니다.
 빈 값(빈 문자열·`null`·빠진 키)은 여기서 정리되므로, 선택 항목은 비워 두거나 지워도 됩니다.
