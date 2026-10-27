@@ -12,7 +12,7 @@ export function Experience() {
   const [selected, setSelected] = useState<ExperienceItem | null>(null)
 
   return (
-    <Section id="experience" title="Experience">
+    <Section id="experience" title="Experience" subtitle="결제·커머스 서비스를 개발해 왔습니다.">
       <ol className="relative space-y-8 border-l border-neutral-200 pl-6 dark:border-neutral-800">
         {experiences.map((exp, i) => (
           <li key={`${i}-${exp.company}`} className="relative">

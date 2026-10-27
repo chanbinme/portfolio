@@ -2,25 +2,25 @@
   {
     "title": "Grafana + K6 + Jaeger로 부하테스트 해보기",
     "url": "https://green-bin.tistory.com/298",
-    "date": "2025.09.04",
+    "date": "2025.09",
     "excerpt": "K6, InfluxDB, Grafana, Jaeger로 부하테스트 환경을 만들고 시나리오를 설계해 병목을 찾는 방법"
   },
   {
     "title": "Oracle 실행 계획으로 복잡한 쿼리 최적화해보기",
     "url": "https://green-bin.tistory.com/236",
-    "date": "2025.02.19",
+    "date": "2025.02",
     "excerpt": "500줄짜리 주문 목록 쿼리의 실행 계획을 분석해 병목 서브쿼리를 찾고, 5.09초에서 0.35초로 줄인 과정"
   },
   {
     "title": "랜덤 쿠폰 뽑기 성능 개선하기",
     "url": "https://green-bin.tistory.com/228",
-    "date": "2025.01.30",
+    "date": "2025.01",
     "excerpt": "랜덤 쿠폰 발급 알고리즘에서 불필요한 임시 List 생성을 없애 메모리 사용과 계산 과정을 줄이고, 쿠폰 50종·100만 건 기준 92% 성능을 향상한 과정"
   },
   {
     "title": "JPA에서 일괄 삭제하는 방법과 주의점",
     "url": "https://green-bin.tistory.com/218",
-    "date": "2024.12.04",
+    "date": "2024.12",
     "excerpt": "deleteAllById가 ID마다 select와 delete를 실행하는 이유와, 벌크 삭제 뒤 영속성 컨텍스트를 동기화해야 하는 이유"
   }
 ]

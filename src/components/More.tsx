@@ -16,7 +16,7 @@ const groups = [...otherCategories, FALLBACK]
 
 export function More() {
   return (
-    <Section id="more" title="More" subtitle="자격 · 학력 · 활동 · 그 외 경력">
+    <Section id="more" title="More" subtitle="자격, 학력, 활동, 그 외 이력입니다.">
       <div className="space-y-10">
         {groups.map((group) => (
           <div key={group.name}>
