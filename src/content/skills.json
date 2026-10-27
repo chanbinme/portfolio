@@ -6,18 +6,19 @@
       "Spring Boot",
       "Spring MVC",
       "Spring Data JPA",
-      "Spring Security (오픈소스 PR)",
-      "Spring WebFlux (Gateway)",
-      "QueryDSL (벌크 연산)",
-      "Gradle (멀티모듈)"
+      "Spring Security",
+      "Spring WebFlux",
+      "QueryDSL",
+      "Gradle",
+      "RabbitMQ"
     ]
   },
   {
     "category": "Database",
     "items": [
       "MySQL",
-      "Oracle (실행 계획 튜닝)",
-      "Redis (토큰 캐싱)",
+      "Oracle",
+      "Redis",
       "H2"
     ]
   },
@@ -33,7 +34,6 @@
   {
     "category": "Infra · Tools",
     "items": [
-      "RabbitMQ",
       "ELK",
       "Docker Swarm",
       "Drone CI",
