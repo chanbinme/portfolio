@@ -60,6 +60,21 @@ export type Highlight = {
   detail?: Detail
 }
 
+/**
+ * 성과를 프로젝트 단위로 묶을 때 씁니다.
+ * 회사·팀 아래에 프로젝트 이름을 두고 그 아래로 성과를 적습니다.
+ */
+export type ExperienceProject = {
+  name: string
+  /** 선택: 프로젝트 기간 */
+  period?: string
+  /** 선택: 프로젝트 한 줄 소개 */
+  summary?: string
+  highlights: Highlight[]
+  /** 선택: 프로젝트에서만 쓴 기술 (비우면 팀·회사 스택만 보여줍니다) */
+  stack: string[]
+}
+
 /** 한 회사 안에서 팀을 옮긴 경우의 팀별 경력 */
 export type Position = {
   team: string
@@ -67,6 +82,9 @@ export type Position = {
   period: string
   /** 그 팀에서 맡은 일 한 줄 */
   summary?: string
+  /** 프로젝트별로 묶은 성과 (최신순). 아래 highlights와 같이 써도 됩니다. */
+  projects: ExperienceProject[]
+  /** 프로젝트로 묶지 않는 성과 — 프로젝트 목록 아래에 이어서 보여줍니다. */
   highlights: Highlight[]
   stack: string[]
 }
@@ -84,6 +102,8 @@ export type Experience = {
    * 없으면 아래 highlights·stack을 회사 단위로 보여줍니다.
    */
   positions: Position[]
+  /** 팀을 나누지 않을 때 프로젝트별로 묶은 성과 */
+  projects: ExperienceProject[]
   /** 성과 목록. 문장별로 detail을 붙이면 그 문장이 클릭 가능해집니다. */
   highlights: Highlight[]
   stack: string[]
@@ -195,6 +215,20 @@ const toHighlights = (v: Maybe<Maybe<Loose<Highlight>>[]>): Highlight[] =>
     .map((h) => ({ text: req(h.text), detail: toDetail(h.detail) }))
     .filter((h) => h.text)
 
+/** 이름이 없거나 성과가 하나도 없는 프로젝트는 없는 것으로 칩니다 */
+const toExperienceProjects = (
+  v: Maybe<Maybe<Loose<ExperienceProject>>[]>,
+): ExperienceProject[] =>
+  list(v)
+    .map((pj) => ({
+      name: req(pj.name),
+      period: opt(pj.period),
+      summary: opt(pj.summary),
+      highlights: toHighlights(pj.highlights),
+      stack: lines(pj.stack),
+    }))
+    .filter((pj) => pj.name && pj.highlights.length > 0)
+
 // ── 내용 ─────────────────────────────────────────────────────
 
 type ProfileJson = Loose<{
@@ -255,10 +289,12 @@ export const experiences: Experience[] = list<Loose<Experience>>(experiencesJson
         role: req(po.role),
         period: req(po.period),
         summary: opt(po.summary),
+        projects: toExperienceProjects(po.projects),
         highlights: toHighlights(po.highlights),
         stack: lines(po.stack),
       }))
       .filter((po) => po.team || po.role),
+    projects: toExperienceProjects(e.projects),
     highlights: toHighlights(e.highlights),
     stack: lines(e.stack),
     detail: toDetail(e.detail),

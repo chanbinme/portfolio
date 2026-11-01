@@ -386,7 +386,8 @@
 
   /* 성과 한 줄이 두 장에 걸쳐 잘리지 않게 합니다 */
   article li,
-  .positions li {
+  .positions li,
+  .exp-projects li {
     break-inside: avoid;
   }
 
@@ -429,6 +430,28 @@
 
   .positions h4 {
     font-size: 10pt;
+    font-weight: 600;
+    color: #111 !important;
+    break-after: avoid;
+  }
+
+  /* ── 프로젝트 묶음 ── */
+
+  /* 화면에서는 왼쪽 선으로 묶음을 보여주지만, 인쇄물에서는 들여쓰기만 둡니다 */
+  .exp-projects {
+    margin-top: 2mm !important;
+  }
+
+  .exp-projects > li {
+    margin-bottom: 2mm;
+    padding-left: 2.5mm;
+    border-left: 0 !important;
+    break-inside: auto;
+  }
+
+  /* 프로젝트 이름이 앞 장 끝에 홀로 남지 않게 합니다 */
+  .exp-projects h5 {
+    font-size: 9.5pt;
     font-weight: 600;
     color: #111 !important;
     break-after: avoid;
