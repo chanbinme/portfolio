@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { animateSpring, prefersReducedMotion, projectMomentum, rubberband } from '../lib/spring'
 
 type ModalProps = {
@@ -262,7 +263,10 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
   if (!shown) return null
   const content = contentRef.current
 
-  return (
+  // body로 띄웁니다. 모달을 연 목록 항목(isolation: isolate)이나 등장 애니메이션
+  // (translate) 안에 두면 그 요소가 쌓임 맥락을 만들어 z-index가 갇히고,
+  // 뒤따르는 항목·섹션이 모달 위에 그려집니다.
+  return createPortal(
     <div
       className="fixed inset-0 z-100 flex items-end justify-center sm:items-center"
       role="presentation"
@@ -335,6 +339,7 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
           {content.children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
