@@ -172,6 +172,80 @@ function EditableAddDev({ file, path, index, blank, label }: AddProps) {
   )
 }
 
+// ── 참/거짓 바꾸기 ───────────────────────────────────────────
+
+type ToggleProps = {
+  file: ContentFile
+  path: Key[]
+  value: boolean
+  label: string
+}
+
+/** boolean 값을 켜고 끄는 단추 (상세 섹션의 "목록으로 표시" 등) */
+export function EditableToggle(props: ToggleProps) {
+  if (!import.meta.env.DEV) return null
+  return <EditableToggleDev {...props} />
+}
+
+function EditableToggleDev({ file, path, value, label }: ToggleProps) {
+  const editing = useEditing()
+  if (!editing) return null
+
+  const toggle = async () => {
+    try {
+      await patch({ op: 'set', file, path, value: !value })
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  return (
+    <button type="button" onClick={() => void toggle()} className="edit-btn edit-btn-add">
+      {label}: {value ? '켬' : '끔'}
+    </button>
+  )
+}
+
+// ── 값 통째로 넣기·비우기 ────────────────────────────────────
+
+type SetProps = {
+  file: ContentFile
+  path: Key[]
+  /** 넣을 값. 비우려면 생략합니다 (키 자체를 지웁니다) */
+  value?: () => unknown
+  label: string
+  /** 지우기처럼 되돌리기 어려운 동작이면 한 번 묻습니다 */
+  confirm?: boolean
+}
+
+/** 선택 항목(상세 등)을 통째로 만들거나 비우는 단추 */
+export function EditableSet(props: SetProps) {
+  if (!import.meta.env.DEV) return null
+  return <EditableSetDev {...props} />
+}
+
+function EditableSetDev({ file, path, value, label, confirm }: SetProps) {
+  const editing = useEditing()
+  if (!editing) return null
+
+  const run = async () => {
+    if (confirm && !window.confirm(`${label}할까요?`)) return
+    try {
+      await patch(
+        value ? { op: 'set', file, path, value: value() } : { op: 'unset', file, path },
+      )
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  return (
+    <button type="button" onClick={() => void run()} className="edit-btn edit-btn-add">
+      {label}
+    </button>
+  )
+}
+
 // ── 편집 모드 토글 ───────────────────────────────────────────
 
 /**

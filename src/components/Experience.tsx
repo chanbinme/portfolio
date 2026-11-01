@@ -11,11 +11,30 @@ import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { HighlightList } from './HighlightList'
 import { PrintDetail } from './PrintDetail'
-import { EditableAdd, EditableRemove, EditableText } from '../dev/Editable'
-import { BLANK, type Key } from '../dev/editor'
+import { EditableAdd, EditableRemove, EditableSet, EditableText } from '../dev/Editable'
+import { BLANK, pathKey, rememberModal, shouldReopen, type Key } from '../dev/editor'
+
+/** 열려 있는 경력. 상세를 고치려면 몇 번째 경력인지도 알아야 합니다 */
+type Selected = { exp: ExperienceItem; index: number }
 
 export function Experience() {
-  const [selected, setSelected] = useState<ExperienceItem | null>(null)
+  const [selected, setSelected] = useState<Selected | null>(() => {
+    if (!import.meta.env.DEV) return null
+    const index = experiences.findIndex(
+      (exp, i) => exp.detail && shouldReopen(pathKey('experiences', [i])),
+    )
+    return index < 0 ? null : { exp: experiences[index], index }
+  })
+
+  const open = (exp: ExperienceItem, index: number) => {
+    rememberModal(pathKey('experiences', [index]))
+    setSelected({ exp, index })
+  }
+
+  const close = () => {
+    rememberModal(null)
+    setSelected(null)
+  }
 
   return (
     <Section id="experience" title="Experience" subtitle="결제·커머스 서비스를 개발해 왔습니다.">
@@ -90,10 +109,21 @@ export function Experience() {
 
             {exp.detail && <PrintDetail detail={exp.detail} />}
 
+            {!exp.detail && (
+              <div className="mt-4">
+                <EditableSet
+                  file="experiences"
+                  path={[i, 'detail']}
+                  value={BLANK.detail}
+                  label="경력 전체 상세 만들기"
+                />
+              </div>
+            )}
+
             {exp.detail && (
               <button
                 type="button"
-                onClick={() => setSelected(exp)}
+                onClick={() => open(exp, i)}
                 className="mt-4 press inline-flex items-center gap-1 text-sm font-medium text-accent hover:opacity-70 dark:text-accent-dark"
               >
                 자세히 보기
@@ -125,11 +155,19 @@ export function Experience() {
 
       <Modal
         open={selected !== null}
-        onClose={() => setSelected(null)}
-        title={selected ? [selected.company, selected.role].filter(Boolean).join(' · ') : ''}
-        meta={selected?.period}
+        onClose={close}
+        title={
+          selected ? [selected.exp.company, selected.exp.role].filter(Boolean).join(' · ') : ''
+        }
+        meta={selected?.exp.period}
       >
-        {selected?.detail && <DetailBody detail={selected.detail} />}
+        {selected?.exp.detail && (
+          <DetailBody
+            detail={selected.exp.detail}
+            file="experiences"
+            path={[selected.index, 'detail']}
+          />
+        )}
       </Modal>
     </Section>
   )

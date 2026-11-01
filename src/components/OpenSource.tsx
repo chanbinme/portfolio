@@ -7,15 +7,44 @@ import { DetailBody } from './DetailBody'
 import { Bullet } from './Bullet'
 import { DetailTrigger } from './DetailTrigger'
 import { PrintDetail } from './PrintDetail'
-import { EditableAdd, EditableRemove, EditableText } from '../dev/Editable'
-import { BLANK, useEditing, type Key } from '../dev/editor'
+import { EditableAdd, EditableRemove, EditableSet, EditableText } from '../dev/Editable'
+import {
+  BLANK,
+  pathKey,
+  rememberModal,
+  shouldReopen,
+  useEditing,
+  type Key,
+} from '../dev/editor'
 
-type Selected = { project: string; contribution: Contribution }
+/** 열려 있는 기여. 상세를 고치려면 몇 번째 기여인지도 알아야 합니다 */
+type Selected = { project: string; contribution: Contribution; path: Key[] }
 
 export function OpenSource() {
-  const [selected, setSelected] = useState<Selected | null>(null)
+  const [selected, setSelected] = useState<Selected | null>(() => {
+    if (!import.meta.env.DEV) return null
+    for (const [i, project] of openSource.entries()) {
+      for (const [j, c] of project.contributions.entries()) {
+        const path = [i, 'contributions', j]
+        if (c.detail && shouldReopen(pathKey('opensource', path))) {
+          return { project: project.name, contribution: c, path }
+        }
+      }
+    }
+    return null
+  })
   // 편집 중에는 상세가 달린 기여도 글자를 고칠 수 있어야 합니다
   const editing = useEditing()
+
+  const open = (name: string, c: Contribution, path: Key[]) => {
+    rememberModal(pathKey('opensource', path))
+    setSelected({ project: name, contribution: c, path })
+  }
+
+  const close = () => {
+    rememberModal(null)
+    setSelected(null)
+  }
 
   if (openSource.length === 0 && !import.meta.env.DEV) return null
 
@@ -46,7 +75,7 @@ export function OpenSource() {
                     {c.detail && !editing ? (
                       <DetailTrigger
                         text={c.text}
-                        onClick={() => setSelected({ project: project.name, contribution: c })}
+                        onClick={() => open(project.name, c, [i, 'contributions', j])}
                       />
                     ) : (
                       <span>
@@ -56,6 +85,22 @@ export function OpenSource() {
                         >
                           {c.text}
                         </EditableText>
+                        {c.detail ? (
+                          <button
+                            type="button"
+                            onClick={() => open(project.name, c, [i, 'contributions', j])}
+                            className="edit-btn edit-btn-add"
+                          >
+                            상세 열기
+                          </button>
+                        ) : (
+                          <EditableSet
+                            file="opensource"
+                            path={[i, 'contributions', j, 'detail']}
+                            value={BLANK.detail}
+                            label="상세 만들기"
+                          />
+                        )}
                         <EditableRemove
                           file="opensource"
                           path={[i, 'contributions']}
@@ -93,13 +138,17 @@ export function OpenSource() {
 
       <Modal
         open={selected !== null}
-        onClose={() => setSelected(null)}
+        onClose={close}
         title={selected?.contribution.text ?? ''}
         meta={selected ? `${selected.project} #${selected.contribution.number}` : undefined}
       >
         {selected?.contribution.detail && (
           <>
-            <DetailBody detail={selected.contribution.detail} />
+            <DetailBody
+              detail={selected.contribution.detail}
+              file="opensource"
+              path={[...selected.path, 'detail']}
+            />
             <a
               href={selected.contribution.url}
               target="_blank"

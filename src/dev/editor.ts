@@ -20,6 +20,7 @@ export type Key = string | number
 const ENDPOINT = '/__content'
 const MODE_KEY = 'portfolio-edit-mode'
 const SCROLL_KEY = 'portfolio-edit-scroll'
+const MODAL_KEY = 'portfolio-edit-modal'
 
 // ── 편집 모드 on/off ─────────────────────────────────────────
 
@@ -67,6 +68,7 @@ export const useEditing = () =>
 
 type Patch =
   | { op: 'set'; file: ContentFile; path: Key[]; value: unknown }
+  | { op: 'unset'; file: ContentFile; path: Key[] }
   | { op: 'insert'; file: ContentFile; path: Key[]; index: number; value: unknown }
   | { op: 'remove'; file: ContentFile; path: Key[]; index: number }
 
@@ -107,6 +109,27 @@ export function restoreScroll() {
   requestAnimationFrame(() => window.scrollTo({ top: Number(saved), behavior: 'instant' }))
 }
 
+// ── 저장 뒤 열려 있던 상세 모달 되살리기 ────────────────────
+//
+// 모달 안에서 글을 고치면 파일이 바뀌고, Vite가 페이지를 다시 불러오면서
+// 모달이 닫힙니다. 그래서 어느 모달이 열려 있었는지 적어 두었다가
+// 새로 그려질 때 같은 자리를 다시 엽니다.
+
+/** 경로를 모달을 구분하는 문자열 하나로 만듭니다 */
+export const pathKey = (file: ContentFile, path: Key[]) => `${file}:${path.join('.')}`
+
+// 새로고침 직후 한 번만 읽고 비웁니다. 그래야 다음 새로고침 때 또 열리지 않습니다
+const reopenKey = import.meta.env.DEV ? read(MODAL_KEY) : null
+if (reopenKey !== null) write(MODAL_KEY, null)
+
+/** 지금 그리는 모달이 저장 직전에 열려 있던 그 모달인지 */
+export const shouldReopen = (key: string) => reopenKey === key
+
+/** 모달이 열리고 닫힐 때마다 적어 둡니다 */
+export const rememberModal = (key: string | null) => {
+  if (import.meta.env.DEV) write(MODAL_KEY, key)
+}
+
 // ── 새 항목의 빈 틀 ──────────────────────────────────────────
 
 /**
@@ -130,4 +153,5 @@ export const BLANK = {
   social: () => ({ label: '', href: '' }),
   contribution: () => ({ text: '', number: '', url: '', status: 'Open' }),
   openSourceProject: () => ({ name: '', contributions: [] }),
+  detail: () => ({ sections: [{ heading: '', body: [''] }] }),
 } as const
