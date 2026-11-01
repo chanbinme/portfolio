@@ -1,16 +1,21 @@
 import { others, otherCategories } from '../data/profile'
 import { Section } from './Section'
+import { EditableAdd, EditableRemove, EditableText } from '../dev/Editable'
+import { BLANK } from '../dev/editor'
 
 const FALLBACK = '기타'
 
 // 정해진 묶음 순서대로, 묶음 안에서는 content 파일에 적은 순서(최신순) 그대로
+// 편집할 때 JSON의 몇 번째 항목인지 알아야 하므로 원래 인덱스를 함께 들고 다닙니다
 const groups = [...otherCategories, FALLBACK]
   .map((name) => ({
     name,
-    items: others.filter((o) => {
-      const known = (otherCategories as readonly string[]).includes(o.category)
-      return (known ? o.category : FALLBACK) === name
-    }),
+    items: others
+      .map((item, index) => ({ item, index }))
+      .filter(({ item }) => {
+        const known = (otherCategories as readonly string[]).includes(item.category)
+        return (known ? item.category : FALLBACK) === name
+      }),
   }))
   .filter((g) => g.items.length > 0)
 
@@ -25,29 +30,51 @@ export function More() {
             </h3>
 
             <ul className="mt-5 space-y-5">
-              {group.items.map((item, i) => (
-                <li key={`${i}-${item.title}`} className="sm:flex sm:gap-6">
+              {group.items.map(({ item, index }) => (
+                <li key={index} className="sm:flex sm:gap-6">
                   <span className="shrink-0 font-mono text-xs text-neutral-500 sm:w-32 sm:pt-0.5 dark:text-neutral-400">
-                    {item.date}
+                    <EditableText file="others" path={[index, 'date']}>
+                      {item.date}
+                    </EditableText>
                   </span>
                   <div className="mt-1 sm:mt-0">
                     <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                      {item.title}
+                      <EditableText file="others" path={[index, 'title']}>
+                        {item.title}
+                      </EditableText>
+                      <EditableRemove file="others" path={[]} index={index} label="항목" />
                     </p>
                     <p className="mt-0.5 text-sm text-neutral-500 dark:text-neutral-400">
-                      {item.issuer}
+                      <EditableText file="others" path={[index, 'issuer']}>
+                        {item.issuer}
+                      </EditableText>
                     </p>
-                    {item.note && (
+                    {(item.note || import.meta.env.DEV) && (
                       <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                        {item.note}
+                        <EditableText file="others" path={[index, 'note']}>
+                          {item.note ?? ''}
+                        </EditableText>
                       </p>
                     )}
+                    {/* 어느 묶음에 들어갈지 정하는 값이라 함께 고칠 수 있게 둡니다 */}
+                    <p className="mt-1 font-mono text-xs text-neutral-400 dark:text-neutral-500">
+                      <EditableText file="others" path={[index, 'category']}>
+                        {item.category}
+                      </EditableText>
+                    </p>
                   </div>
                 </li>
               ))}
             </ul>
           </div>
         ))}
+        <EditableAdd
+          file="others"
+          path={[]}
+          index={others.length}
+          blank={BLANK.other}
+          label="항목"
+        />
       </div>
     </Section>
   )

@@ -4,6 +4,11 @@ import { createRoot } from 'react-dom/client'
 import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css'
 import './index.css'
 import App from './App.tsx'
+import { restoreScroll } from './dev/editor'
+
+// 인라인 편집으로 저장하면 Vite가 페이지를 다시 불러옵니다.
+// 그때 고치던 자리로 스크롤을 되돌립니다 (개발 서버에서만 동작).
+if (import.meta.env.DEV) restoreScroll()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

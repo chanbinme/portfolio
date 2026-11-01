@@ -1,5 +1,6 @@
 import { heroMetrics, profile, socials } from '../data/profile'
 import { PdfMenu } from './PdfMenu'
+import { EditableText } from '../dev/Editable'
 
 export function Hero() {
   const links = socials.filter((s) => s.href)
@@ -10,15 +11,21 @@ export function Hero() {
       className="mx-auto w-full max-w-5xl px-6 pt-16 pb-12 sm:pt-24 sm:pb-14"
     >
       <p className="text-base font-medium text-accent dark:text-accent-dark">
-        {profile.role}
+        <EditableText file="profile" path={['role']}>
+          {profile.role}
+        </EditableText>
       </p>
 
       <h1 className="mt-3 text-[clamp(2.75rem,7vw,4.5rem)] leading-[1.02] font-bold tracking-[-0.035em] text-neutral-900 dark:text-neutral-50">
-        {profile.name}
+        <EditableText file="profile" path={['name']}>
+          {profile.name}
+        </EditableText>
       </h1>
 
       <p className="mt-8 max-w-2xl text-[clamp(1.25rem,2.4vw,1.5rem)] leading-snug text-balance text-neutral-700 dark:text-neutral-200">
-        {profile.headline}
+        <EditableText file="profile" path={['headline']}>
+          {profile.headline}
+        </EditableText>
       </p>
 
       {/*

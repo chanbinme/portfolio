@@ -4,7 +4,7 @@ import { useReveal } from '../hooks/useReveal'
 type SectionProps = {
   id: string
   title: string
-  subtitle?: string
+  subtitle?: ReactNode
   children: ReactNode
 }
 
