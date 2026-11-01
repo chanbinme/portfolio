@@ -13,7 +13,8 @@ export function DetailTrigger({ text, onClick }: DetailTriggerProps) {
     <button
       type="button"
       onClick={onClick}
-      className="group -my-0.5 cursor-pointer py-0.5 text-left transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
+      // 누르는 순간(손을 떼기 전) 글자와 밑줄이 진해져 눌렸다는 것을 바로 알려줍니다
+      className="group -my-0.5 cursor-pointer py-0.5 text-left transition-colors hover:text-neutral-900 active:text-accent active:duration-0 dark:hover:text-neutral-100 dark:active:text-accent-dark"
     >
       <span className="underline decoration-neutral-300 decoration-dashed underline-offset-4 transition-colors group-hover:decoration-accent dark:decoration-neutral-600 dark:group-hover:decoration-accent-dark">
         {text}
