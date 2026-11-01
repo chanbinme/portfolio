@@ -634,6 +634,41 @@
   }
 }
 
+/* ── 경력: 가리킨 프로젝트에 집중 ───────────────────────────
+ *
+ * 프로젝트 하나에 마우스를 올리거나 키보드 초점이 들어가면, 같은 묶음의
+ * 나머지를 흐리게 하고 그 프로젝트 이름에 포인트 색을 줍니다.
+ *
+ * - 마우스처럼 올려 볼 수 있는 입력에서만 동작합니다 (터치에서는 손가락을
+ *   떼도 :hover가 남아 흐려진 채로 굳기 때문입니다)
+ * - :has(> li:hover)로 "어느 프로젝트 위에 있을 때만" 흐리게 합니다. 목록
+ *   위라도 항목 사이 틈에서는 전체가 흐려지지 않습니다
+ * - 인라인 편집 중에는 끕니다. 고칠 글자가 흐려지면 곤란합니다
+ * - 투명도와 색만 바꾸므로 레이아웃이 움직이지 않습니다
+ */
+@media screen and (hover: hover) and (pointer: fine) {
+  .exp-projects > li {
+    transition: opacity 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .exp-projects > li h5 {
+    transition: color 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .exp-projects:has(> li:is(:hover, :focus-within)):not(:has(.edit-text))
+    > li:not(:hover, :focus-within) {
+    opacity: 0.4;
+  }
+
+  .exp-projects:not(:has(.edit-text)) > li:is(:hover, :focus-within) h5 {
+    color: var(--color-accent);
+  }
+
+  .dark .exp-projects:not(:has(.edit-text)) > li:is(:hover, :focus-within) h5 {
+    color: var(--color-accent-dark);
+  }
+}
+
 /* ── 개발 서버 인라인 편집 ───────────────────────────────────
  *
  * src/dev/의 편집 UI가 쓰는 클래스입니다. 편집 모드일 때만 붙고,
