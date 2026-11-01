@@ -34,6 +34,8 @@ type Patch =
   | { op: 'insert'; file: File; path: Key[]; index: number; value: unknown }
   /** path가 가리키는 배열에서 index 항목을 지웁니다 */
   | { op: 'remove'; file: File; path: Key[]; index: number }
+  /** path가 가리키는 키를 통째로 지웁니다 (선택 항목을 비울 때) */
+  | { op: 'unset'; file: File; path: Key[] }
 
 export const ENDPOINT = '/__content'
 
@@ -51,6 +53,10 @@ function parse(body: unknown): Patch {
   const path = p.path as Key[]
 
   if (p.op === 'set') return { op: 'set', file, path, value: p.value }
+  if (p.op === 'unset') {
+    if (path.length === 0) throw new Error('루트는 지울 수 없습니다')
+    return { op: 'unset', file, path }
+  }
 
   if (p.op === 'insert' || p.op === 'remove') {
     if (typeof p.index !== 'number' || !Number.isInteger(p.index) || p.index < 0) {
@@ -84,6 +90,17 @@ function apply(root: unknown, patch: Patch): unknown {
       throw new Error(`경로가 끊겼습니다: ${patch.path.join('.')}`)
     }
     ;(parent as Record<Key, unknown>)[patch.path[patch.path.length - 1]] = patch.value
+    return root
+  }
+
+  if (patch.op === 'unset') {
+    const parent = walk(root, patch.path.slice(0, -1))
+    if (parent === null || typeof parent !== 'object') {
+      throw new Error(`경로가 끊겼습니다: ${patch.path.join('.')}`)
+    }
+    const last = patch.path[patch.path.length - 1]
+    if (Array.isArray(parent)) throw new Error('배열 항목은 remove로 지웁니다')
+    delete (parent as Record<Key, unknown>)[last]
     return root
   }
 

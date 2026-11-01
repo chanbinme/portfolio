@@ -7,11 +7,30 @@ import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { HighlightList } from './HighlightList'
 import { PrintDetail } from './PrintDetail'
-import { EditableAdd, EditableRemove, EditableText } from '../dev/Editable'
-import { BLANK } from '../dev/editor'
+import { EditableAdd, EditableRemove, EditableSet, EditableText } from '../dev/Editable'
+import { BLANK, pathKey, rememberModal, shouldReopen } from '../dev/editor'
+
+/** 열려 있는 프로젝트. 상세를 고치려면 몇 번째 프로젝트인지도 알아야 합니다 */
+type Selected = { project: Project; index: number }
 
 export function Projects() {
-  const [selected, setSelected] = useState<Project | null>(null)
+  const [selected, setSelected] = useState<Selected | null>(() => {
+    if (!import.meta.env.DEV) return null
+    const index = projects.findIndex(
+      (project, i) => project.detail && shouldReopen(pathKey('projects', [i])),
+    )
+    return index < 0 ? null : { project: projects[index], index }
+  })
+
+  const open = (project: Project, index: number) => {
+    rememberModal(pathKey('projects', [index]))
+    setSelected({ project, index })
+  }
+
+  const close = () => {
+    rememberModal(null)
+    setSelected(null)
+  }
 
   return (
     <Section
@@ -83,12 +102,23 @@ export function Projects() {
 
             {project.detail && <PrintDetail detail={project.detail} />}
 
+            {!project.detail && (
+              <div className="mt-4">
+                <EditableSet
+                  file="projects"
+                  path={[i, 'detail']}
+                  value={BLANK.detail}
+                  label="프로젝트 전체 상세 만들기"
+                />
+              </div>
+            )}
+
             {(project.detail || project.repoUrl || project.liveUrl) && (
               <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
                 {project.detail && (
                   <button
                     type="button"
-                    onClick={() => setSelected(project)}
+                    onClick={() => open(project, i)}
                     className="press inline-flex items-center gap-1 font-medium text-accent hover:opacity-70 dark:text-accent-dark"
                   >
                     자세히 보기
@@ -142,11 +172,17 @@ export function Projects() {
 
       <Modal
         open={selected !== null}
-        onClose={() => setSelected(null)}
-        title={selected?.title ?? ''}
-        meta={selected?.period}
+        onClose={close}
+        title={selected?.project.title ?? ''}
+        meta={selected?.project.period}
       >
-        {selected?.detail && <DetailBody detail={selected.detail} />}
+        {selected?.project.detail && (
+          <DetailBody
+            detail={selected.project.detail}
+            file="projects"
+            path={[selected.index, 'detail']}
+          />
+        )}
       </Modal>
     </Section>
   )
