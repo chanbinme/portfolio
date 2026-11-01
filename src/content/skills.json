@@ -23,6 +23,14 @@
     ]
   },
   {
+    "category": "Test / Docs",
+    "items": [
+      "JUnit 5",
+      "Fixture Monkey",
+      "springdoc-openapi"
+    ]
+  },
+  {
     "category": "Performance / Monitoring",
     "items": [
       "K6",
