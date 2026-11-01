@@ -9,6 +9,7 @@ import { Writing } from './components/Writing'
 import { More } from './components/More'
 import { Contact } from './components/Contact'
 import { profile } from './data/profile'
+import { EditToggle } from './dev/Editable'
 
 export default function App() {
   return (
@@ -34,6 +35,9 @@ export default function App() {
           </p>
         </div>
       </footer>
+
+      {/* 개발 서버에서만 보이는 인라인 편집 스위치 */}
+      <EditToggle />
     </>
   )
 }

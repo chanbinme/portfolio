@@ -633,3 +633,81 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── 개발 서버 인라인 편집 ───────────────────────────────────
+ *
+ * src/dev/의 편집 UI가 쓰는 클래스입니다. 편집 모드일 때만 붙고,
+ * 배포된 사이트에는 이 클래스를 붙이는 코드가 없습니다.
+ */
+
+.edit-text {
+  border-radius: 2px;
+  outline: 1px dashed var(--color-neutral-300);
+  outline-offset: 2px;
+}
+
+.dark .edit-text {
+  outline-color: var(--color-neutral-700);
+}
+
+.edit-text:focus {
+  outline: 2px solid var(--color-accent);
+  background-color: color-mix(in oklab, var(--color-accent) 8%, transparent);
+}
+
+.dark .edit-text:focus {
+  outline-color: var(--color-accent-dark);
+}
+
+/* 갓 추가해 비어 있는 항목도 눌러서 쓸 수 있게 자리를 만들어 둡니다 */
+.edit-text[data-empty]::before {
+  content: '내용 입력';
+  color: var(--color-neutral-400);
+}
+
+.edit-btn {
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.edit-btn-remove {
+  margin-left: 4px;
+  padding: 2px 4px;
+  color: var(--color-neutral-400);
+}
+
+.edit-btn-remove:hover {
+  background-color: color-mix(in oklab, red 12%, transparent);
+  color: #dc2626;
+}
+
+.edit-btn-add {
+  margin-top: 6px;
+  padding: 3px 7px;
+  border: 1px dashed var(--color-neutral-300);
+  color: var(--color-neutral-500);
+}
+
+.dark .edit-btn-add {
+  border-color: var(--color-neutral-700);
+  color: var(--color-neutral-400);
+}
+
+.edit-btn-add:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* 편집용 단추는 인쇄물에 나오지 않습니다 */
+@media print {
+  .edit-btn {
+    display: none !important;
+  }
+
+  .edit-text {
+    outline: 0 !important;
+  }
+}

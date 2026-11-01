@@ -11,6 +11,8 @@ import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { HighlightList } from './HighlightList'
 import { PrintDetail } from './PrintDetail'
+import { EditableAdd, EditableRemove, EditableText } from '../dev/Editable'
+import { BLANK, type Key } from '../dev/editor'
 
 export function Experience() {
   const [selected, setSelected] = useState<ExperienceItem | null>(null)
@@ -19,7 +21,7 @@ export function Experience() {
     <Section id="experience" title="Experience" subtitle="결제·커머스 서비스를 개발해 왔습니다.">
       <ol className="relative space-y-8 border-l border-neutral-200 pl-6 dark:border-neutral-800">
         {experiences.map((exp, i) => (
-          <li key={`${i}-${exp.company}`} className="relative">
+          <li key={i} className="relative">
             {/* 타임라인 점 (회사) */}
             <span
               className="timeline-dot absolute top-2 -left-[28.5px] h-2 w-2 rounded-full bg-accent ring-4 ring-white dark:bg-accent-dark dark:ring-neutral-950"
@@ -27,20 +29,29 @@ export function Experience() {
             />
 
             <p className="font-mono text-xs text-neutral-500 dark:text-neutral-400">
-              {exp.period}
+              <EditableText file="experiences" path={[i, 'period']}>
+                {exp.period}
+              </EditableText>
             </p>
 
             <h3 className="mt-1.5 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-              {exp.company}
-              {exp.role && (
+              <EditableText file="experiences" path={[i, 'company']}>
+                {exp.company}
+              </EditableText>
+              {(exp.role || import.meta.env.DEV) && (
                 <span className="ml-2 font-normal text-neutral-500 dark:text-neutral-400">
-                  {exp.role}
+                  <EditableText file="experiences" path={[i, 'role']}>
+                    {exp.role}
+                  </EditableText>
                 </span>
               )}
+              <EditableRemove file="experiences" path={[]} index={i} label="경력" />
             </h3>
 
             <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-              {exp.summary}
+              <EditableText file="experiences" path={[i, 'summary']}>
+                {exp.summary}
+              </EditableText>
             </p>
 
             {/* 팀을 옮긴 회사는 팀별로, 아니면 회사 단위로 */}
@@ -48,17 +59,34 @@ export function Experience() {
               <ol className="positions mt-6 space-y-8">
                 {exp.positions.map((pos, j) => (
                   <PositionItem
-                    key={`${j}-${pos.team}`}
+                    key={j}
                     position={pos}
                     company={exp.company}
+                    path={[i, 'positions', j]}
                   />
                 ))}
               </ol>
             )}
+            <EditableAdd
+              file="experiences"
+              path={[i, 'positions']}
+              index={exp.positions.length}
+              blank={BLANK.position}
+              label="팀"
+            />
 
-            <ProjectList projects={exp.projects} context={exp.company} />
-            <HighlightList items={exp.highlights} context={exp.company} />
-            <StackTags stack={exp.stack} />
+            <ProjectList
+              projects={exp.projects}
+              context={exp.company}
+              path={[i, 'projects']}
+            />
+            <HighlightList
+              items={exp.highlights}
+              context={exp.company}
+              file="experiences"
+              path={[i, 'highlights']}
+            />
+            <StackTags stack={exp.stack} path={[i, 'stack']} />
 
             {exp.detail && <PrintDetail detail={exp.detail} />}
 
@@ -87,6 +115,14 @@ export function Experience() {
         ))}
       </ol>
 
+      <EditableAdd
+        file="experiences"
+        path={[]}
+        index={experiences.length}
+        blank={BLANK.experience}
+        label="경력"
+      />
+
       <Modal
         open={selected !== null}
         onClose={() => setSelected(null)}
@@ -100,7 +136,16 @@ export function Experience() {
 }
 
 /** 회사 안의 팀 하나. 회사와 같은 타임라인 선 위에 속이 빈 점을 찍습니다. */
-function PositionItem({ position, company }: { position: Position; company: string }) {
+function PositionItem({
+  position,
+  company,
+  path,
+}: {
+  position: Position
+  company: string
+  /** 이 팀까지의 JSON 경로 (예: [0, 'positions', 1]) */
+  path: Key[]
+}) {
   return (
     <li className="relative">
       <span
@@ -109,33 +154,50 @@ function PositionItem({ position, company }: { position: Position; company: stri
       />
 
       <p className="font-mono text-xs text-neutral-500 dark:text-neutral-400">
-        {position.period}
+        <EditableText file="experiences" path={[...path, 'period']}>
+          {position.period}
+        </EditableText>
       </p>
 
       <h4 className="mt-1 font-medium text-neutral-900 dark:text-neutral-100">
-        {position.team}
-        {position.role && (
+        <EditableText file="experiences" path={[...path, 'team']}>
+          {position.team}
+        </EditableText>
+        {(position.role || import.meta.env.DEV) && (
           <span className="ml-2 font-normal text-neutral-500 dark:text-neutral-400">
-            {position.role}
+            <EditableText file="experiences" path={[...path, 'role']}>
+              {position.role}
+            </EditableText>
           </span>
         )}
+        <EditableRemove
+          file="experiences"
+          path={path.slice(0, -1)}
+          index={Number(path[path.length - 1])}
+          label="팀"
+        />
       </h4>
 
-      {position.summary && (
+      {(position.summary || import.meta.env.DEV) && (
         <p className="mt-1.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-          {position.summary}
+          <EditableText file="experiences" path={[...path, 'summary']}>
+            {position.summary ?? ''}
+          </EditableText>
         </p>
       )}
 
       <ProjectList
         projects={position.projects}
         context={`${company} · ${position.team}`}
+        path={[...path, 'projects']}
       />
       <HighlightList
         items={position.highlights}
         context={`${company} · ${position.team}`}
+        file="experiences"
+        path={[...path, 'highlights']}
       />
-      <StackTags stack={position.stack} />
+      <StackTags stack={position.stack} path={[...path, 'stack']} />
     </li>
   )
 }
@@ -148,54 +210,93 @@ function PositionItem({ position, company }: { position: Position; company: stri
 function ProjectList({
   projects,
   context,
+  path,
 }: {
   projects: ExperienceProject[]
   context: string
+  /** 프로젝트 목록까지의 JSON 경로 */
+  path: Key[]
 }) {
-  if (projects.length === 0) return null
+  if (projects.length === 0 && !import.meta.env.DEV) return null
 
   return (
-    <ol className="exp-projects mt-4 space-y-4">
-      {projects.map((project, i) => (
-        <li
-          key={`${i}-${project.name}`}
-          className="border-l border-neutral-200 pl-4 dark:border-neutral-800"
-        >
-          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <h5 className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-              {project.name}
-            </h5>
-            {project.period && (
-              <span className="font-mono text-[11px] text-neutral-400 dark:text-neutral-500">
-                {project.period}
-              </span>
+    <>
+      <ol className="exp-projects mt-4 space-y-4">
+        {projects.map((project, i) => (
+          <li
+            key={i}
+            className="border-l border-neutral-200 pl-4 dark:border-neutral-800"
+          >
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+              <h5 className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                <EditableText file="experiences" path={[...path, i, 'name']}>
+                  {project.name}
+                </EditableText>
+                <EditableRemove
+                  file="experiences"
+                  path={path}
+                  index={i}
+                  label="프로젝트"
+                />
+              </h5>
+              {(project.period || import.meta.env.DEV) && (
+                <span className="font-mono text-[11px] text-neutral-400 dark:text-neutral-500">
+                  <EditableText file="experiences" path={[...path, i, 'period']}>
+                    {project.period ?? ''}
+                  </EditableText>
+                </span>
+              )}
+            </div>
+
+            {(project.summary || import.meta.env.DEV) && (
+              <p className="mt-1 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+                <EditableText file="experiences" path={[...path, i, 'summary']}>
+                  {project.summary ?? ''}
+                </EditableText>
+              </p>
             )}
-          </div>
 
-          {project.summary && (
-            <p className="mt-1 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
-              {project.summary}
-            </p>
-          )}
+            <HighlightList
+              items={project.highlights}
+              context={`${context} · ${project.name}`}
+              file="experiences"
+              path={[...path, i, 'highlights']}
+            />
+            <StackTags stack={project.stack} path={[...path, i, 'stack']} />
+          </li>
+        ))}
+      </ol>
 
-          <HighlightList
-            items={project.highlights}
-            context={`${context} · ${project.name}`}
-          />
-          <StackTags stack={project.stack} />
-        </li>
-      ))}
-    </ol>
+      <EditableAdd
+        file="experiences"
+        path={path}
+        index={projects.length}
+        blank={BLANK.experienceProject}
+        label="프로젝트"
+      />
+    </>
   )
 }
 
-function StackTags({ stack }: { stack: string[] }) {
-  if (stack.length === 0) return null
+function StackTags({ stack, path }: { stack: string[]; path: Key[] }) {
+  if (stack.length === 0 && !import.meta.env.DEV) return null
   return (
     <div className="mt-4 flex flex-wrap gap-1.5">
       {stack.map((s, i) => (
-        <Tag key={`${i}-${s}`}>{s}</Tag>
+        <Tag key={i}>
+          <EditableText file="experiences" path={[...path, i]}>
+            {s}
+          </EditableText>
+          <EditableRemove file="experiences" path={path} index={i} label="기술" />
+        </Tag>
       ))}
+      <EditableAdd
+        file="experiences"
+        path={path}
+        index={stack.length}
+        blank={BLANK.text}
+        label="기술"
+      />
     </div>
   )
 }

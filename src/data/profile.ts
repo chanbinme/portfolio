@@ -189,9 +189,26 @@ const req = (v: Maybe<string>) => v?.trim() ?? ''
 /** 선택 문자열: 비어 있으면 undefined (화면에서 아예 안 그림) */
 const opt = (v: Maybe<string>) => v?.trim() || undefined
 
-/** 문자열 목록: 빈 줄 제거 */
+/**
+ * 개발 서버에서는 빈 항목을 지우지 않습니다.
+ *
+ * 인라인 편집(src/dev/)으로 갓 추가한 항목은 비어 있습니다. 그걸 여기서
+ * 걸러 버리면 "추가"를 눌러도 화면에 아무것도 나타나지 않아 글을 쓸 수가
+ * 없고, JSON의 인덱스와 화면의 순서가 어긋나 엉뚱한 항목이 지워집니다.
+ *
+ * 배포 빌드에서는 평소대로 걸러 내므로, 비워 둔 항목은 사이트에 나오지
+ * 않습니다.
+ */
+const DROP_EMPTY = !import.meta.env.DEV
+
+const keep =
+  <T,>(hasContent: (x: T) => unknown) =>
+  (x: T) =>
+    DROP_EMPTY ? Boolean(hasContent(x)) : true
+
+/** 문자열 목록: 빈 줄 제거 (개발 서버에서는 그대로 둡니다) */
 const lines = (v: Maybe<Maybe<string>[]>) =>
-  (v ?? []).map((s) => req(s)).filter(Boolean)
+  (v ?? []).map((s) => req(s)).filter(keep<string>(Boolean))
 
 /** 객체 목록: null 항목 제거 */
 const list = <T>(v: Maybe<Maybe<T>[]>) =>
@@ -201,10 +218,10 @@ function toDetail(d: Maybe<Loose<Detail>>): Detail | undefined {
   if (!d) return undefined
   const sections = list(d.sections)
     .map((s) => ({ heading: req(s.heading), list: s.list === true, body: lines(s.body) }))
-    .filter((s) => s.heading || s.body.length > 0)
+    .filter(keep((s) => s.heading || s.body.length > 0))
   const metrics = list(d.metrics)
     .map((m) => ({ label: req(m.label), value: req(m.value) }))
-    .filter((m) => m.label || m.value)
+    .filter(keep((m) => m.label || m.value))
   // 내용이 없는 상세는 없는 것으로 칩니다 (빈 모달이 열리지 않도록)
   if (sections.length === 0 && metrics.length === 0) return undefined
   return { sections, ...(metrics.length > 0 && { metrics }) }
@@ -213,7 +230,7 @@ function toDetail(d: Maybe<Loose<Detail>>): Detail | undefined {
 const toHighlights = (v: Maybe<Maybe<Loose<Highlight>>[]>): Highlight[] =>
   list(v)
     .map((h) => ({ text: req(h.text), detail: toDetail(h.detail) }))
-    .filter((h) => h.text)
+    .filter(keep((h) => h.text))
 
 /** 이름이 없거나 성과가 하나도 없는 프로젝트는 없는 것으로 칩니다 */
 const toExperienceProjects = (
@@ -227,7 +244,7 @@ const toExperienceProjects = (
       highlights: toHighlights(pj.highlights),
       stack: lines(pj.stack),
     }))
-    .filter((pj) => pj.name && pj.highlights.length > 0)
+    .filter(keep((pj) => pj.name && pj.highlights.length > 0))
 
 // ── 내용 ─────────────────────────────────────────────────────
 
@@ -267,15 +284,15 @@ export const profile = {
 /** 주소가 비어 있는 링크는 렌더하지 않습니다 */
 export const socials: SocialLink[] = list(p.socials)
   .map((s) => ({ label: req(s.label), href: req(s.href) }))
-  .filter((s) => s.label && s.href)
+  .filter(keep((s) => s.label && s.href))
 
 export const heroMetrics: HeroMetric[] = list(p.heroMetrics)
   .map((m) => ({ value: req(m.value), label: req(m.label), source: req(m.source) }))
-  .filter((m) => m.value && m.label)
+  .filter(keep((m) => m.value && m.label))
 
 export const skills: SkillGroup[] = list<Loose<SkillGroup>>(skillsJson)
   .map((g) => ({ category: req(g.category), items: lines(g.items) }))
-  .filter((g) => g.category && g.items.length > 0)
+  .filter(keep((g) => g.category && g.items.length > 0))
 
 export const experiences: Experience[] = list<Loose<Experience>>(experiencesJson).map(
   (e) => ({
@@ -293,7 +310,7 @@ export const experiences: Experience[] = list<Loose<Experience>>(experiencesJson
         highlights: toHighlights(po.highlights),
         stack: lines(po.stack),
       }))
-      .filter((po) => po.team || po.role),
+      .filter(keep((po) => po.team || po.role)),
     projects: toExperienceProjects(e.projects),
     highlights: toHighlights(e.highlights),
     stack: lines(e.stack),
@@ -320,7 +337,7 @@ export const posts: Post[] = list<Loose<Post>>(postsJson)
     date: opt(po.date),
     excerpt: opt(po.excerpt),
   }))
-  .filter((po) => po.title)
+  .filter(keep((po) => po.title))
 
 export const others: OtherItem[] = list<Loose<OtherItem>>(othersJson).map((o) => ({
   category: req(o.category),
@@ -345,6 +362,6 @@ export const openSource: OpenSourceProject[] = list<Loose<OpenSourceProject>>(op
         release: opt(c.release),
         detail: toDetail(c.detail),
       }))
-      .filter((c) => c.text),
+      .filter(keep((c) => c.text)),
   }))
-  .filter((pr) => pr.name && pr.contributions.length > 0)
+  .filter(keep((pr) => pr.name && pr.contributions.length > 0))

@@ -1,5 +1,7 @@
+import type { ReactNode } from 'react'
+
 type TagProps = {
-  children: string
+  children: ReactNode
 }
 
 export function Tag({ children }: TagProps) {

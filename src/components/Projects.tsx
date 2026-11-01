@@ -7,6 +7,8 @@ import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { HighlightList } from './HighlightList'
 import { PrintDetail } from './PrintDetail'
+import { EditableAdd, EditableRemove, EditableText } from '../dev/Editable'
+import { BLANK } from '../dev/editor'
 
 export function Projects() {
   const [selected, setSelected] = useState<Project | null>(null)
@@ -20,12 +22,15 @@ export function Projects() {
       <div className={`grid gap-4 ${projects.length > 1 ? 'lg:grid-cols-2' : ''}`}>
         {projects.map((project, i) => (
           <article
-            key={`${i}-${project.title}`}
+            key={i}
             className="rounded-xl border border-neutral-200 p-5 transition-colors hover:border-neutral-300 dark:border-neutral-800 dark:hover:border-neutral-700"
           >
             <div className="flex items-baseline justify-between gap-4">
               <h3 className="font-medium text-neutral-900 dark:text-neutral-100">
-                {project.title}
+                <EditableText file="projects" path={[i, 'title']}>
+                  {project.title}
+                </EditableText>
+                <EditableRemove file="projects" path={[]} index={i} label="프로젝트" />
                 {project.featured && (
                   <span className="ml-2 align-middle font-mono text-[10px] tracking-wide text-accent uppercase dark:text-accent-dark">
                     featured
@@ -33,24 +38,47 @@ export function Projects() {
                 )}
               </h3>
               <span className="shrink-0 font-mono text-xs text-neutral-500 dark:text-neutral-400">
-                {project.period}
+                <EditableText file="projects" path={[i, 'period']}>
+                  {project.period}
+                </EditableText>
               </span>
             </div>
 
             <p className="mt-2.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-              {project.description}
+              <EditableText file="projects" path={[i, 'description']}>
+                {project.description}
+              </EditableText>
             </p>
 
             <HighlightList
               items={project.points}
               context={project.title}
               tone="muted"
+              file="projects"
+              path={[i, 'points']}
             />
 
             <div className="mt-4 flex flex-wrap items-center gap-1.5">
               {project.stack.map((s, j) => (
-                <Tag key={`${j}-${s}`}>{s}</Tag>
+                <Tag key={j}>
+                  <EditableText file="projects" path={[i, 'stack', j]}>
+                    {s}
+                  </EditableText>
+                  <EditableRemove
+                    file="projects"
+                    path={[i, 'stack']}
+                    index={j}
+                    label="기술"
+                  />
+                </Tag>
               ))}
+              <EditableAdd
+                file="projects"
+                path={[i, 'stack']}
+                index={project.stack.length}
+                blank={BLANK.text}
+                label="기술"
+              />
             </div>
 
             {project.detail && <PrintDetail detail={project.detail} />}
@@ -103,6 +131,14 @@ export function Projects() {
           </article>
         ))}
       </div>
+
+      <EditableAdd
+        file="projects"
+        path={[]}
+        index={projects.length}
+        blank={BLANK.project}
+        label="프로젝트"
+      />
 
       <Modal
         open={selected !== null}

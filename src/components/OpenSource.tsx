@@ -7,13 +7,17 @@ import { DetailBody } from './DetailBody'
 import { Bullet } from './Bullet'
 import { DetailTrigger } from './DetailTrigger'
 import { PrintDetail } from './PrintDetail'
+import { EditableAdd, EditableRemove, EditableText } from '../dev/Editable'
+import { BLANK, useEditing, type Key } from '../dev/editor'
 
 type Selected = { project: string; contribution: Contribution }
 
 export function OpenSource() {
   const [selected, setSelected] = useState<Selected | null>(null)
+  // 편집 중에는 상세가 달린 기여도 글자를 고칠 수 있어야 합니다
+  const editing = useEditing()
 
-  if (openSource.length === 0) return null
+  if (openSource.length === 0 && !import.meta.env.DEV) return null
 
   return (
     <Section
@@ -23,35 +27,68 @@ export function OpenSource() {
     >
       <div className="space-y-8">
         {openSource.map((project, i) => (
-          <div key={`${i}-${project.name}`}>
+          <div key={i}>
             <h3 className="font-medium text-neutral-900 dark:text-neutral-100">
-              {project.name}
+              <EditableText file="opensource" path={[i, 'name']}>
+                {project.name}
+              </EditableText>
+              <EditableRemove file="opensource" path={[]} index={i} label="프로젝트" />
             </h3>
 
             <ul className="mt-3 space-y-3">
               {project.contributions.map((c, j) => (
                 <li
-                  key={`${j}-${c.number}`}
+                  key={j}
                   className="flex gap-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300"
                 >
                   <Bullet />
                   <div>
-                    {c.detail ? (
+                    {c.detail && !editing ? (
                       <DetailTrigger
                         text={c.text}
                         onClick={() => setSelected({ project: project.name, contribution: c })}
                       />
                     ) : (
-                      <span>{c.text}</span>
+                      <span>
+                        <EditableText
+                          file="opensource"
+                          path={[i, 'contributions', j, 'text']}
+                        >
+                          {c.text}
+                        </EditableText>
+                        <EditableRemove
+                          file="opensource"
+                          path={[i, 'contributions']}
+                          index={j}
+                          label="기여"
+                        />
+                      </span>
                     )}
-                    <ContributionMeta contribution={c} />
+                    <ContributionMeta
+                      contribution={c}
+                      path={[i, 'contributions', j]}
+                    />
                     {c.detail && <PrintDetail detail={c.detail} />}
                   </div>
                 </li>
               ))}
             </ul>
+            <EditableAdd
+              file="opensource"
+              path={[i, 'contributions']}
+              index={project.contributions.length}
+              blank={BLANK.contribution}
+              label="기여"
+            />
           </div>
         ))}
+        <EditableAdd
+          file="opensource"
+          path={[]}
+          index={openSource.length}
+          blank={BLANK.openSourceProject}
+          label="프로젝트"
+        />
       </div>
 
       <Modal
@@ -79,7 +116,14 @@ export function OpenSource() {
 }
 
 /** PR 번호(링크) · 상태 · 머지 시점 · 반영 버전 */
-function ContributionMeta({ contribution: c }: { contribution: Contribution }) {
+function ContributionMeta({
+  contribution: c,
+  path,
+}: {
+  contribution: Contribution
+  /** 이 기여까지의 JSON 경로 */
+  path: Key[]
+}) {
   return (
     <p className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-xs text-neutral-500 dark:text-neutral-400">
       <a
@@ -88,7 +132,10 @@ function ContributionMeta({ contribution: c }: { contribution: Contribution }) {
         rel="noreferrer noopener"
         className="text-neutral-500 underline decoration-neutral-300 underline-offset-4 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:decoration-neutral-700 dark:hover:text-neutral-100"
       >
-        #{c.number}
+        #
+        <EditableText file="opensource" path={[...path, 'number']}>
+          {c.number}
+        </EditableText>
       </a>
       <span aria-hidden="true">·</span>
       {/* GitHub의 PR 상태 색을 따릅니다 (Merged 보라, Open 초록) */}
@@ -99,15 +146,34 @@ function ContributionMeta({ contribution: c }: { contribution: Contribution }) {
             : 'text-emerald-600 dark:text-emerald-400'
         }
       >
-        {c.status}
-        {c.merged && ` ${c.merged}`}
+        <EditableText file="opensource" path={[...path, 'status']}>
+          {c.status}
+        </EditableText>
+        {(c.merged || import.meta.env.DEV) && (
+          <>
+            {' '}
+            <EditableText file="opensource" path={[...path, 'merged']}>
+              {c.merged ?? ''}
+            </EditableText>
+          </>
+        )}
       </span>
-      {c.release && (
+      {(c.release || import.meta.env.DEV) && (
         <>
           <span aria-hidden="true">·</span>
-          <span>{c.release} 반영</span>
+          <span>
+            <EditableText file="opensource" path={[...path, 'release']}>
+              {c.release ?? ''}
+            </EditableText>{' '}
+            반영
+          </span>
         </>
       )}
+      <span aria-hidden="true">·</span>
+      {/* PR 주소는 글자가 아니라 링크라 따로 꺼내 둡니다 */}
+      <EditableText file="opensource" path={[...path, 'url']}>
+        {c.url}
+      </EditableText>
     </p>
   )
 }
