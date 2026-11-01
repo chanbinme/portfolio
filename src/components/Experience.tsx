@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { experiences } from '../data/profile'
-import type { Experience as ExperienceItem, Position } from '../data/profile'
+import type {
+  Experience as ExperienceItem,
+  ExperienceProject,
+  Position,
+} from '../data/profile'
 import { Section } from './Section'
 import { Tag } from './Tag'
 import { Modal } from './Modal'
@@ -52,6 +56,7 @@ export function Experience() {
               </ol>
             )}
 
+            <ProjectList projects={exp.projects} context={exp.company} />
             <HighlightList items={exp.highlights} context={exp.company} />
             <StackTags stack={exp.stack} />
 
@@ -122,12 +127,65 @@ function PositionItem({ position, company }: { position: Position; company: stri
         </p>
       )}
 
+      <ProjectList
+        projects={position.projects}
+        context={`${company} · ${position.team}`}
+      />
       <HighlightList
         items={position.highlights}
         context={`${company} · ${position.team}`}
       />
       <StackTags stack={position.stack} />
     </li>
+  )
+}
+
+/**
+ * 프로젝트 단위로 묶은 성과.
+ * 팀 아래 한 단계 더 들어가는 자리라, 타임라인 점을 더 찍는 대신
+ * 왼쪽 선과 작은 제목으로만 묶음을 표시합니다.
+ */
+function ProjectList({
+  projects,
+  context,
+}: {
+  projects: ExperienceProject[]
+  context: string
+}) {
+  if (projects.length === 0) return null
+
+  return (
+    <ol className="exp-projects mt-4 space-y-4">
+      {projects.map((project, i) => (
+        <li
+          key={`${i}-${project.name}`}
+          className="border-l border-neutral-200 pl-4 dark:border-neutral-800"
+        >
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <h5 className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+              {project.name}
+            </h5>
+            {project.period && (
+              <span className="font-mono text-[11px] text-neutral-400 dark:text-neutral-500">
+                {project.period}
+              </span>
+            )}
+          </div>
+
+          {project.summary && (
+            <p className="mt-1 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+              {project.summary}
+            </p>
+          )}
+
+          <HighlightList
+            items={project.highlights}
+            context={`${context} · ${project.name}`}
+          />
+          <StackTags stack={project.stack} />
+        </li>
+      ))}
+    </ol>
   )
 }
 
