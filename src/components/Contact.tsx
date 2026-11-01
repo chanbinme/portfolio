@@ -39,11 +39,18 @@ export function Contact() {
                   {social.label}
                 </EditableText>
               </a>
-              {/* 주소는 글자가 아니라 링크라 따로 꺼내 둡니다 */}
-              <span className="ml-1 font-mono text-xs text-neutral-400 dark:text-neutral-500">
-                <EditableText file="profile" path={['socials', index, 'href']}>
-                  {social.href}
-                </EditableText>
+              {/*
+                주소를 함께 보여줍니다 (전화번호처럼 그 자체가 정보인 경우가 있어서).
+                화면에서는 https:// · tel: 같은 접두어를 떼고 읽기 좋게, 개발 서버에서는 고칠 수 있게 원문 그대로 둡니다.
+              */}
+              <span className="ml-1 font-mono text-xs text-neutral-500 dark:text-neutral-400">
+                {import.meta.env.DEV ? (
+                  <EditableText file="profile" path={['socials', index, 'href']}>
+                    {social.href}
+                  </EditableText>
+                ) : (
+                  readableHref(social.href)
+                )}
               </span>
               <EditableRemove
                 file="profile"
@@ -65,4 +72,12 @@ export function Contact() {
       />
     </Section>
   )
+}
+
+/** 링크 주소를 사람이 읽는 모양으로: https://github.com/x/ → github.com/x, tel:010-… → 010-… */
+function readableHref(href: string) {
+  return href
+    .replace(/^(https?:\/\/|mailto:|tel:)/, '')
+    .replace(/^www\./, '')
+    .replace(/\/$/, '')
 }

@@ -82,9 +82,11 @@ export function Header() {
         'material sticky top-0 z-50 border-b backdrop-blur-xl backdrop-saturate-150 transition-[border-color,box-shadow,background-color] duration-300 [--material-solid:var(--color-white)] dark:[--material-solid:var(--color-neutral-950)]',
         // 메뉴가 펼쳐져 면이 커지면 더 두꺼운 재질로 — 아래 글자가 비쳐 읽기 어렵지 않게
         menuOpen ? 'bg-white/95 dark:bg-neutral-950/95' : 'bg-white/70 dark:bg-neutral-950/70',
+        // 선을 긋지 않고 아래로 번지는 그림자로만 본문과 나눕니다 (고대비 설정에서는 index.css가 선을 되살립니다)
+        'border-transparent',
         scrolled || menuOpen
-          ? 'border-neutral-200/70 shadow-[0_1px_12px_-6px_rgb(0_0_0/0.12)] dark:border-neutral-800/70'
-          : 'border-transparent',
+          ? 'shadow-[0_4px_12px_-8px_rgb(0_0_0/0.14)] dark:shadow-[0_4px_12px_-8px_rgb(0_0_0/0.7)]'
+          : '',
       ].join(' ')}
     >
       <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-6">
@@ -137,28 +139,32 @@ export function Header() {
       </div>
 
       {/* 모바일 드롭다운 */}
-      {menuOpen && (
-        <nav
-          id="mobile-nav"
-          className="menu-in border-t border-neutral-200/70 px-6 py-2 md:hidden dark:border-neutral-800/70"
-        >
-          {NAV.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              onClick={() => setMenuOpen(false)}
-              className={[
-                'press block rounded-md px-2 py-2.5 text-sm',
-                active === item.id
-                  ? 'text-accent dark:text-accent-dark'
-                  : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100',
-              ].join(' ')}
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-      )}
+      {/* 늘 그려 두고 열림 상태만 바꿉니다. 그래야 닫힐 때도 열린 길을 되짚어 접힙니다 */}
+      <div className="menu-panel md:hidden" data-open={menuOpen} inert={!menuOpen}>
+        {/* 접히는 칸은 여백이 없어야 0까지 줄어듭니다. 여백은 안쪽 nav가 가집니다 */}
+        <div>
+          <nav
+            id="mobile-nav"
+            className="border-t border-neutral-200/70 px-6 py-2 dark:border-neutral-800/70"
+          >
+            {NAV.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={() => setMenuOpen(false)}
+                className={[
+                  'press block rounded-md px-2 py-2.5 text-sm',
+                  active === item.id
+                    ? 'text-accent dark:text-accent-dark'
+                    : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100',
+                ].join(' ')}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </div>
     </header>
   )
 }

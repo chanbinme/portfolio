@@ -218,11 +218,15 @@ function ContributionMeta({
           </span>
         </>
       )}
-      <span aria-hidden="true">·</span>
-      {/* PR 주소는 글자가 아니라 링크라 따로 꺼내 둡니다 */}
-      <EditableText file="opensource" path={[...path, 'url']}>
-        {c.url}
-      </EditableText>
+      {/* PR 주소는 링크라 글자로는 보이지 않으므로, 고칠 수 있게 개발 서버에서만 꺼내 둡니다 */}
+      {import.meta.env.DEV && (
+        <>
+          <span aria-hidden="true">·</span>
+          <EditableText file="opensource" path={[...path, 'url']}>
+            {c.url}
+          </EditableText>
+        </>
+      )}
     </p>
   )
 }

@@ -52,12 +52,14 @@ export function Writing() {
                   </EditableText>
                 </p>
               )}
-              {/* 주소는 글자가 아니라 링크라, 편집할 수 있게 따로 꺼내 둡니다 */}
-              <p className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
-                <EditableText file="posts" path={[i, 'url']}>
-                  {post.url}
-                </EditableText>
-              </p>
+              {/* 주소는 제목 링크에 이미 걸려 있습니다. 고칠 수 있게 개발 서버에서만 꺼내 둡니다 */}
+              {import.meta.env.DEV && (
+                <p className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+                  <EditableText file="posts" path={[i, 'url']}>
+                    {post.url}
+                  </EditableText>
+                </p>
+              )}
             </li>
           )
         })}

@@ -56,12 +56,14 @@ export function More() {
                         </EditableText>
                       </p>
                     )}
-                    {/* 어느 묶음에 들어갈지 정하는 값이라 함께 고칠 수 있게 둡니다 */}
-                    <p className="mt-1 font-mono text-xs text-neutral-400 dark:text-neutral-500">
-                      <EditableText file="others" path={[index, 'category']}>
-                        {item.category}
-                      </EditableText>
-                    </p>
+                    {/* 어느 묶음에 들어갈지 정하는 값입니다. 화면에서는 묶음 제목과 겹치므로 개발 서버에서만 보입니다 */}
+                    {import.meta.env.DEV && (
+                      <p className="mt-1 font-mono text-xs text-neutral-400 dark:text-neutral-500">
+                        <EditableText file="others" path={[index, 'category']}>
+                          {item.category}
+                        </EditableText>
+                      </p>
+                    )}
                   </div>
                 </li>
               ))}

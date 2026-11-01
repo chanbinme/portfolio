@@ -98,32 +98,33 @@ export function PdfMenu() {
         </svg>
       </button>
 
-      {open && (
-        <div
-          role="menu"
-          className="absolute top-full left-0 z-20 mt-2 w-[min(20rem,calc(100vw-3rem))] rounded-xl border border-neutral-200 bg-white p-1.5 shadow-lg shadow-neutral-900/10 dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-black/40"
-        >
-          {OPTIONS.map((o) => (
-            <button
-              key={o.kind}
-              type="button"
-              role="menuitem"
-              onClick={() => {
-                setOpen(false)
-                printAs(o.kind, o.label)
-              }}
-              className="block w-full rounded-lg px-3 py-2.5 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800"
-            >
-              <span className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                {o.label}
-              </span>
-              <span className="mt-0.5 block text-xs leading-snug text-neutral-500 dark:text-neutral-400">
-                {o.hint}
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
+      {/* 늘 그려 두고 열림 상태만 바꿉니다. 단추에서 자라나고, 닫힐 때 단추 쪽으로 접힙니다 */}
+      <div
+        role="menu"
+        data-open={open}
+        inert={!open}
+        className="popover absolute top-full left-0 z-20 mt-2 w-[min(20rem,calc(100vw-3rem))] rounded-xl border border-neutral-200 bg-white p-1.5 shadow-lg shadow-neutral-900/10 dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-black/40"
+      >
+        {OPTIONS.map((o) => (
+          <button
+            key={o.kind}
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              setOpen(false)
+              printAs(o.kind, o.label)
+            }}
+            className="block w-full rounded-lg px-3 py-2.5 text-left hover:bg-neutral-50 active:bg-neutral-100 dark:hover:bg-neutral-800 dark:active:bg-neutral-700/70"
+          >
+            <span className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
+              {o.label}
+            </span>
+            <span className="mt-0.5 block text-xs leading-snug text-neutral-500 dark:text-neutral-400">
+              {o.hint}
+            </span>
+          </button>
+        ))}
+      </div>
     </div>
   )
 }

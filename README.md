@@ -233,6 +233,24 @@ PDF 기본 파일명은 `김찬빈 이력서`, `김찬빈 경력기술서`로 �
   헤더의 토글 버튼을 누르면 선택이 `localStorage`에 저장됩니다.
   첫 페인트 깜빡임은 `index.html`의 인라인 스크립트로 막습니다.
 
+## 스모크 테스트
+
+```bash
+npm run build
+npm run test:smoke
+```
+
+빌드 결과를 띄워 데스크톱·모바일 화면에서 상세 모달을 모두 열어 보고, 모달이 맨 위에 그려지는지, Esc로 닫히는지,
+콘솔 에러가 없는지 확인합니다. Playwright가 필요합니다 (`npm i -D playwright && npx playwright install chromium`).
+
+## Claude Code 설정
+
+- [`CLAUDE.md`](CLAUDE.md): 이 저장소에서 Claude가 따를 작업 규칙 (내용 작성 원칙, 검증 방법)
+- [`.claude/settings.json`](.claude/settings.json)
+  - `src/` 아래 TS·JSON을 고치면 [`.claude/hooks/typecheck.sh`](.claude/hooks/typecheck.sh)가 `tsc -b`를 돌려 타입 오류를 바로 알려줍니다
+  - [epoko77-ai/im-not-ai](https://github.com/epoko77-ai/im-not-ai)(MIT)의 `humanize-korean` 플러그인을 v2.3.2로 고정해 켭니다.
+    한국어 문장의 AI 티를 진단(`/humanize-scan`)하고 윤문(`/humanize-korean`)합니다. 처음 열 때 마켓플레이스·플러그인 설치를 확인하는 창이 뜹니다
+
 ## Claude 스킬
 
 [`.claude/skills/design-taste-frontend/`](.claude/skills/design-taste-frontend)에
