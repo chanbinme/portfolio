@@ -636,36 +636,55 @@
 
 /* ── 경력: 가리킨 프로젝트에 집중 ───────────────────────────
  *
- * 프로젝트 하나에 마우스를 올리거나 키보드 초점이 들어가면, 같은 묶음의
- * 나머지를 흐리게 하고 그 프로젝트 이름에 포인트 색을 줍니다.
+ * 프로젝트 하나에 마우스를 올리거나 키보드 초점이 들어가면, 그 프로젝트
+ * 뒤에 포인트 색을 옅게 깔고 왼쪽 선을 포인트 색으로 바꿉니다.
+ * 나머지 프로젝트는 그대로 둡니다. 읽던 글자를 흐리게 하지 않기 위해서입니다.
  *
  * - 마우스처럼 올려 볼 수 있는 입력에서만 동작합니다 (터치에서는 손가락을
- *   떼도 :hover가 남아 흐려진 채로 굳기 때문입니다)
- * - :has(> li:hover)로 "어느 프로젝트 위에 있을 때만" 흐리게 합니다. 목록
- *   위라도 항목 사이 틈에서는 전체가 흐려지지 않습니다
- * - 인라인 편집 중에는 끕니다. 고칠 글자가 흐려지면 곤란합니다
- * - 투명도와 색만 바꾸므로 레이아웃이 움직이지 않습니다
+ *   떼도 :hover가 남아 색이 굳기 때문입니다)
+ * - 배경은 ::before로 글자 바깥에 그립니다. 레이아웃에는 관여하지 않아
+ *   올려도 아무것도 밀리지 않습니다
+ * - 선은 두께를 바꾸지 않고 안쪽 그림자 1px을 더해 두껍게 보이게 합니다
+ * - 인라인 편집 중에는 끕니다. 고칠 글자 뒤에 색이 깔리면 곤란합니다
  */
 @media screen and (hover: hover) and (pointer: fine) {
   .exp-projects > li {
+    position: relative;
+    /* 배경을 음수 z-index로 깔아도 섹션 뒤로 숨지 않게 막습니다 */
+    isolation: isolate;
+    transition:
+      border-color 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .exp-projects > li::before {
+    content: '';
+    position: absolute;
+    inset: -0.5rem -0.75rem -0.5rem -0.25rem;
+    z-index: -1;
+    border-radius: 0.5rem;
+    background-color: color-mix(in oklab, var(--color-accent) 7%, transparent);
+    opacity: 0;
     transition: opacity 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
   }
 
-  .exp-projects > li h5 {
-    transition: color 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  .dark .exp-projects > li::before {
+    background-color: color-mix(in oklab, var(--color-accent-dark) 13%, transparent);
   }
 
-  .exp-projects:has(> li:is(:hover, :focus-within)):not(:has(.edit-text))
-    > li:not(:hover, :focus-within) {
-    opacity: 0.4;
+  .exp-projects:not(:has(.edit-text)) > li:is(:hover, :focus-within) {
+    border-left-color: var(--color-accent);
+    box-shadow: inset 1px 0 0 var(--color-accent);
   }
 
-  .exp-projects:not(:has(.edit-text)) > li:is(:hover, :focus-within) h5 {
-    color: var(--color-accent);
+  .dark .exp-projects:not(:has(.edit-text)) > li:is(:hover, :focus-within) {
+    border-left-color: var(--color-accent-dark);
+    box-shadow: inset 1px 0 0 var(--color-accent-dark);
   }
 
-  .dark .exp-projects:not(:has(.edit-text)) > li:is(:hover, :focus-within) h5 {
-    color: var(--color-accent-dark);
+  .exp-projects:not(:has(.edit-text)) > li:is(:hover, :focus-within)::before {
+    opacity: 1;
   }
 }
 
