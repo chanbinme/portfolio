@@ -697,6 +697,8 @@
  *   올려도 아무것도 밀리지 않습니다
  * - 선은 두께를 바꾸지 않고 안쪽 그림자 1px을 더해 두껍게 보이게 합니다
  * - 인라인 편집 중에는 끕니다. 고칠 글자 뒤에 색이 깔리면 곤란합니다
+ * - 키보드 초점은 :focus-visible로만 봅니다. :focus-within을 쓰면 마우스로 성과를 눌러
+ *   모달을 연 뒤, 닫을 때 초점이 그 문장으로 돌아오면서 색이 계속 남습니다
  */
 @media screen and (hover: hover) and (pointer: fine) {
   .exp-projects > li {
@@ -724,17 +726,17 @@
     background-color: color-mix(in oklab, var(--color-accent-dark) 13%, transparent);
   }
 
-  .exp-projects:not(:has(.edit-text)) > li:is(:hover, :focus-within) {
+  .exp-projects:not(:has(.edit-text)) > li:is(:hover, :has(:focus-visible)) {
     border-left-color: var(--color-accent);
     box-shadow: inset 1px 0 0 var(--color-accent);
   }
 
-  .dark .exp-projects:not(:has(.edit-text)) > li:is(:hover, :focus-within) {
+  .dark .exp-projects:not(:has(.edit-text)) > li:is(:hover, :has(:focus-visible)) {
     border-left-color: var(--color-accent-dark);
     box-shadow: inset 1px 0 0 var(--color-accent-dark);
   }
 
-  .exp-projects:not(:has(.edit-text)) > li:is(:hover, :focus-within)::before {
+  .exp-projects:not(:has(.edit-text)) > li:is(:hover, :has(:focus-visible))::before {
     opacity: 1;
   }
 }
