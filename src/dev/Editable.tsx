@@ -6,6 +6,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import {
+  dropAttrs,
   patch,
   setEditing,
   sortAttrs,
@@ -13,6 +14,7 @@ import {
   useEditing,
   type ContentFile,
   type Key,
+  type Move,
 } from './editor'
 
 /** 저장에 실패하면 조용히 넘어가지 않고 알립니다 */
@@ -112,6 +114,11 @@ type RemoveProps = {
   label: string
   /** 한 배열이 화면에서 여러 묶음으로 나뉘어 그려질 때, 순서를 바꿀 수 있는 범위(묶음 이름) */
   scope?: string
+  /**
+   * 같은 종류의 다른 목록으로도 옮길 수 있게 하는 이름 (예: 'project').
+   * 목록 끝의 EditableAdd에도 같은 이름을 dropKind로 주어야 빈 목록에 놓을 수 있습니다
+   */
+  kind?: string
 }
 
 /**
@@ -123,7 +130,7 @@ export function EditableRemove(props: RemoveProps) {
   return <EditableRemoveDev {...props} />
 }
 
-function EditableRemoveDev({ file, path, index, label, scope }: RemoveProps) {
+function EditableRemoveDev({ file, path, index, label, scope, kind }: RemoveProps) {
   const editing = useEditing()
   if (!editing) return null
 
@@ -138,7 +145,7 @@ function EditableRemoveDev({ file, path, index, label, scope }: RemoveProps) {
 
   return (
     <>
-      <SortHandle file={file} path={path} index={index} label={label} scope={scope} />
+      <SortHandle file={file} path={path} index={index} label={label} scope={scope} kind={kind} />
       <button
         type="button"
         onClick={() => void remove()}
@@ -157,10 +164,15 @@ function EditableRemoveDev({ file, path, index, label, scope }: RemoveProps) {
  *
  * 버튼이 아니라 span인 이유: Firefox는 button을 끌지 못합니다.
  */
-function SortHandle({ file, path, index, label, scope }: RemoveProps) {
-  const move = async (to: { from: number; to: number }) => {
+function SortHandle({ file, path, index, label, scope, kind }: RemoveProps) {
+  const move = async ({ from, to }: Move) => {
     try {
-      await patch({ op: 'move', file, path, ...to })
+      // 같은 목록이면 자리만 바꾸고, 다른 목록이면 옮깁니다
+      await patch(
+        JSON.stringify(from.path) === JSON.stringify(to.path)
+          ? { op: 'move', file, path: from.path, from: from.index, to: to.index }
+          : { op: 'transfer', file, from, to },
+      )
     } catch (error) {
       report(error)
     }
@@ -170,12 +182,12 @@ function SortHandle({ file, path, index, label, scope }: RemoveProps) {
     <span
       role="button"
       aria-label={`${label} 순서 바꾸기`}
-      title={`끌어서 ${label} 순서 바꾸기`}
+      title={kind ? `끌어서 ${label} 옮기기` : `끌어서 ${label} 순서 바꾸기`}
       draggable
-      {...sortAttrs(file, path, index, scope)}
+      {...sortAttrs(file, path, index, scope, kind)}
       className="edit-btn edit-btn-move"
       onDragStart={(e) => {
-        const started = startSort(e.nativeEvent, file, path, index, scope, (m) => void move(m))
+        const started = startSort(e.nativeEvent, file, path, index, scope, kind, (m) => void move(m))
         if (!started) e.preventDefault()
       }}
     >
@@ -193,6 +205,8 @@ type AddProps = {
   /** 새 항목의 빈 틀 (editor.ts의 BLANK) */
   blank: () => unknown
   label: string
+  /** 같은 종류의 항목을 이 목록 끝으로 끌어다 놓을 수 있게 합니다 (EditableRemove의 kind와 같은 이름) */
+  dropKind?: string
 }
 
 /** 배열에 빈 항목을 더하는 단추. 편집 모드에서만 보입니다 */
@@ -201,7 +215,7 @@ export function EditableAdd(props: AddProps) {
   return <EditableAddDev {...props} />
 }
 
-function EditableAddDev({ file, path, index, blank, label }: AddProps) {
+function EditableAddDev({ file, path, index, blank, label, dropKind }: AddProps) {
   const editing = useEditing()
   if (!editing) return null
 
@@ -214,7 +228,12 @@ function EditableAddDev({ file, path, index, blank, label }: AddProps) {
   }
 
   return (
-    <button type="button" onClick={() => void add()} className="edit-btn edit-btn-add">
+    <button
+      type="button"
+      onClick={() => void add()}
+      {...(dropKind ? dropAttrs(file, path, index, dropKind) : {})}
+      className="edit-btn edit-btn-add"
+    >
       + {label}
     </button>
   )

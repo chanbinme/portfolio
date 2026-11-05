@@ -27,6 +27,9 @@ type File = (typeof FILES)[number]
 /** 객체 키 또는 배열 인덱스로 이뤄진 경로 */
 type Key = string | number
 
+/** 배열 안의 한 자리 */
+type ItemRef = { path: Key[]; index: number }
+
 type Patch =
   /** path가 가리키는 값을 value로 바꿉니다 */
   | { op: 'set'; file: File; path: Key[]; value: unknown }
@@ -36,6 +39,8 @@ type Patch =
   | { op: 'remove'; file: File; path: Key[]; index: number }
   /** path가 가리키는 배열에서 from 항목을 to 자리로 옮깁니다 (to는 옮긴 뒤의 위치) */
   | { op: 'move'; file: File; path: Key[]; from: number; to: number }
+  /** 한 배열의 항목을 다른 배열의 index 자리로 옮깁니다 (프로젝트를 다른 팀으로 등) */
+  | { op: 'transfer'; file: File; from: ItemRef; to: ItemRef }
   /** path가 가리키는 키를 통째로 지웁니다 (선택 항목을 비울 때) */
   | { op: 'unset'; file: File; path: Key[] }
 
@@ -45,14 +50,27 @@ const isIndex = (v: unknown): v is number => typeof v === 'number' && Number.isI
 
 const isKey = (v: unknown): v is Key => typeof v === 'string' || isIndex(v)
 
+const isRef = (v: unknown): v is ItemRef =>
+  typeof v === 'object' &&
+  v !== null &&
+  Array.isArray((v as ItemRef).path) &&
+  (v as ItemRef).path.every(isKey) &&
+  isIndex((v as ItemRef).index)
+
 function parse(body: unknown): Patch {
   if (typeof body !== 'object' || body === null) throw new Error('본문이 객체가 아닙니다')
   const p = body as Record<string, unknown>
 
   if (!FILES.includes(p.file as File)) throw new Error(`모르는 파일: ${String(p.file)}`)
+  const file = p.file as File
+
+  if (p.op === 'transfer') {
+    if (!isRef(p.from) || !isRef(p.to)) throw new Error('from·to가 올바르지 않습니다')
+    return { op: 'transfer', file, from: p.from, to: p.to }
+  }
+
   if (!Array.isArray(p.path) || !p.path.every(isKey)) throw new Error('경로가 올바르지 않습니다')
 
-  const file = p.file as File
   const path = p.path as Key[]
 
   if (p.op === 'set') return { op: 'set', file, path, value: p.value }
@@ -88,7 +106,45 @@ function walk(root: unknown, path: Key[]): unknown {
   return node
 }
 
+/**
+ * path가 가리키는 배열. create면 키가 비어 있어도 배열부터 만들어 돌려줍니다.
+ * 선택 항목(기술 스택 등)은 비워 두면 키 자체가 없어서, 처음 넣을 때 필요합니다
+ */
+function arrayAt(root: unknown, path: Key[], create = false): unknown[] {
+  let target = walk(root, path)
+
+  if (target === undefined && create) {
+    const parent = walk(root, path.slice(0, -1))
+    const key = path[path.length - 1]
+    if (
+      typeof key === 'string' &&
+      parent !== null &&
+      typeof parent === 'object' &&
+      !Array.isArray(parent)
+    ) {
+      target = []
+      ;(parent as Record<Key, unknown>)[key] = target
+    }
+  }
+
+  if (!Array.isArray(target)) {
+    throw new Error(`배열이 아닙니다: ${path.join('.') || '(루트)'}`)
+  }
+  return target
+}
+
 function apply(root: unknown, patch: Patch): unknown {
+  if (patch.op === 'transfer') {
+    const from = arrayAt(root, patch.from.path)
+    const to = arrayAt(root, patch.to.path, true)
+    if (patch.from.index >= from.length || patch.to.index > to.length) {
+      throw new Error('index가 배열 범위를 넘었습니다')
+    }
+    const [item] = from.splice(patch.from.index, 1)
+    to.splice(patch.to.index, 0, item)
+    return root
+  }
+
   if (patch.op === 'set') {
     if (patch.path.length === 0) return patch.value
     const parent = walk(root, patch.path.slice(0, -1))
@@ -110,26 +166,7 @@ function apply(root: unknown, patch: Patch): unknown {
     return root
   }
 
-  let target = walk(root, patch.path)
-
-  // 선택 항목(기술 스택 등)은 비워 두면 키 자체가 없습니다. 처음 넣을 때는 배열부터 만듭니다
-  if (target === undefined && patch.op === 'insert') {
-    const parent = walk(root, patch.path.slice(0, -1))
-    const key = patch.path[patch.path.length - 1]
-    if (
-      typeof key === 'string' &&
-      parent !== null &&
-      typeof parent === 'object' &&
-      !Array.isArray(parent)
-    ) {
-      target = []
-      ;(parent as Record<Key, unknown>)[key] = target
-    }
-  }
-
-  if (!Array.isArray(target)) {
-    throw new Error(`배열이 아닙니다: ${patch.path.join('.') || '(루트)'}`)
-  }
+  const target = arrayAt(root, patch.path, patch.op === 'insert')
 
   if (patch.op === 'move') {
     if (patch.from >= target.length || patch.to >= target.length) {

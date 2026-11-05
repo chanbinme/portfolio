@@ -817,13 +817,30 @@
 }
 
 .edit-drop-before,
-.edit-drop-after {
+.edit-drop-after,
+.edit-drop-end,
+.edit-drop-ready {
   --edit-drop: var(--color-accent);
 }
 
 .dark .edit-drop-before,
-.dark .edit-drop-after {
+.dark .edit-drop-after,
+.dark .edit-drop-end,
+.dark .edit-drop-ready {
   --edit-drop: var(--color-accent-dark);
+}
+
+/* 다른 목록으로 옮길 수 있을 때, 놓을 수 있는 목록 끝("+ 추가" 단추)을 미리 보여 줍니다 */
+.edit-btn-add.edit-drop-ready {
+  border-color: var(--edit-drop);
+  color: var(--edit-drop);
+}
+
+.edit-btn-add.edit-drop-end {
+  border-style: solid;
+  background-color: color-mix(in oklab, var(--edit-drop) 14%, transparent);
+  outline: 2px solid var(--edit-drop);
+  outline-offset: 2px;
 }
 
 .edit-drop-before {
