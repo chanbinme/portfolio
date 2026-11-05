@@ -275,6 +275,7 @@ function ProjectList({
                   path={path}
                   index={i}
                   label="프로젝트"
+                  kind="project"
                 />
               </h5>
               {(project.period || import.meta.env.DEV) && (
@@ -311,6 +312,7 @@ function ProjectList({
         index={projects.length}
         blank={BLANK.experienceProject}
         label="프로젝트"
+        dropKind="project"
       />
     </>
   )

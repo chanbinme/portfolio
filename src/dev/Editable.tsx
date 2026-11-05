@@ -5,7 +5,17 @@
 // 편집 코드 자체가 번들에서 빠집니다.
 
 import { useEffect, useRef, useState } from 'react'
-import { patch, setEditing, useEditing, type ContentFile, type Key } from './editor'
+import {
+  dropAttrs,
+  patch,
+  setEditing,
+  sortAttrs,
+  startSort,
+  useEditing,
+  type ContentFile,
+  type Key,
+  type Move,
+} from './editor'
 
 /** 저장에 실패하면 조용히 넘어가지 않고 알립니다 */
 function report(error: unknown) {
@@ -102,15 +112,25 @@ type RemoveProps = {
   index: number
   /** 확인 창에 보여 줄 이름 */
   label: string
+  /** 한 배열이 화면에서 여러 묶음으로 나뉘어 그려질 때, 순서를 바꿀 수 있는 범위(묶음 이름) */
+  scope?: string
+  /**
+   * 같은 종류의 다른 목록으로도 옮길 수 있게 하는 이름 (예: 'project').
+   * 목록 끝의 EditableAdd에도 같은 이름을 dropKind로 주어야 빈 목록에 놓을 수 있습니다
+   */
+  kind?: string
 }
 
-/** 배열에서 항목 하나를 지우는 단추. 편집 모드에서만 보입니다 */
+/**
+ * 배열의 항목 하나를 지우는 단추와, 같은 배열 안에서 순서를 바꾸는 손잡이.
+ * 편집 모드에서만 보입니다. 지울 수 있는 곳은 모두 순서도 바꿀 수 있습니다
+ */
 export function EditableRemove(props: RemoveProps) {
   if (!import.meta.env.DEV) return null
   return <EditableRemoveDev {...props} />
 }
 
-function EditableRemoveDev({ file, path, index, label }: RemoveProps) {
+function EditableRemoveDev({ file, path, index, label, scope, kind }: RemoveProps) {
   const editing = useEditing()
   if (!editing) return null
 
@@ -124,15 +144,55 @@ function EditableRemoveDev({ file, path, index, label }: RemoveProps) {
   }
 
   return (
-    <button
-      type="button"
-      onClick={() => void remove()}
-      title={`${label} 지우기`}
-      aria-label={`${label} 지우기`}
-      className="edit-btn edit-btn-remove"
+    <>
+      <SortHandle file={file} path={path} index={index} label={label} scope={scope} kind={kind} />
+      <button
+        type="button"
+        onClick={() => void remove()}
+        title={`${label} 지우기`}
+        aria-label={`${label} 지우기`}
+        className="edit-btn edit-btn-remove"
+      >
+        ✕
+      </button>
+    </>
+  )
+}
+
+/**
+ * 끌어서 같은 목록 안의 다른 자리로 옮기는 손잡이.
+ *
+ * 버튼이 아니라 span인 이유: Firefox는 button을 끌지 못합니다.
+ */
+function SortHandle({ file, path, index, label, scope, kind }: RemoveProps) {
+  const move = async ({ from, to }: Move) => {
+    try {
+      // 같은 목록이면 자리만 바꾸고, 다른 목록이면 옮깁니다
+      await patch(
+        JSON.stringify(from.path) === JSON.stringify(to.path)
+          ? { op: 'move', file, path: from.path, from: from.index, to: to.index }
+          : { op: 'transfer', file, from, to },
+      )
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  return (
+    <span
+      role="button"
+      aria-label={`${label} 순서 바꾸기`}
+      title={kind ? `끌어서 ${label} 옮기기` : `끌어서 ${label} 순서 바꾸기`}
+      draggable
+      {...sortAttrs(file, path, index, scope, kind)}
+      className="edit-btn edit-btn-move"
+      onDragStart={(e) => {
+        const started = startSort(e.nativeEvent, file, path, index, scope, kind, (m) => void move(m))
+        if (!started) e.preventDefault()
+      }}
     >
-      ✕
-    </button>
+      ⠿
+    </span>
   )
 }
 
@@ -145,6 +205,8 @@ type AddProps = {
   /** 새 항목의 빈 틀 (editor.ts의 BLANK) */
   blank: () => unknown
   label: string
+  /** 같은 종류의 항목을 이 목록 끝으로 끌어다 놓을 수 있게 합니다 (EditableRemove의 kind와 같은 이름) */
+  dropKind?: string
 }
 
 /** 배열에 빈 항목을 더하는 단추. 편집 모드에서만 보입니다 */
@@ -153,7 +215,7 @@ export function EditableAdd(props: AddProps) {
   return <EditableAddDev {...props} />
 }
 
-function EditableAddDev({ file, path, index, blank, label }: AddProps) {
+function EditableAddDev({ file, path, index, blank, label, dropKind }: AddProps) {
   const editing = useEditing()
   if (!editing) return null
 
@@ -166,7 +228,12 @@ function EditableAddDev({ file, path, index, blank, label }: AddProps) {
   }
 
   return (
-    <button type="button" onClick={() => void add()} className="edit-btn edit-btn-add">
+    <button
+      type="button"
+      onClick={() => void add()}
+      {...(dropKind ? dropAttrs(file, path, index, dropKind) : {})}
+      className="edit-btn edit-btn-add"
+    >
       + {label}
     </button>
   )

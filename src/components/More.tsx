@@ -42,7 +42,13 @@ export function More() {
                       <EditableText file="others" path={[index, 'title']}>
                         {item.title}
                       </EditableText>
-                      <EditableRemove file="others" path={[]} index={index} label="항목" />
+                      <EditableRemove
+                        file="others"
+                        path={[]}
+                        index={index}
+                        label="항목"
+                        scope={group.name}
+                      />
                     </p>
                     <p className="mt-0.5 text-sm text-neutral-500 dark:text-neutral-400">
                       <EditableText file="others" path={[index, 'issuer']}>
