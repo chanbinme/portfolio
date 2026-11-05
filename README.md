@@ -109,6 +109,9 @@ npm run preview  # 빌드 결과 로컬 확인
 - **추가** — 목록 아래 **`+ 성과`** 같은 점선 단추를 누르면 빈 항목이 생깁니다.
   바로 눌러서 내용을 채우세요
 - **삭제** — 항목 옆 **✕**를 누릅니다 (확인 후 삭제)
+- **순서 바꾸기** — ✕ 옆의 **⠿** 손잡이를 끌어 같은 목록 안의 다른 자리에 놓습니다.
+  놓을 자리에 파란 선이 보입니다. 상세 모달 안의 목록도 같습니다. 항목이 하나뿐인
+  목록에서는 끌 수 없고, More는 같은 묶음(자격·교육, 학력 등) 안에서만 옮길 수 있습니다
 
 저장하면 `src/content/*.json`에 바로 기록되고, Vite가 페이지를 다시 그립니다.
 보던 위치는 그대로 유지됩니다. **커밋·푸시는 직접 하세요.**
@@ -128,8 +131,8 @@ npm run preview  # 빌드 결과 로컬 확인
 | 파일 | 하는 일 |
 | --- | --- |
 | [`tools/content-editor.ts`](tools/content-editor.ts) | 개발 서버의 저장 API (`POST /__content`) |
-| [`src/dev/editor.ts`](src/dev/editor.ts) | 편집 모드 상태, 저장 요청, 새 항목의 빈 틀 |
-| [`src/dev/Editable.tsx`](src/dev/Editable.tsx) | 편집 UI (글자·추가·삭제·토글) |
+| [`src/dev/editor.ts`](src/dev/editor.ts) | 편집 모드 상태, 저장 요청, 끌어서 순서 바꾸기, 새 항목의 빈 틀 |
+| [`src/dev/Editable.tsx`](src/dev/Editable.tsx) | 편집 UI (글자·추가·삭제·순서·토글) |
 
 ## 관리자 페이지
 

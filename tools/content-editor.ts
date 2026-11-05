@@ -34,13 +34,16 @@ type Patch =
   | { op: 'insert'; file: File; path: Key[]; index: number; value: unknown }
   /** path가 가리키는 배열에서 index 항목을 지웁니다 */
   | { op: 'remove'; file: File; path: Key[]; index: number }
+  /** path가 가리키는 배열에서 from 항목을 to 자리로 옮깁니다 (to는 옮긴 뒤의 위치) */
+  | { op: 'move'; file: File; path: Key[]; from: number; to: number }
   /** path가 가리키는 키를 통째로 지웁니다 (선택 항목을 비울 때) */
   | { op: 'unset'; file: File; path: Key[] }
 
 export const ENDPOINT = '/__content'
 
-const isKey = (v: unknown): v is Key =>
-  typeof v === 'string' || (typeof v === 'number' && Number.isInteger(v) && v >= 0)
+const isIndex = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v) && v >= 0
+
+const isKey = (v: unknown): v is Key => typeof v === 'string' || isIndex(v)
 
 function parse(body: unknown): Patch {
   if (typeof body !== 'object' || body === null) throw new Error('본문이 객체가 아닙니다')
@@ -58,10 +61,13 @@ function parse(body: unknown): Patch {
     return { op: 'unset', file, path }
   }
 
+  if (p.op === 'move') {
+    if (!isIndex(p.from) || !isIndex(p.to)) throw new Error('from·to가 올바르지 않습니다')
+    return { op: 'move', file, path, from: p.from, to: p.to }
+  }
+
   if (p.op === 'insert' || p.op === 'remove') {
-    if (typeof p.index !== 'number' || !Number.isInteger(p.index) || p.index < 0) {
-      throw new Error('index가 올바르지 않습니다')
-    }
+    if (!isIndex(p.index)) throw new Error('index가 올바르지 않습니다')
     return p.op === 'insert'
       ? { op: 'insert', file, path, index: p.index, value: p.value }
       : { op: 'remove', file, path, index: p.index }
@@ -104,10 +110,36 @@ function apply(root: unknown, patch: Patch): unknown {
     return root
   }
 
-  const target = walk(root, patch.path)
+  let target = walk(root, patch.path)
+
+  // 선택 항목(기술 스택 등)은 비워 두면 키 자체가 없습니다. 처음 넣을 때는 배열부터 만듭니다
+  if (target === undefined && patch.op === 'insert') {
+    const parent = walk(root, patch.path.slice(0, -1))
+    const key = patch.path[patch.path.length - 1]
+    if (
+      typeof key === 'string' &&
+      parent !== null &&
+      typeof parent === 'object' &&
+      !Array.isArray(parent)
+    ) {
+      target = []
+      ;(parent as Record<Key, unknown>)[key] = target
+    }
+  }
+
   if (!Array.isArray(target)) {
     throw new Error(`배열이 아닙니다: ${patch.path.join('.') || '(루트)'}`)
   }
+
+  if (patch.op === 'move') {
+    if (patch.from >= target.length || patch.to >= target.length) {
+      throw new Error('index가 배열 범위를 넘었습니다')
+    }
+    const [item] = target.splice(patch.from, 1)
+    target.splice(patch.to, 0, item)
+    return root
+  }
+
   if (patch.index > target.length) throw new Error('index가 배열 범위를 넘었습니다')
 
   if (patch.op === 'insert') target.splice(patch.index, 0, patch.value)

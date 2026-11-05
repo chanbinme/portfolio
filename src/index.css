@@ -791,6 +791,66 @@
   color: #dc2626;
 }
 
+.edit-btn-move {
+  margin-left: 4px;
+  padding: 2px 3px;
+  color: var(--color-neutral-400);
+  cursor: grab;
+  user-select: none;
+}
+
+.edit-btn-move:hover {
+  color: var(--color-accent);
+}
+
+.dark .edit-btn-move:hover {
+  color: var(--color-accent-dark);
+}
+
+.edit-btn-move:active {
+  cursor: grabbing;
+}
+
+/* 끌고 있는 항목은 흐리게, 놓을 자리는 선으로 보여 줍니다 */
+.edit-sorting {
+  opacity: 0.4;
+}
+
+.edit-drop-before,
+.edit-drop-after {
+  --edit-drop: var(--color-accent);
+}
+
+.dark .edit-drop-before,
+.dark .edit-drop-after {
+  --edit-drop: var(--color-accent-dark);
+}
+
+.edit-drop-before {
+  box-shadow: 0 -2px 0 0 var(--edit-drop);
+}
+
+.edit-drop-after {
+  box-shadow: 0 2px 0 0 var(--edit-drop);
+}
+
+/* 한 줄에 놓이는 항목(태그)은 모서리가 둥글어서 그림자 선이 휘므로, 곧은 선을 배경으로 그립니다 */
+.edit-drop-inline.edit-drop-before,
+.edit-drop-inline.edit-drop-after {
+  box-shadow: none;
+  background-image: linear-gradient(var(--edit-drop), var(--edit-drop));
+  background-repeat: no-repeat;
+  background-size: 2px 100%;
+}
+
+.edit-drop-inline.edit-drop-before {
+  background-position: left center;
+}
+
+.edit-drop-inline.edit-drop-after {
+  background-position: right center;
+}
+
 .edit-btn-add {
   margin-top: 6px;
   padding: 3px 7px;
