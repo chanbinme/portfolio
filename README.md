@@ -111,7 +111,8 @@ npm run preview  # 빌드 결과 로컬 확인
 - **삭제** — 항목 옆 **✕**를 누릅니다 (확인 후 삭제)
 - **순서 바꾸기** — ✕ 옆의 **⠿** 손잡이를 끌어 같은 목록 안의 다른 자리에 놓습니다.
   놓을 자리에 파란 선이 보입니다. 상세 모달 안의 목록도 같습니다. 항목이 하나뿐인
-  목록에서는 끌 수 없고, More는 같은 묶음(자격·교육, 학력 등) 안에서만 옮길 수 있습니다
+  목록에서는 끌 수 없고, More는 같은 묶음(자격·교육, 학력 등) 안에서만 옮길 수 있습니다.
+  More의 항목은 각 묶음 아래 **`+ 자격·교육 항목`** 같은 단추로 추가하면 그 묶음의 분류가 자동으로 채워집니다
 - **프로젝트 옮기기** — Experience의 프로젝트는 다른 팀·회사로도 옮길 수 있습니다.
   다른 프로젝트 위에 놓거나, 목록 끝의 **`+ 프로젝트`** 단추 위에 놓습니다(비어 있는 목록도
   됩니다). 끌기 시작하면 놓을 수 있는 단추가 강조됩니다
@@ -301,7 +302,7 @@ src/
     Tag.tsx           기술 스택 배지
     DetailTrigger.tsx 클릭하면 상세 모달이 열리는 문장 (점선 밑줄 + ⓘ)
     Bullet.tsx        목록 앞 점 (인쇄 시 텍스트 •로 대체)
-    Hero / About / Skills / Experience / Projects / OpenSource / Writing / More / Contact
+    Hero / About / Experience / Projects / Skills / OpenSource / Writing / More / Contact
   App.tsx             섹션 조립 + 푸터
 ```
 
