@@ -66,6 +66,11 @@ export type Highlight = {
  */
 export type ExperienceProject = {
   name: string
+  /**
+   * 선택: Projects 섹션의 프로젝트 제목. 적으면 성과·기술은 그쪽에 두고
+   * 여기에는 이름과 한 줄 소개, "Projects에서 자세히 보기" 링크만 보여줍니다.
+   */
+  projectRef?: string
   /** 선택: 프로젝트 기간 */
   period?: string
   /** 선택: 프로젝트 한 줄 소개 */
@@ -113,6 +118,9 @@ export type Experience = {
 
 export type Project = {
   title: string
+  /** 선택: 회사 프로젝트의 소속 (예: 회사 · 팀). 제목 아래에 한 줄로 보여줍니다. */
+  affiliation?: string
+  /** 비우면 표시되지 않습니다 (회사 프로젝트는 기간을 적지 않습니다) */
   period: string
   description: string
   /** 성과 목록. 문장별로 detail을 붙이면 그 문장이 클릭 가능해집니다. */
@@ -232,19 +240,20 @@ const toHighlights = (v: Maybe<Maybe<Loose<Highlight>>[]>): Highlight[] =>
     .map((h) => ({ text: req(h.text), detail: toDetail(h.detail) }))
     .filter(keep((h) => h.text))
 
-/** 이름이 없거나 성과가 하나도 없는 프로젝트는 없는 것으로 칩니다 */
+/** 이름이 없거나, 성과도 Projects 연결(projectRef)도 없는 프로젝트는 없는 것으로 칩니다 */
 const toExperienceProjects = (
   v: Maybe<Maybe<Loose<ExperienceProject>>[]>,
 ): ExperienceProject[] =>
   list(v)
     .map((pj) => ({
       name: req(pj.name),
+      projectRef: opt(pj.projectRef),
       period: opt(pj.period),
       summary: opt(pj.summary),
       highlights: toHighlights(pj.highlights),
       stack: lines(pj.stack),
     }))
-    .filter(keep((pj) => pj.name && pj.highlights.length > 0))
+    .filter(keep((pj) => pj.name && (pj.highlights.length > 0 || pj.projectRef)))
 
 // ── 내용 ─────────────────────────────────────────────────────
 
@@ -320,6 +329,7 @@ export const experiences: Experience[] = list<Loose<Experience>>(experiencesJson
 
 export const projects: Project[] = list<Loose<Project>>(projectsJson).map((pr) => ({
   title: req(pr.title),
+  affiliation: opt(pr.affiliation),
   period: req(pr.period),
   description: req(pr.description),
   points: toHighlights(pr.points),
@@ -329,6 +339,9 @@ export const projects: Project[] = list<Loose<Project>>(projectsJson).map((pr) =
   featured: pr.featured === true,
   detail: toDetail(pr.detail),
 }))
+
+/** Projects 카드의 앵커 id. Experience의 "자세히 보기" 링크가 가리킵니다 */
+export const projectAnchor = (index: number) => `project-${index}`
 
 export const posts: Post[] = list<Loose<Post>>(postsJson)
   .map((po) => ({

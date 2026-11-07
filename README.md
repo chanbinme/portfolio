@@ -27,7 +27,7 @@ npm run preview  # 빌드 결과 로컬 확인
 | `profile.json` | 이름·역할·한 줄 소개·대표 성과·자기소개·이메일·링크 |
 | `skills.json` | 기술 스택 |
 | `experiences.json` | 경력 타임라인 |
-| `projects.json` | 프로젝트 카드 (`featured: true` → 배지 표시) |
+| `projects.json` | 프로젝트 카드 (`featured: true` → 배지 표시, 회사 프로젝트는 `affiliation`에 소속을 적고 `period`는 비움) |
 | `opensource.json` | 오픈소스 기여 (프로젝트별 PR 목록, 비우면 섹션·메뉴가 사라짐) |
 | `posts.json` | 글 목록 (비우면 섹션·메뉴가 사라짐) |
 | `others.json` | More: 자격·교육 · 학력 · 활동 · 그 외 경력 (항목마다 `category`로 묶음 지정) |
@@ -38,6 +38,23 @@ npm run preview  # 빌드 결과 로컬 확인
 > **잘못된 수정은 배포되지 않습니다.** JSON 구조가 `profile.ts`의 타입과 맞지 않으면
 > 빌드(`tsc`)가 실패해 배포가 멈추고, 기존 사이트가 그대로 유지됩니다.
 > GitHub **Actions** 탭에서 실패한 실행의 로그를 확인하세요.
+
+### 경력의 프로젝트를 Projects로 옮겨 보여주기
+
+깊게 다룬 프로젝트는 성과와 상세를 `projects.json`(Projects 섹션)에 두고, 경력에는
+이름과 한 줄 소개만 남길 수 있습니다. 경력의 프로젝트에 `projectRef`를 Projects 카드의
+`title`과 똑같이 적으면 "Projects에서 자세히 보기" 링크가 생기고, 이때 `highlights`·`stack`은
+비워도 됩니다(성과가 없어도 `projectRef`가 있으면 그려집니다). 짝이 되는 카드가 없으면
+링크만 생략됩니다. 링크는 PDF에는 나오지 않고, Projects 섹션은 PDF에 그대로 실립니다.
+
+```jsonc
+// experiences.json — 경력 쪽: 이름과 한 줄 소개, 연결만
+{ "name": "가상계좌 발급", "summary": "한 줄 소개", "projectRef": "가상계좌 발급" }
+
+// projects.json — Projects 쪽: 성과·상세·기술
+{ "title": "가상계좌 발급", "affiliation": "(주)더즌 · 팀 이름",
+  "description": "한 줄 소개", "points": [{ "text": "...", "detail": {...} }], "stack": [...] }
+```
 
 ### 한 회사에서 팀을 옮긴 경력
 

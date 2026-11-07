@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { projects } from '../data/profile'
+import { projectAnchor, projects } from '../data/profile'
 import type { Project } from '../data/profile'
 import { Section } from './Section'
 import { Tag } from './Tag'
@@ -42,6 +42,7 @@ export function Projects() {
         {projects.map((project, i) => (
           <article
             key={i}
+            id={projectAnchor(i)}
             className="rounded-xl border border-neutral-200 p-5 transition-colors hover:border-neutral-300 dark:border-neutral-800 dark:hover:border-neutral-700"
           >
             <div className="flex items-baseline justify-between gap-4">
@@ -62,6 +63,14 @@ export function Projects() {
                 </EditableText>
               </span>
             </div>
+
+            {(project.affiliation || import.meta.env.DEV) && (
+              <p className="mt-1 font-mono text-xs text-neutral-500 dark:text-neutral-400">
+                <EditableText file="projects" path={[i, 'affiliation']}>
+                  {project.affiliation ?? ''}
+                </EditableText>
+              </p>
+            )}
 
             <p className="mt-2.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
               <EditableText file="projects" path={[i, 'description']}>
@@ -174,7 +183,7 @@ export function Projects() {
         open={selected !== null}
         onClose={close}
         title={selected?.project.title ?? ''}
-        meta={selected?.project.period}
+        meta={[selected?.project.affiliation, selected?.project.period].filter(Boolean).join(' · ')}
       >
         {selected?.project.detail && (
           <DetailBody
