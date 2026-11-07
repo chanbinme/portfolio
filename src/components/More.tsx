@@ -17,7 +17,12 @@ const groups = [...otherCategories, FALLBACK]
         return (known ? item.category : FALLBACK) === name
       }),
   }))
-  .filter((g) => g.items.length > 0)
+  // 개발 서버에서는 비어 있는 묶음도 남겨, 거기에 첫 항목을 추가할 수 있게 합니다
+  .filter((g) => g.items.length > 0 || (import.meta.env.DEV && g.name !== FALLBACK))
+
+/** 묶음의 마지막 항목 바로 뒤 자리. 비어 있는 묶음이면 파일 맨 뒤 */
+const endOf = (items: { index: number }[]) =>
+  items.length > 0 ? items[items.length - 1].index + 1 : others.length
 
 export function More() {
   return (
@@ -62,8 +67,9 @@ export function More() {
                         </EditableText>
                       </p>
                     )}
-                    {/* 어느 묶음에 들어갈지 정하는 값입니다. 화면에서는 묶음 제목과 겹치므로 개발 서버에서만 보입니다 */}
-                    {import.meta.env.DEV && (
+                    {/* 어느 묶음에 들어갈지 정하는 값입니다. 묶음 제목과 겹치므로 평소에는 보이지 않고,
+                        알 수 없는 분류가 모이는 '기타'에서만 값을 고칠 수 있게 개발 서버에서 보여 줍니다 */}
+                    {import.meta.env.DEV && group.name === FALLBACK && (
                       <p className="mt-1 font-mono text-xs text-neutral-400 dark:text-neutral-500">
                         <EditableText file="others" path={[index, 'category']}>
                           {item.category}
@@ -74,15 +80,19 @@ export function More() {
                 </li>
               ))}
             </ul>
+
+            {/* 이 묶음의 마지막 항목 바로 뒤에 넣어 묶음이 흩어지지 않게 하고, 분류는 묶음 이름으로 채웁니다 */}
+            {group.name !== FALLBACK && (
+              <EditableAdd
+                file="others"
+                path={[]}
+                index={endOf(group.items)}
+                blank={() => ({ ...BLANK.other(), category: group.name })}
+                label={`${group.name} 항목`}
+              />
+            )}
           </div>
         ))}
-        <EditableAdd
-          file="others"
-          path={[]}
-          index={others.length}
-          blank={BLANK.other}
-          label="항목"
-        />
       </div>
     </Section>
   )
