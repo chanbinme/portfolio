@@ -58,6 +58,8 @@ export type Detail = {
 export type Highlight = {
   text: string
   detail?: Detail
+  /** false면 포트폴리오(화면·PDF)에 노출하지 않습니다. 비워 두면 노출합니다 */
+  visible: boolean
 }
 
 /**
@@ -126,7 +128,8 @@ export type Project = {
   stack: string[]
   repoUrl?: string
   liveUrl?: string
-  featured?: boolean
+  /** 선택: 카드 제목 옆에 붙는 짧은 글 (예: featured). 비우면 표시되지 않습니다. */
+  badge?: string
   detail?: Detail
 }
 
@@ -235,7 +238,7 @@ function toDetail(d: Maybe<Loose<Detail>>): Detail | undefined {
 
 const toHighlights = (v: Maybe<Maybe<Loose<Highlight>>[]>): Highlight[] =>
   list(v)
-    .map((h) => ({ text: req(h.text), detail: toDetail(h.detail) }))
+    .map((h) => ({ text: req(h.text), detail: toDetail(h.detail), visible: h.visible !== false }))
     .filter(keep((h) => h.text))
 
 /** 이름이 없는 프로젝트는 없는 것으로 칩니다 */
@@ -334,7 +337,7 @@ export const projects: Project[] = list<Loose<Project>>(projectsJson).map((pr) =
   stack: lines(pr.stack),
   repoUrl: opt(pr.repoUrl),
   liveUrl: opt(pr.liveUrl),
-  featured: pr.featured === true,
+  badge: opt(pr.badge),
   detail: toDetail(pr.detail),
 }))
 

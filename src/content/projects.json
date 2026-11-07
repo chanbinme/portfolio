@@ -853,7 +853,7 @@
       "Node.js (node:test)",
       "Playwright"
     ],
-    "featured": true,
+    "badge": "featured",
     "detail": {
       "metrics": [
         {
