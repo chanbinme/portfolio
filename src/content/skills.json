@@ -35,11 +35,8 @@
     "items": [
       "JUnit 5",
       "Mockito",
-      "Jacoco",
       "Fixture Monkey",
       "springdoc-openapi",
-      "Redocly",
-      "Scalar",
       "Swagger"
     ]
   },
@@ -53,19 +50,15 @@
     "category": "Build & Deploy",
     "items": [
       "Docker",
-      "Drone CI",
-      "Git"
+      "Drone CI"
     ]
   },
   {
     "category": "Front-end",
     "items": [
       "React",
-      "Vite",
       "TypeScript",
-      "JSP",
-      "jQuery",
-      "Ajax"
+      "JSP"
     ]
   }
 ]
