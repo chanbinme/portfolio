@@ -4,10 +4,7 @@
     "items": [
       "Java",
       "Spring Boot",
-      "Spring MVC",
-      "Spring WebFlux",
-      "Spring Security",
-      "JPA",
+      "JPA/Hibernate",
       "QueryDSL",
       "Mybatis"
     ]
@@ -49,11 +46,7 @@
   {
     "category": "Observability",
     "items": [
-      "ELK",
-      "K6",
-      "Grafana",
-      "InfluxDB",
-      "Jaeger"
+      "ELK"
     ]
   },
   {

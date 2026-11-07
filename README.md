@@ -27,7 +27,7 @@ npm run preview  # 빌드 결과 로컬 확인
 | `profile.json` | 이름·역할·한 줄 소개·대표 성과·자기소개·이메일·링크 |
 | `skills.json` | 기술 스택 |
 | `experiences.json` | 경력 타임라인 |
-| `projects.json` | 프로젝트 카드 (`featured: true` → 배지 표시) |
+| `projects.json` | 프로젝트 카드 (`featured: true` → 배지 표시, 회사 프로젝트는 `affiliation`에 소속을 적고 `period`는 비움, `visible: false` → 화면·PDF에서 숨김) |
 | `opensource.json` | 오픈소스 기여 (프로젝트별 PR 목록, 비우면 섹션·메뉴가 사라짐) |
 | `posts.json` | 글 목록 (비우면 섹션·메뉴가 사라짐) |
 | `others.json` | More: 자격·교육 · 학력 · 활동 · 그 외 경력 (항목마다 `category`로 묶음 지정) |
@@ -38,6 +38,27 @@ npm run preview  # 빌드 결과 로컬 확인
 > **잘못된 수정은 배포되지 않습니다.** JSON 구조가 `profile.ts`의 타입과 맞지 않으면
 > 빌드(`tsc`)가 실패해 배포가 멈추고, 기존 사이트가 그대로 유지됩니다.
 > GitHub **Actions** 탭에서 실패한 실행의 로그를 확인하세요.
+
+### 프로젝트는 Projects에, 경력에는 이름만
+
+깊게 다룬 프로젝트는 성과·상세·기술을 `projects.json`(Projects 섹션)에 두고, 경력에는
+프로젝트 이름과 한 줄 소개만 남깁니다. 경력의 프로젝트는 `highlights`·`stack`을 비워도
+이름이 있으면 그려집니다. 소속(회사·팀)은 Projects 카드의 `affiliation`에 적고,
+회사 프로젝트에는 기간(`period`)을 적지 않습니다.
+
+```jsonc
+// experiences.json — 경력 쪽: 이름과 한 줄 소개만
+{ "name": "가상계좌 발급", "summary": "한 줄 소개" }
+
+// projects.json — Projects 쪽: 성과·상세·기술
+{ "title": "가상계좌 발급", "affiliation": "(주)더즌 · 팀 이름",
+  "description": "한 줄 소개", "points": [{ "text": "...", "detail": {...} }], "stack": [...] }
+```
+
+**노출 여부**: 프로젝트의 `visible`을 `false`로 하면 화면과 PDF 어디에도 나오지 않습니다
+(비우면 노출). 개발 서버 편집 모드에서는 카드마다 **"포트폴리오 노출"** 단추가 있고, 꺼 둔
+프로젝트는 흐리게 보여 다시 켤 수 있습니다. 관리자 페이지에서는 **"포트폴리오에 노출"**
+칸입니다. 노출 중인 프로젝트가 하나도 없으면 Projects 섹션과 메뉴가 사라집니다.
 
 ### 한 회사에서 팀을 옮긴 경력
 
@@ -199,10 +220,17 @@ curl -sL "https://unpkg.com/@sveltia/cms@$V/dist/sveltia-cms.js" \
 
 Hero의 **"PDF 저장"** 버튼을 누르면 두 가지 중에서 고릅니다.
 
-| 종류 | 내용 |
+| 종류 | 구성 |
 | --- | --- |
-| 이력서 | 경력과 성과를 한 줄씩 담은 요약본 |
-| 경력기술서 | 각 항목을 눌렀을 때 나오는 상세 내용(모달)까지 항목 아래에 이어 붙인 문서 |
+| 이력서 | About → Experience → Projects(노출 중인 앞 3개) → Skills → Open Source → Writing → Education & Activities (More의 자격·교육, 학력, 활동. 비개발 경력은 뺌). 상세 내용은 싣지 않음 |
+| 경력기술서 | About → Experience → Projects (노출 중인 모든 프로젝트). 각 항목을 눌렀을 때 나오는 상세 내용(모달)까지 항목 아래에 이어 붙임 |
+
+- 순서는 화면(DOM) 순서와 같고, `@media print`가 `<html data-print="resume | career">`에 따라 뺄 섹션만 정합니다
+- 이력서에 실을 프로젝트 수는 [`profile.ts`](src/data/profile.ts)의 `RESUME_PROJECT_COUNT`입니다.
+  카드 순서가 곧 우선순위이므로, Projects에서 끌어서 위로 올리면 이력서에 실립니다
+- 노출을 끈 프로젝트(`visible: false`)는 두 PDF 모두에서 빠집니다
+- 경력기술서는 프로젝트가 1개 늘 때마다 약 1쪽씩 늡니다. 쪽수를 줄이려면 노출하는 프로젝트를 줄이세요
+- Open Source·Writing의 링크 주소는 PDF에서 눌러 열 수 있어서, 종이용 주소 덧붙임을 생략합니다
 
 고르면 브라우저 인쇄 대화상자가 열리고, 대상을 "PDF로 저장"으로 고르면 A4 PDF가 만들어집니다.
 별도 라이브러리가 없어 번들이 늘지 않고, 텍스트를 선택·검색할 수 있는 PDF가 나옵니다.
@@ -226,7 +254,7 @@ PDF 기본 파일명은 `김찬빈 이력서`, `김찬빈 경력기술서`로 �
 - 기술 스택 배지는 `Java, Kotlin, ...` 처럼 쉼표로 이어진 텍스트로
 - 카드와 경력 항목이 페이지 경계에서 잘리지 않도록 `break-inside: avoid`
 - 외부 링크는 주소를 괄호로 덧붙여 종이에서도 확인 가능
-- **모달의 상세 내용은 PDF에 포함되지 않습니다** (화면에 보이는 내용만)
+- 모달의 상세 내용은 **경력기술서에만** 실립니다 (이력서에는 화면에 보이는 내용만)
 
 > 저장 전에 브라우저 인쇄 미리보기에서 페이지 수와 줄바꿈을 한 번 확인하세요.
 > 내용 분량에 따라 `@media print`의 `font-size`나 `@page` 여백을 조절하면 됩니다.

@@ -26,10 +26,15 @@ const endOf = (items: { index: number }[]) =>
 
 export function More() {
   return (
-    <Section id="more" title="More" subtitle="자격, 학력, 활동, 그 외 이력입니다.">
+    <Section
+      id="more"
+      title="More"
+      printTitle="Education & Activities"
+      subtitle="자격, 학력, 활동, 그 외 이력입니다."
+    >
       <div className="space-y-10">
         {groups.map((group) => (
-          <div key={group.name}>
+          <div key={group.name} data-more-group={group.name}>
             <h3 className="border-b border-neutral-200 pb-2 text-sm font-semibold text-neutral-900 dark:border-neutral-800 dark:text-neutral-100">
               {group.name}
             </h3>

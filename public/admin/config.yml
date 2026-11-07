@@ -149,6 +149,8 @@ collections:
                         label: 성과
                         label_singular: 성과
                         widget: list
+                        required: false
+                        hint: 성과·상세를 Projects 섹션에 둔 프로젝트는 비워 둬도 됩니다 (이름과 프로젝트 소개만 적습니다)
                         summary: '{{fields.text}}'
                         # 성과 한 줄의 구조 — 팀·회사 단위 성과에서도 그대로 씁니다
                         fields: &highlight_fields
@@ -248,10 +250,11 @@ collections:
             label_singular: 프로젝트
             widget: list
             root: true
-            summary: '{{fields.title}} · {{fields.period}}'
+            summary: '{{fields.title}}'
             fields:
               - { name: title, label: 제목, widget: string }
-              - { name: period, label: 기간, widget: string }
+              - { name: affiliation, label: 소속, widget: string, required: false, hint: '회사 프로젝트면 회사·팀 (예: (주)더즌 · 글로벌플랫폼개발파트). 제목 아래에 보입니다' }
+              - { name: period, label: 기간, widget: string, required: false, hint: 비우면 표시되지 않습니다. 회사 프로젝트는 기간을 적지 않습니다 }
               - { name: description, label: 설명, widget: text }
               - name: points
                 label: 성과
@@ -268,6 +271,7 @@ collections:
                 field: { name: item, label: 기술, widget: string }
               - { name: repoUrl, label: 코드 링크, widget: string, required: false }
               - { name: liveUrl, label: 서비스 링크, widget: string, required: false }
+              - { name: visible, label: 포트폴리오에 노출, widget: boolean, required: false, default: true, hint: 끄면 화면과 PDF에서 모두 빠집니다 }
               - { name: featured, label: featured 표시, widget: boolean, required: false, default: false }
               - name: detail
                 label: 프로젝트 상세 (자세히 보기)

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { projects } from '../data/profile'
+import { projects, RESUME_PROJECT_COUNT } from '../data/profile'
 import type { Project } from '../data/profile'
 import { Section } from './Section'
 import { Tag } from './Tag'
@@ -7,8 +7,14 @@ import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { HighlightList } from './HighlightList'
 import { PrintDetail } from './PrintDetail'
-import { EditableAdd, EditableRemove, EditableSet, EditableText } from '../dev/Editable'
-import { BLANK, pathKey, rememberModal, shouldReopen } from '../dev/editor'
+import {
+  EditableAdd,
+  EditableRemove,
+  EditableSet,
+  EditableText,
+  EditableToggle,
+} from '../dev/Editable'
+import { BLANK, pathKey, rememberModal, shouldReopen, useEditing } from '../dev/editor'
 
 /** 열려 있는 프로젝트. 상세를 고치려면 몇 번째 프로젝트인지도 알아야 합니다 */
 type Selected = { project: Project; index: number }
@@ -22,6 +28,21 @@ export function Projects() {
     return index < 0 ? null : { project: projects[index], index }
   })
 
+  const editing = useEditing()
+
+  // 숨긴 프로젝트는 편집할 때만 흐리게 보여, 다시 켤 수 있게 합니다.
+  // 이력서 PDF에는 노출 중인 프로젝트 중 앞의 몇 개만 싣습니다 (나머지는 CSS가 가립니다)
+  const cards: { project: Project; index: number; skipInResume: boolean }[] = []
+  let forResume = 0
+  projects.forEach((project, index) => {
+    if (!project.visible && !editing) return
+    cards.push({
+      project,
+      index,
+      skipInResume: !project.visible || forResume++ >= RESUME_PROJECT_COUNT,
+    })
+  })
+
   const open = (project: Project, index: number) => {
     rememberModal(pathKey('projects', [index]))
     setSelected({ project, index })
@@ -32,16 +53,21 @@ export function Projects() {
     setSelected(null)
   }
 
+  // 노출할 프로젝트가 없으면 섹션도 메뉴도 그리지 않습니다 (개발 서버에서는 추가할 수 있게 둡니다)
+  if (cards.length === 0 && !import.meta.env.DEV) return null
+
   return (
     <Section
       id="projects"
       title="Projects"
       subtitle="직접 설계하고 만든 것들입니다."
     >
-      <div className={`grid gap-4 ${projects.length > 1 ? 'lg:grid-cols-2' : ''}`}>
-        {projects.map((project, i) => (
+      <div className={`grid gap-4 ${cards.length > 1 ? 'lg:grid-cols-2' : ''}`}>
+        {cards.map(({ project, index: i, skipInResume }) => (
           <article
             key={i}
+            data-hidden={project.visible ? undefined : ''}
+            data-resume-skip={skipInResume ? '' : undefined}
             className="rounded-xl border border-neutral-200 p-5 transition-colors hover:border-neutral-300 dark:border-neutral-800 dark:hover:border-neutral-700"
           >
             <div className="flex items-baseline justify-between gap-4">
@@ -62,6 +88,25 @@ export function Projects() {
                 </EditableText>
               </span>
             </div>
+
+            {import.meta.env.DEV && (
+              <div>
+                <EditableToggle
+                  file="projects"
+                  path={[i, 'visible']}
+                  value={project.visible}
+                  label="포트폴리오 노출"
+                />
+              </div>
+            )}
+
+            {(project.affiliation || import.meta.env.DEV) && (
+              <p className="mt-1 font-mono text-xs text-neutral-500 dark:text-neutral-400">
+                <EditableText file="projects" path={[i, 'affiliation']}>
+                  {project.affiliation ?? ''}
+                </EditableText>
+              </p>
+            )}
 
             <p className="mt-2.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
               <EditableText file="projects" path={[i, 'description']}>
@@ -174,7 +219,7 @@ export function Projects() {
         open={selected !== null}
         onClose={close}
         title={selected?.project.title ?? ''}
-        meta={selected?.project.period}
+        meta={[selected?.project.affiliation, selected?.project.period].filter(Boolean).join(' · ')}
       >
         {selected?.project.detail && (
           <DetailBody

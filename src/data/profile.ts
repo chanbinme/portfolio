@@ -70,6 +70,7 @@ export type ExperienceProject = {
   period?: string
   /** 선택: 프로젝트 한 줄 소개 */
   summary?: string
+  /** 비워도 됩니다 (성과·상세를 Projects 섹션에 둔 프로젝트는 이름과 한 줄 소개만 적습니다) */
   highlights: Highlight[]
   /** 선택: 프로젝트에서만 쓴 기술 (비우면 팀·회사 스택만 보여줍니다) */
   stack: string[]
@@ -113,7 +114,12 @@ export type Experience = {
 
 export type Project = {
   title: string
+  /** 선택: 회사 프로젝트의 소속 (예: 회사 · 팀). 제목 아래에 한 줄로 보여줍니다. */
+  affiliation?: string
+  /** 비우면 표시되지 않습니다 (회사 프로젝트는 기간을 적지 않습니다) */
   period: string
+  /** false면 포트폴리오(화면·PDF)에 노출하지 않습니다. 비워 두면 노출합니다 */
+  visible: boolean
   description: string
   /** 성과 목록. 문장별로 detail을 붙이면 그 문장이 클릭 가능해집니다. */
   points: Highlight[]
@@ -232,7 +238,7 @@ const toHighlights = (v: Maybe<Maybe<Loose<Highlight>>[]>): Highlight[] =>
     .map((h) => ({ text: req(h.text), detail: toDetail(h.detail) }))
     .filter(keep((h) => h.text))
 
-/** 이름이 없거나 성과가 하나도 없는 프로젝트는 없는 것으로 칩니다 */
+/** 이름이 없는 프로젝트는 없는 것으로 칩니다 */
 const toExperienceProjects = (
   v: Maybe<Maybe<Loose<ExperienceProject>>[]>,
 ): ExperienceProject[] =>
@@ -244,7 +250,7 @@ const toExperienceProjects = (
       highlights: toHighlights(pj.highlights),
       stack: lines(pj.stack),
     }))
-    .filter(keep((pj) => pj.name && pj.highlights.length > 0))
+    .filter(keep((pj) => pj.name))
 
 // ── 내용 ─────────────────────────────────────────────────────
 
@@ -320,7 +326,9 @@ export const experiences: Experience[] = list<Loose<Experience>>(experiencesJson
 
 export const projects: Project[] = list<Loose<Project>>(projectsJson).map((pr) => ({
   title: req(pr.title),
+  affiliation: opt(pr.affiliation),
   period: req(pr.period),
+  visible: pr.visible !== false,
   description: req(pr.description),
   points: toHighlights(pr.points),
   stack: lines(pr.stack),
@@ -329,6 +337,9 @@ export const projects: Project[] = list<Loose<Project>>(projectsJson).map((pr) =
   featured: pr.featured === true,
   detail: toDetail(pr.detail),
 }))
+
+/** 이력서 PDF에 실을 프로젝트 수 (노출 중인 프로젝트 중 앞에서부터) */
+export const RESUME_PROJECT_COUNT = 3
 
 export const posts: Post[] = list<Loose<Post>>(postsJson)
   .map((po) => ({

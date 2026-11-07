@@ -28,6 +28,9 @@
 
 - 첫 화면 대표 성과(`heroMetrics`)는 쓰지 않는다
 - 경력 아래 프로젝트에는 기간(`period`)을 넣지 않는다
+- 회사 프로젝트는 성과·상세·기술을 Projects(`projects.json`)에 두고 `affiliation`에 소속을 적는다. 경력(`experiences.json`)에는 이름과 한 줄 소개만 남긴다 (예외로 경력에 남긴 것: GAVS, 개발 환경·테스트). 새 회사 프로젝트의 성과를 경력에 길게 쓰지 않는다
+- Projects는 카드 순서가 우선순위다. 이력서 PDF에는 노출 중인(`visible`) 앞 3개만 실린다. 숨기려면 `visible: false`
+- PDF 구성: 이력서 = About → Experience → Projects(앞 3개) → Skills → Open Source → Writing → Education & Activities, 경력기술서 = About → Experience → Projects (`src/index.css`의 `@media print`, `data-print`)
 - More(`others.json`) 항목은 부연설명을 `issuer` 한 줄로만 쓰고 `note`는 비운다. 핵심만 전달한다
 - (주)더즌: 차세대결제팀 2026.04 — 재직 중, 키오스크개발팀 2025.04 — 2026.04. DBP 작업은 모두 차세대결제팀에 둔다
 
