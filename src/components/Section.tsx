@@ -4,11 +4,13 @@ import { useReveal } from '../hooks/useReveal'
 type SectionProps = {
   id: string
   title: string
+  /** 선택: PDF에서만 쓸 제목 (화면 제목과 다를 때) */
+  printTitle?: string
   subtitle?: ReactNode
   children: ReactNode
 }
 
-export function Section({ id, title, subtitle, children }: SectionProps) {
+export function Section({ id, title, printTitle, subtitle, children }: SectionProps) {
   const { ref, visible, animate } = useReveal<HTMLElement>()
 
   return (
@@ -23,7 +25,14 @@ export function Section({ id, title, subtitle, children }: SectionProps) {
       <div className="section-grid lg:grid lg:grid-cols-[10rem_minmax(0,1fr)] lg:gap-12">
         <header className="mb-6 lg:sticky lg:top-24 lg:mb-0 lg:self-start">
           <h2 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
-            {title}
+            {printTitle ? (
+              <>
+                <span className="title-screen">{title}</span>
+                <span className="title-print">{printTitle}</span>
+              </>
+            ) : (
+              title
+            )}
           </h2>
           {subtitle && (
             <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">{subtitle}</p>

@@ -4,8 +4,8 @@ import { profile } from '../data/profile'
 type Kind = 'resume' | 'career'
 
 const OPTIONS: { kind: Kind; label: string; hint: string }[] = [
-  { kind: 'resume', label: '이력서', hint: '경력과 성과를 한 줄씩 담은 요약본' },
-  { kind: 'career', label: '경력기술서', hint: '각 항목을 눌렀을 때 나오는 상세 내용까지 담은 문서' },
+  { kind: 'resume', label: '이력서', hint: '경력, 대표 프로젝트 3개, 기술, 글, 학력·활동을 담은 요약본' },
+  { kind: 'career', label: '경력기술서', hint: '경력과 모든 프로젝트를 상세 내용까지 담은 문서' },
 ]
 
 /**

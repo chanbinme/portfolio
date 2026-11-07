@@ -145,13 +145,12 @@ collections:
                       - { name: name, label: 프로젝트 이름, widget: string, hint: '예: 가상계좌 발급' }
                       - { name: period, label: 기간, widget: string, required: false, hint: 비우면 표시되지 않습니다 }
                       - { name: summary, label: 프로젝트 소개, widget: text, required: false }
-                      - { name: projectRef, label: Projects 연결, widget: string, required: false, hint: "Projects 섹션의 프로젝트 제목과 똑같이 적으면 '자세히 보기' 링크가 생깁니다. 이때 성과와 기술은 Projects에 두고 여기는 비웁니다" }
                       - name: highlights
                         label: 성과
                         label_singular: 성과
                         widget: list
                         required: false
-                        hint: Projects 연결을 쓰면 비워 둬도 됩니다
+                        hint: 성과·상세를 Projects 섹션에 둔 프로젝트는 비워 둬도 됩니다 (이름과 프로젝트 소개만 적습니다)
                         summary: '{{fields.text}}'
                         # 성과 한 줄의 구조 — 팀·회사 단위 성과에서도 그대로 씁니다
                         fields: &highlight_fields
@@ -272,6 +271,7 @@ collections:
                 field: { name: item, label: 기술, widget: string }
               - { name: repoUrl, label: 코드 링크, widget: string, required: false }
               - { name: liveUrl, label: 서비스 링크, widget: string, required: false }
+              - { name: visible, label: 포트폴리오에 노출, widget: boolean, required: false, default: true, hint: 끄면 화면과 PDF에서 모두 빠집니다 }
               - { name: featured, label: featured 표시, widget: boolean, required: false, default: false }
               - name: detail
                 label: 프로젝트 상세 (자세히 보기)

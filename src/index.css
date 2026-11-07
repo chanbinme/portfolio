@@ -252,6 +252,16 @@
   display: none;
 }
 
+/* PDF에서만 쓰는 섹션 제목 (Section의 printTitle) */
+.title-print {
+  display: none;
+}
+
+/* 편집할 때 노출을 끈 프로젝트는 흐리게 보여, 꺼 둔 것임을 알아보게 합니다 */
+article[data-hidden] {
+  opacity: 0.45;
+}
+
 /* 경력기술서 PDF에만 나오는 상세 본문 (아래 @media print 참고) */
 .print-detail {
   display: none;
@@ -560,6 +570,43 @@
     display: none !important;
   }
 
+  /*
+   * ── PDF 구성 ──
+   * 이력서(기본):  About → Experience → Projects(앞 3개) → Skills → Open Source → Writing → Education & Activities
+   * 경력기술서:    About → Experience → Projects (모든 프로젝트, 상세 포함)
+   * 순서는 화면(DOM) 순서와 같으므로 여기서는 무엇을 뺄지만 정합니다.
+   * 이력서의 프로젝트 수는 profile.ts의 RESUME_PROJECT_COUNT입니다.
+   */
+
+  /* 노출을 끈 프로젝트는 어느 PDF에도 싣지 않습니다 */
+  article[data-hidden] {
+    display: none !important;
+  }
+
+  html:not([data-print='career']) article[data-resume-skip] {
+    display: none !important;
+  }
+
+  html[data-print='career'] #skills,
+  html[data-print='career'] #opensource,
+  html[data-print='career'] #writing,
+  html[data-print='career'] #more {
+    display: none !important;
+  }
+
+  /* 이력서의 More는 학력·자격·활동만. 비개발 경력은 뺍니다 */
+  #more [data-more-group='그 외 경력'] {
+    display: none !important;
+  }
+
+  .title-screen {
+    display: none;
+  }
+
+  .title-print {
+    display: inline;
+  }
+
   /* ── Writing: 제목 목록을 촘촘하게 ── */
 
   #writing li {
@@ -586,6 +633,12 @@
     word-break: break-all;
   }
 
+  /*
+   * Open Source·Writing은 항목이 많아, 줄마다 긴 주소를 덧붙이면 분량이 크게 늘어납니다.
+   * 이 링크들은 PDF에서 눌러 열 수 있으므로 주소 덧붙임을 생략합니다.
+   */
+  #opensource a[href^='http']::after,
+  #writing a[href^='http']::after,
   a[href^='#']::after,
   a[href^='mailto']::after,
   .print-only a::after {

@@ -11,7 +11,6 @@ import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { HighlightList } from './HighlightList'
 import { PrintDetail } from './PrintDetail'
-import { projectAnchor, projects as allProjects } from '../data/profile'
 import { EditableAdd, EditableRemove, EditableSet, EditableText } from '../dev/Editable'
 import { BLANK, pathKey, rememberModal, shouldReopen, type Key } from '../dev/editor'
 
@@ -296,8 +295,6 @@ function ProjectList({
               </p>
             )}
 
-            {project.projectRef && <ProjectLink title={project.projectRef} />}
-
             <HighlightList
               items={project.highlights}
               context={`${context} · ${project.name}`}
@@ -318,36 +315,6 @@ function ProjectList({
         dropKind="project"
       />
     </>
-  )
-}
-
-/**
- * Projects 섹션의 같은 제목 카드로 가는 링크.
- * 이력서 종이에서는 눌러 볼 수 없으니 인쇄에서 빼고, 짝이 없으면 그리지 않습니다.
- */
-function ProjectLink({ title }: { title: string }) {
-  const index = allProjects.findIndex((p) => p.title === title)
-  if (index < 0) return null
-
-  return (
-    <a
-      href={`#${projectAnchor(index)}`}
-      className="no-print press mt-2 inline-flex items-center gap-1 text-sm font-medium text-accent hover:opacity-70 dark:text-accent-dark"
-    >
-      Projects에서 자세히 보기
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        aria-hidden="true"
-      >
-        <path d="M9 6l6 6-6 6" />
-      </svg>
-    </a>
   )
 }
 
