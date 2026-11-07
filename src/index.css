@@ -257,8 +257,8 @@
   display: none;
 }
 
-/* 편집할 때 노출을 끈 프로젝트는 흐리게 보여, 꺼 둔 것임을 알아보게 합니다 */
-article[data-hidden] {
+/* 편집할 때 노출을 끈 프로젝트·성과는 흐리게 보여, 꺼 둔 것임을 알아보게 합니다 */
+[data-hidden] {
   opacity: 0.45;
 }
 
@@ -578,8 +578,8 @@ article[data-hidden] {
    * 이력서의 프로젝트 수는 profile.ts의 RESUME_PROJECT_COUNT입니다.
    */
 
-  /* 노출을 끈 프로젝트는 어느 PDF에도 싣지 않습니다 */
-  article[data-hidden] {
+  /* 노출을 끈 프로젝트·성과는 어느 PDF에도 싣지 않습니다 */
+  [data-hidden] {
     display: none !important;
   }
 

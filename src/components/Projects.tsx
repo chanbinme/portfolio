@@ -76,9 +76,11 @@ export function Projects() {
                   {project.title}
                 </EditableText>
                 <EditableRemove file="projects" path={[]} index={i} label="프로젝트" />
-                {project.featured && (
+                {(project.badge || editing) && (
                   <span className="ml-2 align-middle font-mono text-[10px] tracking-wide text-accent uppercase dark:text-accent-dark">
-                    featured
+                    <EditableText file="projects" path={[i, 'badge']}>
+                      {project.badge ?? ''}
+                    </EditableText>
                   </span>
                 )}
               </h3>

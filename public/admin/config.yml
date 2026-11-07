@@ -155,6 +155,7 @@ collections:
                         # 성과 한 줄의 구조 — 팀·회사 단위 성과에서도 그대로 씁니다
                         fields: &highlight_fields
                           - { name: text, label: 문장, widget: text }
+                          - { name: visible, label: 포트폴리오에 노출, widget: boolean, required: false, default: true, hint: 끄면 화면과 PDF에서 모두 빠집니다 }
                           - name: detail
                             label: 상세 (문장 클릭 시 모달)
                             widget: object
@@ -272,7 +273,7 @@ collections:
               - { name: repoUrl, label: 코드 링크, widget: string, required: false }
               - { name: liveUrl, label: 서비스 링크, widget: string, required: false }
               - { name: visible, label: 포트폴리오에 노출, widget: boolean, required: false, default: true, hint: 끄면 화면과 PDF에서 모두 빠집니다 }
-              - { name: featured, label: featured 표시, widget: boolean, required: false, default: false }
+              - { name: badge, label: 배지, widget: string, required: false, hint: '카드 제목 옆에 붙는 짧은 글 (예: featured). 비우면 표시되지 않습니다' }
               - name: detail
                 label: 프로젝트 상세 (자세히 보기)
                 widget: object

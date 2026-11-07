@@ -5,7 +5,13 @@ import { DetailBody } from './DetailBody'
 import { Bullet } from './Bullet'
 import { DetailTrigger } from './DetailTrigger'
 import { PrintDetail } from './PrintDetail'
-import { EditableAdd, EditableRemove, EditableSet, EditableText } from '../dev/Editable'
+import {
+  EditableAdd,
+  EditableRemove,
+  EditableSet,
+  EditableText,
+  EditableToggle,
+} from '../dev/Editable'
 import {
   BLANK,
   pathKey,
@@ -62,7 +68,12 @@ export function HighlightList({
     setSelected(null)
   }
 
-  if (items.length === 0 && !import.meta.env.DEV) return null
+  // 노출을 끈 성과는 편집할 때만 흐리게 보여, 다시 켤 수 있게 합니다
+  const shown = items
+    .map((item, i) => ({ item, i }))
+    .filter(({ item }) => item.visible || editing)
+
+  if (shown.length === 0 && !import.meta.env.DEV) return null
 
   const textColor =
     tone === 'muted'
@@ -72,11 +83,15 @@ export function HighlightList({
   return (
     <>
       <ul className="mt-3 space-y-1.5">
-        {items.map((item, i) => {
+        {shown.map(({ item, i }) => {
           const { text, detail } = item
 
           return (
-            <li key={i} className={`flex gap-2 text-sm leading-relaxed ${textColor}`}>
+            <li
+              key={i}
+              data-hidden={item.visible ? undefined : ''}
+              className={`flex gap-2 text-sm leading-relaxed ${textColor}`}
+            >
               <Bullet />
 
               {detail && !editing ? (
@@ -105,6 +120,12 @@ export function HighlightList({
                       label="상세 만들기"
                     />
                   )}
+                  <EditableToggle
+                    file={file}
+                    path={[...path, i, 'visible']}
+                    value={item.visible}
+                    label="노출"
+                  />
                   <EditableRemove file={file} path={path} index={i} label="성과" />
                   {detail && <PrintDetail detail={detail} />}
                 </span>
