@@ -1,38 +1,55 @@
 [
   {
-    "category": "Back-end",
+    "category": "Language & Framework",
     "items": [
       "Java",
       "Spring Boot",
       "Spring MVC",
-      "Spring Data JPA",
-      "Spring Security",
       "Spring WebFlux",
+      "Spring Security",
+      "JPA",
       "QueryDSL",
-      "Gradle",
-      "RabbitMQ"
+      "Mybatis"
     ]
   },
   {
-    "category": "Database",
+    "category": "Integrations",
+    "items": [
+      "Triple A (오프램프)",
+      "iPiD (해외계좌검증)",
+      "M-DAQ (크로스보더)",
+      "케이뱅크 (가상계좌)",
+      "웰컴저축은행 (가상계좌)",
+      "SC은행 (외환)",
+      "KG이니시스 (PG)"
+    ]
+  },
+  {
+    "category": "Data & Messaging",
     "items": [
       "MySQL",
       "Oracle",
       "Redis",
-      "H2"
+      "RabbitMQ"
     ]
   },
   {
-    "category": "Test / Docs",
+    "category": "Test & Docs",
     "items": [
       "JUnit 5",
+      "Mockito",
+      "Jacoco",
       "Fixture Monkey",
-      "springdoc-openapi"
+      "springdoc-openapi",
+      "Redocly",
+      "Scalar",
+      "Swagger"
     ]
   },
   {
-    "category": "Performance / Monitoring",
+    "category": "Observability",
     "items": [
+      "ELK",
       "K6",
       "Grafana",
       "InfluxDB",
@@ -40,12 +57,22 @@
     ]
   },
   {
-    "category": "Infra · Tools",
+    "category": "Build & Deploy",
     "items": [
-      "ELK",
-      "Docker Swarm",
+      "Docker",
       "Drone CI",
       "Git"
+    ]
+  },
+  {
+    "category": "Front-end",
+    "items": [
+      "React",
+      "Vite",
+      "TypeScript",
+      "JSP",
+      "jQuery",
+      "Ajax"
     ]
   }
 ]
