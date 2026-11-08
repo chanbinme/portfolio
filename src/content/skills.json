@@ -10,51 +10,38 @@
     ]
   },
   {
-    "category": "Integrations",
-    "items": [
-      "Triple A (오프램프)",
-      "iPiD (해외계좌검증)",
-      "M-DAQ (크로스보더)",
-      "케이뱅크 (가상계좌)",
-      "웰컴저축은행 (가상계좌)",
-      "SC은행 (외환)",
-      "KG이니시스 (PG)"
-    ]
-  },
-  {
-    "category": "Data & Messaging",
+    "category": "Database & Messaging",
     "items": [
       "MySQL",
       "Oracle",
+      "MariaDB",
       "Redis",
       "RabbitMQ"
     ]
   },
   {
-    "category": "Test & Docs",
+    "category": "Infrastructure & DevOps",
+    "items": [
+      "Docker",
+      "Drone CI",
+      "GitHub Actions",
+      "Linux",
+      "JEUS",
+      "WebToB"
+    ]
+  },
+  {
+    "category": "Testing & Observability",
     "items": [
       "JUnit 5",
       "Mockito",
       "Jacoco",
       "Fixture Monkey",
-      "springdoc-openapi",
-      "Redocly",
-      "Scalar",
-      "Swagger"
-    ]
-  },
-  {
-    "category": "Observability",
-    "items": [
-      "ELK"
-    ]
-  },
-  {
-    "category": "Build & Deploy",
-    "items": [
-      "Docker",
-      "Drone CI",
-      "Git"
+      "ELK",
+      "k6",
+      "Grafana",
+      "InfluxDB",
+      "Jaeger"
     ]
   },
   {
@@ -64,8 +51,19 @@
       "Vite",
       "TypeScript",
       "JSP",
-      "jQuery",
-      "Ajax"
+      "jQuery"
+    ]
+  },
+  {
+    "category": "Integrations",
+    "items": [
+      "Triple A (오프램프)",
+      "iPiD (해외계좌검증)",
+      "M-DAQ (크로스보더)",
+      "케이뱅크 (가상계좌)",
+      "웰컴저축은행 (가상계좌)",
+      "SC은행 (외환)",
+      "KG이니시스 (PG)"
     ]
   }
 ]
