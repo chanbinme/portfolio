@@ -37,8 +37,8 @@
             "visible": false
           },
           {
-            "text": "Fixture Monkey와 java-test-fixtures로 테스트 데이터 생성 코드를 모듈 간 공유해, 테스트 데이터 준비 코드 [N줄 → N줄(-N%)], [N개] 모듈에서 재사용\n\n\n",
-            "visible": false
+            "text": "Fixture Monkey를 활용해 테스트 데이터를 재활용하고 java-test-fixtures로 테스트 전용 코드를 모듈 간 공유해 Given절 75% 감소 (약 2,400줄 → 600줄, 7개 모듈에서 재사용)",
+            "visible": true
           },
           {
             "text": "서비스별 로그 포맷과 Correlation ID를 표준화하고 ELK 수집 환경을 구축해, 여러 모듈을 거치는 요청을 하나의 ID로 추적, 장애 원인 파악 시간 [N분 → N분]",
