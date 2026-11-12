@@ -1,5 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
 import { profile } from '../data/profile'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 type Kind = 'resume' | 'career'
 
@@ -32,99 +38,59 @@ function printAs(kind: Kind, label: string) {
 }
 
 export function PdfMenu() {
-  const [open, setOpen] = useState(false)
-  const wrapRef = useRef<HTMLDivElement>(null)
-  const buttonRef = useRef<HTMLButtonElement>(null)
-
-  // 바깥을 누르거나 Esc를 누르면 닫습니다
-  useEffect(() => {
-    if (!open) return
-
-    const onPointerDown = (e: PointerEvent) => {
-      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false)
-    }
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setOpen(false)
-        buttonRef.current?.focus()
-      }
-    }
-
-    document.addEventListener('pointerdown', onPointerDown)
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.removeEventListener('pointerdown', onPointerDown)
-      document.removeEventListener('keydown', onKeyDown)
-    }
-  }, [open])
-
   return (
-    <div ref={wrapRef} className="sm:relative">
-      <button
-        ref={buttonRef}
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-2 press rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-900"
-      >
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
-        </svg>
-        PDF 저장
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-          className={`-mr-1 transition-transform ${open ? 'rotate-180' : ''}`}
-        >
-          <path d="M6 9l6 6 6-6" />
-        </svg>
-      </button>
+    // modal={false}: 메뉴가 열려 있는 동안 본문 스크롤을 잠그지 않아 레이아웃이 밀리지 않습니다
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" className="group press h-10 px-4">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="size-[15px]"
+          >
+            <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+          </svg>
+          PDF 저장
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="-mr-1 size-3 transition-transform group-data-[state=open]:rotate-180"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </Button>
+      </DropdownMenuTrigger>
 
-      {/* 늘 그려 두고 열림 상태만 바꿉니다. 단추에서 자라나고, 닫힐 때 단추 쪽으로 접힙니다 */}
-      <div
-        role="menu"
-        data-open={open}
-        inert={!open}
-        className="popover absolute top-full left-0 z-20 mt-2 w-[min(20rem,calc(100vw-3rem))] rounded-xl border border-neutral-200 bg-white p-1.5 shadow-lg shadow-neutral-900/10 dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-black/40"
+      {/* 포털로 body에 그려지므로, 인쇄물에 메뉴가 찍히지 않게 print:hidden을 둡니다 */}
+      <DropdownMenuContent
+        align="start"
+        className="w-[min(20rem,calc(100vw-3rem))] rounded-xl p-1.5 print:hidden"
       >
         {OPTIONS.map((o) => (
-          <button
+          <DropdownMenuItem
             key={o.kind}
-            type="button"
-            role="menuitem"
-            onClick={() => {
-              setOpen(false)
-              printAs(o.kind, o.label)
-            }}
-            className="block w-full rounded-lg px-3 py-2.5 text-left hover:bg-neutral-50 active:bg-neutral-100 dark:hover:bg-neutral-800 dark:active:bg-neutral-700/70"
+            onSelect={() => printAs(o.kind, o.label)}
+            className="flex-col items-start gap-0.5 rounded-lg px-3 py-2.5"
           >
-            <span className="block text-sm font-medium text-neutral-900 dark:text-neutral-100">
-              {o.label}
-            </span>
-            <span className="mt-0.5 block text-xs leading-snug text-neutral-500 dark:text-neutral-400">
-              {o.hint}
-            </span>
-          </button>
+            <span className="text-sm font-medium">{o.label}</span>
+            <span className="text-xs leading-snug text-muted-foreground">{o.hint}</span>
+          </DropdownMenuItem>
         ))}
-      </div>
-    </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

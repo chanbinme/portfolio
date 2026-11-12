@@ -1,5 +1,6 @@
 import { heroMetrics, profile, socials } from '../data/profile'
 import { PdfMenu } from './PdfMenu'
+import { Button } from '@/components/ui/button'
 import { EditableText } from '../dev/Editable'
 
 export function Hero() {
@@ -49,24 +50,18 @@ export function Hero() {
       </p>
 
       <div className="no-print relative mt-10 flex flex-wrap items-center gap-3">
-        <a
-          href="#contact"
-          className="press rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"
-        >
-          연락하기
-        </a>
+        <Button asChild className="press h-10 px-4">
+          <a href="#contact">연락하기</a>
+        </Button>
 
         <PdfMenu />
 
         {profile.resumeUrl && (
-          <a
-            href={profile.resumeUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="press rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-900"
-          >
-            이력서
-          </a>
+          <Button asChild variant="outline" className="press h-10 px-4">
+            <a href={profile.resumeUrl} target="_blank" rel="noreferrer noopener">
+              이력서
+            </a>
+          </Button>
         )}
 
         {links.length > 0 && (

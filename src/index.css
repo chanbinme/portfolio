@@ -1,7 +1,69 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
 /* 다크 모드를 html.dark 클래스로 제어 (Tailwind v4 방식) */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * shadcn/ui 기본(neutral) 테마 토큰. src/components/ui/*에서 쓰는 색입니다.
+ *
+ * 일부러 등록하지 않은 것:
+ * - accent / accent-foreground: 사이트의 포인트 색(--color-accent)과 이름이 겹칩니다.
+ *   shadcn의 호버 배경 자리에는 ui 컴포넌트에서 muted를 씁니다.
+ * - radius 척도(--radius-sm~xl): 등록하면 사이트 전체의 rounded-md, rounded-lg 값이 바뀝니다.
+ * - 전역 `* { border-border }`: 색을 지정하지 않은 border의 색이 바뀝니다.
+ *   ui 컴포넌트는 border-border를 직접 씁니다.
+ */
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
 
 @theme {
   /* Pretendard는 라틴 글리프가 Inter 기반이라 한글·영문이 한 폰트로 어울립니다 */
@@ -135,32 +197,6 @@
 .menu-panel > * {
   min-height: 0;
   overflow: hidden;
-}
-
-/* 누른 단추에서 자라나 단추 쪽으로 접혀 들어갑니다 */
-.popover {
-  transform-origin: top left;
-  opacity: 0;
-  scale: 0.96;
-  translate: 0 -0.25rem;
-  visibility: hidden;
-  transition:
-    opacity 0.16s ease,
-    scale 0.2s cubic-bezier(0.32, 0.72, 0, 1),
-    translate 0.2s cubic-bezier(0.32, 0.72, 0, 1),
-    visibility 0s linear 0.2s;
-}
-
-.popover[data-open='true'] {
-  opacity: 1;
-  scale: 1;
-  translate: 0 0;
-  visibility: visible;
-  transition:
-    opacity 0.16s ease,
-    scale 0.2s cubic-bezier(0.32, 0.72, 0, 1),
-    translate 0.2s cubic-bezier(0.32, 0.72, 0, 1),
-    visibility 0s;
 }
 
 /*
@@ -527,6 +563,9 @@
     padding: 0 !important;
     font-size: 9pt;
     color: #555 !important;
+    /* shadcn Badge의 줄바꿈 금지·잘라내기를 풀어야 쉼표 뒤에서 줄이 바뀝니다 */
+    white-space: normal !important;
+    overflow: visible !important;
   }
 
   .tag::after {

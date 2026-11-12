@@ -48,6 +48,11 @@ npm run test:smoke   # dist/를 띄워 모든 상세 모달을 열고 닫아 본
 
 - 상세 모달(`src/components/Modal.tsx`)은 `createPortal`로 `document.body`에 띄운다. 목록 항목의 `isolation: isolate`와 등장 애니메이션의 `translate`가 쌓임 맥락을 만들어, 안에 두면 뒤따르는 내용이 모달을 덮는다
 - 인쇄(PDF 저장) 스타일은 `src/index.css`의 `@media print`에 있다. 화면 UI를 바꾸면 인쇄 미리보기도 확인한다
+- shadcn/ui(new-york, neutral)를 쓴다. 컴포넌트는 `src/components/ui/`, 별칭은 `@/`, 설정은 `components.json`이다. 쓰는 것은 Button·Badge·DropdownMenu(Hero 버튼, `PdfMenu`, `Tag`)뿐이고 `Modal`은 직접 만든 시트·드래그 제스처 때문에 Dialog로 바꾸지 않았다
+  - `npx shadcn add`는 사내·샌드박스 프록시가 `ui.shadcn.com`을 막으면 실패한다. 그때는 컴포넌트 코드를 직접 옮겨 오고 의존성만 npm으로 설치한다
+  - shadcn의 `accent`는 사이트 포인트 색(`--color-accent`)과 이름이 겹친다. 그래서 `index.css`에 accent·radius 척도·전역 `border-border`를 등록하지 않았고, ui 컴포넌트는 hover 배경에 `muted`를, 테두리에 `border-border`를 직접 쓴다. 새로 받은 컴포넌트에 `bg-accent`가 있으면 같은 식으로 바꾼다
+  - `Badge`는 `whitespace-nowrap`·`overflow-hidden`이라 인쇄에서 태그 줄이 페이지 폭을 넘는다. `index.css`의 `@media print .tag`가 이를 풀어 두었으니 `tag` 클래스를 지우지 않는다
+  - 포털로 body에 그려지는 메뉴·팝오버에는 `print:hidden`을 둔다
 
 ## 스킬
 
