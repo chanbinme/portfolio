@@ -1,13 +1,15 @@
 import type { ReactNode } from 'react'
+import { Badge } from '@/components/ui/badge'
 
 type TagProps = {
   children: ReactNode
 }
 
 export function Tag({ children }: TagProps) {
+  // `tag` 클래스는 인쇄 스타일(index.css의 @media print)이 쉼표로 이은 글로 바꿀 때 씁니다
   return (
-    <span className="tag rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600 dark:bg-neutral-900 dark:text-neutral-400">
+    <Badge variant="secondary" className="tag">
       {children}
-    </span>
+    </Badge>
   )
 }

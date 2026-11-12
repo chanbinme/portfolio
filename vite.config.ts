@@ -1,5 +1,6 @@
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import { contentEditor } from './tools/content-editor.ts'
 
@@ -10,4 +11,8 @@ export default defineConfig({
   base: '/portfolio/',
   // contentEditor는 개발 서버에서만 동작합니다 (배포본에는 없습니다)
   plugins: [react(), tailwindcss(), contentEditor()],
+  resolve: {
+    // shadcn/ui 컴포넌트가 쓰는 '@/' 별칭
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
+  },
 })
