@@ -222,6 +222,9 @@ curl -sL "https://unpkg.com/@sveltia/cms@$V/dist/sveltia-cms.js" \
 ```
 
 브라우저 탭 제목과 링크 미리보기(OG) 문구는 [`index.html`](index.html)에서 수정합니다.
+링크 미리보기 이미지(`og.png`)는 빌드할 때 [`tools/og-image.ts`](tools/og-image.ts)가
+`profile.json`의 역할·이름·헤드라인으로 만들어 주므로 따로 관리하지 않아도 됩니다.
+`npm run build` 뒤 `dist/og.png`로 미리 볼 수 있습니다.
 
 ## PDF 저장
 
