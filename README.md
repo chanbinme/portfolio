@@ -31,6 +31,7 @@ npm run preview  # 빌드 결과 로컬 확인
 | `opensource.json` | 오픈소스 기여 (프로젝트별 PR 목록, 비우면 섹션·메뉴가 사라짐) |
 | `posts.json` | 글 목록 (비우면 섹션·메뉴가 사라짐) |
 | `others.json` | More: 자격·교육 · 학력 · 활동 · 그 외 경력 (항목마다 `category`로 묶음 지정) |
+| `resume.json` | 이력서 페이지(`/resume/`)의 경력. `experiences.json`과 같은 구조로 따로 씀 |
 | `views.json` | 지원처별 보기 (`?for=` 링크마다 프로젝트 순서·노출) |
 | `settings.json` | 사이트 설정 (방문 분석 GoatCounter 사이트 코드) |
 
@@ -276,26 +277,51 @@ https://chanbinme.github.io/portfolio/?for=fintech&ref=acme   + 어느 회사에
 코드를 비우면 스크립트를 아예 불러오지 않습니다. 개발 서버(`npm run dev`)에서는 기록하지 않습니다.
 구현은 [`src/lib/analytics.ts`](src/lib/analytics.ts)에 있습니다.
 
-## PDF 저장
+## 이력서 페이지와 PDF
 
-Hero의 **"PDF 저장"** 버튼을 누르면 두 가지 중에서 고릅니다.
+이력서는 포트폴리오와 따로 된 페이지입니다: <https://chanbinme.github.io/portfolio/resume/>
 
-| 종류 | 구성 |
+| 섹션 | 내용을 가져오는 곳 |
 | --- | --- |
-| 이력서 | About → Experience → Projects(노출 중인 앞 3개) → Skills → Open Source → Writing → Education & Activities (More의 자격·교육, 학력, 활동. 비개발 경력은 뺌). 상세 내용은 싣지 않음 |
-| 경력기술서 | About → Experience → Projects (노출 중인 모든 프로젝트). 각 항목을 눌렀을 때 나오는 상세 내용(모달)까지 항목 아래에 이어 붙임 |
+| 첫 화면·About·Skills·Open Source·Writing·More·Contact | 포트폴리오와 같은 JSON |
+| Experience | **`resume.json`** (포트폴리오의 `experiences.json`과 같은 구조로 따로 씀) |
+| Projects | 없음 |
 
-- 순서는 화면(DOM) 순서와 같고, `@media print`가 `<html data-print="resume | career">`에 따라 뺄 섹션만 정합니다
-- 이력서에 실을 프로젝트 수는 [`profile.ts`](src/data/profile.ts)의 `RESUME_PROJECT_COUNT`입니다.
-  카드 순서가 곧 우선순위이므로, Projects에서 끌어서 위로 올리면 이력서에 실립니다
-- 노출을 끈 프로젝트(`visible: false`)는 두 PDF 모두에서 빠집니다
+이력서용 경력은 `src/content/resume.json`을 고치거나, 관리자 페이지의 **"이력서 페이지 · Experience"**,
+또는 개발 서버(`http://localhost:5173/portfolio/resume/`)의 편집 모드에서 고칩니다.
+처음에는 포트폴리오 경력을 복사해 두었으니 이력서에 맞게 줄이면 됩니다.
+
+### PDF 받기
+
+Hero의 **"PDF 저장"** 메뉴와 이력서 페이지의 **"PDF 다운로드"** 버튼이 있습니다.
+
+| 메뉴 | 동작 |
+| --- | --- |
+| 이력서 | `resume.pdf`를 바로 내려받음 (파일 이름 `김찬빈_이력서.pdf`) |
+| 경력기술서 | 브라우저 인쇄 창을 엶. About → Experience → Projects (노출 중인 모든 프로젝트와 상세 내용) |
+| 이력서 페이지 보기 | 이력서 페이지로 이동 |
+
+`resume.pdf`는 배포할 때 만들어집니다. GitHub Actions가 빌드 뒤 `npm run build:pdf`
+([`tools/resume-pdf.mjs`](tools/resume-pdf.mjs))로 이력서 페이지를 Chromium에서 인쇄합니다.
+그래서 `resume.json`이나 공용 JSON을 고쳐 배포하면 PDF도 따라 바뀝니다. 실패하면 배포가 멈춥니다.
+
+로컬에서 PDF를 확인하려면:
+
+```bash
+npm run build && npm run build:pdf   # dist/resume.pdf
+```
+
+개발 서버에는 `resume.pdf`가 없어서 "이력서" 메뉴는 이력서 페이지를 열고, 이력서 페이지의
+"PDF 다운로드"는 인쇄 창을 띄웁니다 (같은 모양입니다).
+
+### 인쇄 모양
+
+- 순서는 화면(DOM) 순서와 같고, `@media print`가 `<html data-print="career">` 여부에 따라 뺄 섹션만 정합니다
+- 포트폴리오 페이지에서 Ctrl/Cmd+P로 직접 인쇄하면 예전 이력서 구성(Projects 앞 3개 포함)이 나옵니다.
+  이 개수는 [`profile.ts`](src/data/profile.ts)의 `RESUME_PROJECT_COUNT`입니다
+- 노출을 끈 프로젝트·성과(`visible: false`)는 어느 PDF에도 실리지 않습니다
 - 경력기술서는 프로젝트가 1개 늘 때마다 약 1쪽씩 늡니다. 쪽수를 줄이려면 노출하는 프로젝트를 줄이세요
 - Open Source·Writing의 링크 주소는 PDF에서 눌러 열 수 있어서, 종이용 주소 덧붙임을 생략합니다
-
-고르면 브라우저 인쇄 대화상자가 열리고, 대상을 "PDF로 저장"으로 고르면 A4 PDF가 만들어집니다.
-별도 라이브러리가 없어 번들이 늘지 않고, 텍스트를 선택·검색할 수 있는 PDF가 나옵니다.
-PDF 기본 파일명은 `김찬빈 이력서`, `김찬빈 경력기술서`로 바뀝니다.
-브라우저의 인쇄 단축키(Ctrl/Cmd+P)로 직접 인쇄하면 이력서 쪽이 나옵니다.
 
 경력기술서는 인쇄 직전에 `<html data-print="career">`를 붙여 상세 본문(`.print-detail`)을
 보이게 하는 방식입니다. 상세 본문은 화면에서는 숨겨져 있고, 내용은 모달과 같은 JSON(`detail`)에서

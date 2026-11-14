@@ -1,5 +1,6 @@
 import { profile } from '../data/profile'
 import { track } from '../lib/analytics'
+import { RESUME_PAGE_URL, RESUME_PDF_URL, resumeFileName } from '../lib/resume'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -8,12 +9,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-type Kind = 'resume' | 'career'
+type Kind = 'career'
 
-const OPTIONS: { kind: Kind; label: string; hint: string }[] = [
-  { kind: 'resume', label: '이력서', hint: '경력, 대표 프로젝트 3개, 기술, 글, 학력·활동을 담은 요약본' },
-  { kind: 'career', label: '경력기술서', hint: '경력과 모든 프로젝트를 상세 내용까지 담은 문서' },
-]
+const ITEM = 'flex-col items-start gap-0.5 rounded-lg px-3 py-2.5'
+const HINT = 'text-xs leading-snug text-muted-foreground'
 
 /**
  * 브라우저 인쇄 대화상자를 엽니다. "PDF로 저장"을 고르면 PDF가 됩니다.
@@ -82,16 +81,32 @@ export function PdfMenu() {
         align="start"
         className="w-[min(20rem,calc(100vw-3rem))] rounded-xl p-1.5 print:hidden"
       >
-        {OPTIONS.map((o) => (
-          <DropdownMenuItem
-            key={o.kind}
-            onSelect={() => printAs(o.kind, o.label)}
-            className="flex-col items-start gap-0.5 rounded-lg px-3 py-2.5"
+        {/*
+          이력서: 이력서 페이지(/resume/)를 배포 때 PDF로 만들어 둔 파일을 바로 받습니다.
+          개발 서버에는 그 파일이 없어 이력서 페이지를 엽니다.
+        */}
+        <DropdownMenuItem asChild className={ITEM}>
+          <a
+            href={import.meta.env.DEV ? RESUME_PAGE_URL : RESUME_PDF_URL}
+            download={import.meta.env.DEV ? undefined : resumeFileName()}
+            onClick={() => track('pdf: 이력서')}
           >
-            <span className="text-sm font-medium">{o.label}</span>
-            <span className="text-xs leading-snug text-muted-foreground">{o.hint}</span>
-          </DropdownMenuItem>
-        ))}
+            <span className="text-sm font-medium">이력서</span>
+            <span className={HINT}>경력, 기술, 오픈소스, 글, 학력·활동을 담은 요약본 (PDF 다운로드)</span>
+          </a>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem onSelect={() => printAs('career', '경력기술서')} className={ITEM}>
+          <span className="text-sm font-medium">경력기술서</span>
+          <span className={HINT}>경력과 모든 프로젝트를 상세 내용까지 담은 문서</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild className={ITEM}>
+          <a href={RESUME_PAGE_URL}>
+            <span className="text-sm font-medium">이력서 페이지 보기</span>
+            <span className={HINT}>PDF로 받기 전에 웹에서 이력서를 봅니다</span>
+          </a>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

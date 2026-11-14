@@ -5,7 +5,7 @@
 // 개발 서버에서는 보내지 않습니다.
 //
 // 기록하는 것 (GoatCounter 대시보드의 경로 이름)
-// - 방문:       /?for=fintech&ref=회사   (지원처별 링크로 들어왔는지)
+// - 방문:       /?for=fintech&ref=회사   (지원처별 링크로 들어왔는지, 이력서 페이지는 /resume/)
 // - 상세 모달:  modal: <제목>
 // - PDF 저장:   pdf: 이력서 / pdf: 경력기술서
 // - 바깥 링크:  link: github.com, link: mailto 같은 주소의 호스트
@@ -37,7 +37,7 @@ export function track(name: string) {
   send({ path: name, title: name, event: true })
 }
 
-/** 지원처별 링크의 쿼리(for·ref)만 남긴 방문 경로 */
+/** 페이지 경로 + 지원처별 링크의 쿼리(for·ref)만 남긴 방문 경로 */
 function visitPath() {
   const params = new URLSearchParams()
   for (const key of ['for', 'ref']) {
@@ -45,7 +45,9 @@ function visitPath() {
     if (value) params.set(key, value)
   }
   const query = params.toString()
-  return query ? `/?${query}` : '/'
+  // 배포 경로(/portfolio/)를 뺀 페이지 경로: 포트폴리오는 /, 이력서 페이지는 /resume/
+  const page = `/${location.pathname.slice(import.meta.env.BASE_URL.length)}`
+  return query ? `${page}?${query}` : page
 }
 
 /** 바깥으로 나가는 링크(새 탭·메일·전화)를 누르면 그 호스트를 기록합니다 */

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:pdf": "node tools/resume-pdf.mjs",
     "preview": "vite preview",
     "test:smoke": "node tools/smoke.mjs"
   },
@@ -26,6 +27,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^5.0.0",
+    "playwright": "^1.63.0",
     "satori": "^0.26.0",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.9.2",
