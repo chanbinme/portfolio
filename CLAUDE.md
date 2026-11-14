@@ -19,6 +19,7 @@
 
 - **수치를 지어내지 않는다.** 노트에 없는 숫자는 쓰지 않는다. DBP 성과 수치는 사용자가 직접 넣는다
 - 사내 코드·모듈명·테이블명·제휴사·은행 실명은 쓰지 않고 "제휴 은행", "해외 결제 제휴사"처럼 일반화한다
+  - 예외: Skills(`skills.json`)의 `Integrations`에는 연동해 본 제휴사·은행 실명을 "이름 (분야)" 형식으로 적는다. 성과·상세 본문에는 여전히 실명을 쓰지 않는다
 - 진행 중인 일은 완료처럼 쓰지 않는다 (예: "사내 이관 진행 중")
 - 혼자 했는지 팀이 했는지 확인된 것만 쓴다. 단독으로 확인된 것: 입금 집계·대사, 웹훅 HMAC 서명, 이벤트 기반 발급 흐름 설계
 - 모든 작업을 나열하지 않는다. 임팩트 있는 것만 남긴다
@@ -27,12 +28,22 @@
 현재 정해진 구성
 
 - 첫 화면 대표 성과(`heroMetrics`)는 쓰지 않는다
-- 경력 아래 프로젝트에는 기간(`period`)을 넣지 않는다
-- 회사 프로젝트는 성과·상세·기술을 Projects(`projects.json`)에 두고 `affiliation`에 소속을 적는다. 경력(`experiences.json`)에는 이름과 한 줄 소개만 남긴다 (예외로 경력에 남긴 것: GAVS, 개발 환경·테스트). 새 회사 프로젝트의 성과를 경력에 길게 쓰지 않는다
+- 경력(`experiences.json`)은 회사 아래 팀별 경력(`positions`)으로 나눈다. 팀마다 `summary` 한 줄과 팀 단위 핵심 성과(`highlights`)를 두고, 경력 아래 프로젝트(`projects`)는 비워 둔다. 덜 중요한 성과는 지우지 않고 `visible: false`로 숨긴다
+- 회사 프로젝트는 성과·상세·기술을 Projects(`projects.json`)에 두고 `affiliation`에 "회사 · 팀"을 적는다. `period` 필드는 비운다
+  - 기간을 보여야 하는 프로젝트(이전 팀·이전 회사, 보더리스 플랫폼)는 `affiliation` 끝에 "· YYYY.MM ~ YYYY.MM"(진행 중이면 "~ 진행 중")으로 붙인다. 현재 팀(글로벌플랫폼개발파트)의 가상계좌·GAVS·백오피스는 기간을 쓰지 않는다
+  - 개인 프로젝트(HappyDev Kit 등)는 `affiliation` 없이 `period`를 쓴다
+- 경력의 `highlights`와 Projects의 `points`가 같은 일을 다룰 수 있다. 경력에는 결과가 보이는 한 줄만, 문제·대안·과정은 Projects의 `detail`에 쓴다
 - Projects는 카드 순서가 우선순위다. 이력서 PDF에는 노출 중인(`visible`) 앞 3개만 실린다. 숨기려면 `visible: false`
 - PDF 구성: 이력서 = About → Experience → Projects(앞 3개) → Skills → Open Source → Writing → Education & Activities, 경력기술서 = About → Experience → Projects (`src/index.css`의 `@media print`, `data-print`)
 - More(`others.json`) 항목은 부연설명을 `issuer` 한 줄로만 쓰고 `note`는 비운다. 핵심만 전달한다
-- (주)더즌: 차세대결제팀 2026.04 — 재직 중, 키오스크개발팀 2025.04 — 2026.04. DBP 작업은 모두 차세대결제팀에 둔다
+- (주)더즌(2025.04 — 재직 중): 글로벌사업전략팀 글로벌플랫폼개발파트 2026.03 — 재직 중, 키오스크개발팀 선불서비스파트 2025.04 — 2026.02. DBP(보더리스 플랫폼) 작업은 모두 글로벌플랫폼개발파트에 둔다. 보더리스 플랫폼 프로젝트의 `affiliation`은 "글로벌사업전략팀 · 2025.10 ~ 진행 중"이다
+- 연락처(`profile.json`의 `socials`)에 전화번호를 둔다. 화면과 PDF 양쪽에 나온다
+
+## 링크 미리보기(OG 이미지)
+
+- `og.png`는 빌드할 때 `tools/og-image.ts`(Vite 플러그인)가 `profile.json`의 `role`·`name`·`headline`으로 그린다. 이미지 파일을 따로 커밋하지 않는다
+- `index.html`의 `og:image`·`twitter:image`는 절대 주소(`https://chanbinme.github.io/portfolio/og.png`)다. 배포 주소나 `base`를 바꾸면 `og:url`과 함께 고친다
+- 그림 확인: `npm run build` 뒤 `dist/og.png`를 연다. 카카오톡은 미리보기를 캐시하므로 바뀐 이미지는 카카오 개발자 도구의 OG 캐시 초기화로 반영한다
 
 ## 검증
 
