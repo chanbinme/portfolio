@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
 import { openSource, posts, profile, viewProjects } from '../data/profile'
 
-const NAV = [
+/** 메뉴 항목. href가 없으면 같은 페이지의 #id 섹션으로 갑니다 */
+export type NavItem = { id: string; label: string; href?: string }
+
+const NAV: NavItem[] = [
   { id: 'about', label: 'About' },
   { id: 'experience', label: 'Experience' },
   { id: 'projects', label: 'Projects' },
@@ -19,7 +22,7 @@ const NAV = [
     (n.id !== 'writing' || posts.length > 0),
 )
 
-export function Header() {
+export function Header({ nav = NAV }: { nav?: NavItem[] }) {
   const { theme, toggle } = useTheme()
   const [active, setActive] = useState<string>('')
   const [menuOpen, setMenuOpen] = useState(false)
@@ -32,7 +35,7 @@ export function Header() {
   // 짧아서 끝까지 스크롤해도 20% 지점까지 올라오지 못하기 때문입니다.
   // 첫 섹션보다 위(첫 화면)에서는 아무것도 강조하지 않습니다.
   useEffect(() => {
-    const sections = NAV.map((n) => document.getElementById(n.id)).filter(
+    const sections = nav.map((n) => document.getElementById(n.id)).filter(
       (el): el is HTMLElement => el !== null,
     )
 
@@ -65,7 +68,7 @@ export function Header() {
       window.removeEventListener('resize', schedule)
       cancelAnimationFrame(frame)
     }
-  }, [])
+  }, [nav])
 
   // 모바일 메뉴가 열려 있을 때 Esc로 닫기
   useEffect(() => {
@@ -99,10 +102,10 @@ export function Header() {
         </a>
 
         <nav className="hidden items-center gap-1 md:flex">
-          {NAV.map((item) => (
+          {nav.map((item) => (
             <a
               key={item.id}
-              href={`#${item.id}`}
+              href={item.href ?? `#${item.id}`}
               className={[
                 'press rounded-md px-2.5 py-1.5 text-sm',
                 active === item.id
@@ -148,10 +151,10 @@ export function Header() {
             id="mobile-nav"
             className="border-t border-neutral-200/70 px-6 py-2 dark:border-neutral-800/70"
           >
-            {NAV.map((item) => (
+            {nav.map((item) => (
               <a
                 key={item.id}
-                href={`#${item.id}`}
+                href={item.href ?? `#${item.id}`}
                 onClick={() => setMenuOpen(false)}
                 className={[
                   'press block rounded-md px-2 py-2.5 text-sm',
