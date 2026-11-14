@@ -31,6 +31,8 @@ npm run preview  # 빌드 결과 로컬 확인
 | `opensource.json` | 오픈소스 기여 (프로젝트별 PR 목록, 비우면 섹션·메뉴가 사라짐) |
 | `posts.json` | 글 목록 (비우면 섹션·메뉴가 사라짐) |
 | `others.json` | More: 자격·교육 · 학력 · 활동 · 그 외 경력 (항목마다 `category`로 묶음 지정) |
+| `views.json` | 지원처별 보기 (`?for=` 링크마다 프로젝트 순서·노출) |
+| `settings.json` | 사이트 설정 (방문 분석 GoatCounter 사이트 코드) |
 
 [`src/data/profile.ts`](src/data/profile.ts)는 이 JSON을 읽어 타입을 보장하는 계층입니다.
 빈 값(빈 문자열·`null`·빠진 키)은 여기서 정리되므로, 선택 항목은 비워 두거나 지워도 됩니다.
@@ -225,6 +227,54 @@ curl -sL "https://unpkg.com/@sveltia/cms@$V/dist/sveltia-cms.js" \
 링크 미리보기 이미지(`og.png`)는 빌드할 때 [`tools/og-image.ts`](tools/og-image.ts)가
 `profile.json`의 역할·이름·헤드라인으로 만들어 주므로 따로 관리하지 않아도 됩니다.
 `npm run build` 뒤 `dist/og.png`로 미리 볼 수 있습니다.
+
+## 지원처별 링크
+
+지원하는 곳에 맞춰 Projects 카드 순서를 바꾼 링크를 보낼 수 있습니다. 화면과 PDF가 함께 바뀝니다
+(이력서 PDF에는 바뀐 순서의 앞 3개가 실립니다).
+
+```
+https://chanbinme.github.io/portfolio/?for=fintech            핀테크용 순서
+https://chanbinme.github.io/portfolio/?for=fintech&ref=acme   + 어느 회사에 보낸 링크인지 기록
+```
+
+- `for`: `views.json`의 `id`. 모르는 이름이거나 없으면 기본 순서로 보입니다
+- `ref`: 화면에는 영향이 없고, 방문 분석에 "어느 지원처에 보낸 링크로 들어왔는지"를 남깁니다.
+  아무 이름이나 쓸 수 있습니다 (영문 권장)
+
+`views.json` 한 항목:
+
+```jsonc
+{
+  "id": "fintech",            // 주소 이름 (영문 소문자·숫자·하이픈)
+  "label": "핀테크·결제",       // 관리용 이름, 화면에는 안 나옴
+  "projects": ["글로벌 보더리스 플랫폼 구축", "..."],  // 이 순서로 맨 앞에. visible: false여도 보임
+  "hideRest": false           // true면 목록에 없는 프로젝트를 숨김
+}
+```
+
+프로젝트 제목은 `projects.json`과 똑같아야 합니다. 제목을 바꾸고 보기를 고치지 않으면
+**빌드가 실패해 배포가 멈춥니다** (`tools/content-check.ts`). 관리자 페이지에서는
+"지원처별 보기"에서 고칩니다. 개발 서버의 편집 모드에서는 보기와 상관없이 JSON 순서대로 보입니다.
+
+## 방문 분석
+
+[GoatCounter](https://www.goatcounter.com)를 씁니다. 쿠키를 쓰지 않고 개인을 식별하지 않아 동의 배너가 필요 없고,
+개인 사이트는 무료입니다.
+
+1. goatcounter.com에서 가입하며 사이트 코드를 정합니다 (예: `chanbin` → `https://chanbin.goatcounter.com`)
+2. `settings.json`의 `goatcounter`에 코드만 적습니다 (관리자 페이지: "사이트 설정")
+3. 배포되면 대시보드에서 아래 항목을 볼 수 있습니다
+
+| 대시보드 경로 | 뜻 |
+| --- | --- |
+| `/`, `/?for=fintech&ref=acme` | 방문. 지원처별 링크로 들어왔는지 |
+| `modal: <제목>` | 어떤 상세 모달을 열어 봤는지 |
+| `pdf: 이력서`, `pdf: 경력기술서` | PDF 저장 메뉴를 눌렀는지 |
+| `link: github.com`, `link: mailto` | 어떤 바깥 링크·연락처를 눌렀는지 |
+
+코드를 비우면 스크립트를 아예 불러오지 않습니다. 개발 서버(`npm run dev`)에서는 기록하지 않습니다.
+구현은 [`src/lib/analytics.ts`](src/lib/analytics.ts)에 있습니다.
 
 ## PDF 저장
 

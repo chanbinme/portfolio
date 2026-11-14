@@ -350,3 +350,27 @@ collections:
               - { name: issuer, label: 기관 · 설명, widget: string }
               - { name: date, label: 기간, widget: string }
               - { name: note, label: 메모, widget: text, required: false }
+
+      # ── 지원처별 보기 ─────────────────────────────────────
+      - name: views
+        label: 지원처별 보기 (?for=)
+        file: src/content/views.json
+        fields:
+          - name: items
+            label: 보기
+            label_singular: 보기
+            widget: list
+            root: true
+            summary: '{{fields.label}} · ?for={{fields.id}}'
+            fields:
+              - { name: id, label: 주소 이름, widget: string, pattern: ['^[a-z0-9][a-z0-9-]*$', '영문 소문자·숫자·하이픈만'], hint: '예: fintech → https://chanbinme.github.io/portfolio/?for=fintech' }
+              - { name: label, label: 관리용 이름, widget: string, hint: 화면에는 나오지 않습니다 }
+              - { name: projects, label: 앞에 둘 프로젝트, widget: list, field: { name: title, label: 프로젝트 제목, widget: string }, hint: 'Projects의 제목과 똑같이 적습니다. 이 순서대로 앞에 오고, 이력서 PDF에는 앞 3개가 실립니다. 숨긴 프로젝트도 여기 넣으면 보입니다' }
+              - { name: hideRest, label: 나머지 숨기기, widget: boolean, default: false, required: false, hint: 켜면 위 목록에 없는 프로젝트를 숨깁니다 }
+
+      # ── 사이트 설정 ───────────────────────────────────────
+      - name: settings
+        label: 사이트 설정 (방문 분석)
+        file: src/content/settings.json
+        fields:
+          - { name: goatcounter, label: GoatCounter 사이트 코드, widget: string, required: false, hint: 'https://<코드>.goatcounter.com 의 <코드>만 적습니다. 비우면 방문 분석을 끕니다' }

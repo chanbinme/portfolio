@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { projects, RESUME_PROJECT_COUNT } from '../data/profile'
+import { activeView, projects, RESUME_PROJECT_COUNT, viewProjects } from '../data/profile'
 import type { Project } from '../data/profile'
 import { Section } from './Section'
 import { Tag } from './Tag'
@@ -31,17 +31,19 @@ export function Projects() {
   const editing = useEditing()
 
   // 숨긴 프로젝트는 편집할 때만 흐리게 보여, 다시 켤 수 있게 합니다.
+  // 순서와 노출은 지원처별 보기(?for=)를 따릅니다. 편집할 때는 JSON 순서 그대로 보여줍니다.
   // 이력서 PDF에는 노출 중인 프로젝트 중 앞의 몇 개만 싣습니다 (나머지는 CSS가 가립니다)
-  const cards: { project: Project; index: number; skipInResume: boolean }[] = []
+  const cards: { project: Project; index: number; visible: boolean; skipInResume: boolean }[] = []
   let forResume = 0
-  projects.forEach((project, index) => {
-    if (!project.visible && !editing) return
+  for (const { project, index, visible } of viewProjects(editing ? undefined : activeView)) {
+    if (!visible && !editing) continue
     cards.push({
       project,
       index,
-      skipInResume: !project.visible || forResume++ >= RESUME_PROJECT_COUNT,
+      visible,
+      skipInResume: !visible || forResume++ >= RESUME_PROJECT_COUNT,
     })
-  })
+  }
 
   const open = (project: Project, index: number) => {
     rememberModal(pathKey('projects', [index]))
@@ -63,10 +65,10 @@ export function Projects() {
       subtitle="직접 설계하고 만든 것들입니다."
     >
       <div className={`grid gap-4 ${cards.length > 1 ? 'lg:grid-cols-2' : ''}`}>
-        {cards.map(({ project, index: i, skipInResume }) => (
+        {cards.map(({ project, index: i, visible, skipInResume }) => (
           <article
             key={i}
-            data-hidden={project.visible ? undefined : ''}
+            data-hidden={visible ? undefined : ''}
             data-resume-skip={skipInResume ? '' : undefined}
             className="rounded-xl border border-neutral-200 p-5 transition-colors hover:border-neutral-300 dark:border-neutral-800 dark:hover:border-neutral-700"
           >
