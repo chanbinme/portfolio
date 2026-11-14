@@ -17,6 +17,8 @@ import projectsJson from '../content/projects.json'
 import postsJson from '../content/posts.json'
 import othersJson from '../content/others.json'
 import openSourceJson from '../content/opensource.json'
+import viewsJson from '../content/views.json'
+import settingsJson from '../content/settings.json'
 
 // ── 타입 ─────────────────────────────────────────────────────
 
@@ -379,3 +381,69 @@ export const openSource: OpenSourceProject[] = list<Loose<OpenSourceProject>>(op
       .filter(keep((c) => c.text)),
   }))
   .filter(keep((pr) => pr.name && pr.contributions.length > 0))
+
+// ── 지원처별 보기 ────────────────────────────────────────────
+
+/**
+ * 지원처별 보기. `?for=<id>`로 열면 Projects 카드 순서와 노출을 이 설정대로 바꿉니다.
+ * 이력서 PDF의 "앞 3개"도 바뀐 순서를 따릅니다.
+ */
+export type View = {
+  /** 주소에 쓰는 이름 (영문 소문자·숫자·하이픈). 예: fintech → ?for=fintech */
+  id: string
+  /** 관리용 이름. 화면에는 나오지 않습니다 */
+  label: string
+  /** 앞에 둘 프로젝트 제목 (이 순서대로). 여기 넣은 프로젝트는 visible: false여도 보입니다 */
+  projects: string[]
+  /** true면 위 목록에 없는 프로젝트를 숨깁니다. false면 기본 순서대로 뒤에 붙입니다 */
+  hideRest: boolean
+}
+
+export const views: View[] = list<Loose<View>>(viewsJson)
+  .map((v) => ({
+    id: req(v.id),
+    label: req(v.label),
+    projects: lines(v.projects),
+    hideRest: v.hideRest === true,
+  }))
+  .filter(keep((v) => v.id))
+
+/** 주소의 쿼리 값 하나 (서버·빌드 환경에서는 undefined) */
+export function queryParam(name: string) {
+  if (typeof window === 'undefined') return undefined
+  return new URLSearchParams(window.location.search).get(name)?.trim() || undefined
+}
+
+/** 지금 주소(?for=)에 맞는 보기. 없거나 모르는 이름이면 undefined (기본 보기) */
+export const activeView: View | undefined = views.find((v) => v.id === queryParam('for'))
+
+/** 화면에 그릴 순서의 프로젝트. index는 JSON 안의 위치(편집용), visible은 보기를 반영한 노출 여부 */
+export type ViewProject = { project: Project; index: number; visible: boolean }
+
+export function viewProjects(view: View | undefined = activeView): ViewProject[] {
+  const all = projects.map((project, index) => ({ project, index, visible: project.visible }))
+  if (!view) return all
+
+  const picked = view.projects
+    .map((title) => all.find((p) => p.project.title === title))
+    .filter((p): p is ViewProject => p !== undefined)
+    .map((p) => ({ ...p, visible: true }))
+  const rest = all
+    .filter((p) => !picked.some((q) => q.index === p.index))
+    .map((p) => ({ ...p, visible: p.visible && !view.hideRest }))
+  return [...picked, ...rest]
+}
+
+// ── 사이트 설정 ──────────────────────────────────────────────
+
+type SettingsJson = Loose<{
+  /** GoatCounter 사이트 코드 (https://<코드>.goatcounter.com). 비우면 방문 분석을 끕니다 */
+  goatcounter: string
+}>
+
+const settingsData: SettingsJson = settingsJson
+const st = settingsData ?? {}
+
+export const settings = {
+  goatcounter: opt(st.goatcounter),
+}

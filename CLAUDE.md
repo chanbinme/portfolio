@@ -39,6 +39,13 @@
 - (주)더즌(2025.04 — 재직 중): 글로벌사업전략팀 글로벌플랫폼개발파트 2026.03 — 재직 중, 키오스크개발팀 선불서비스파트 2025.04 — 2026.02. DBP(보더리스 플랫폼) 작업은 모두 글로벌플랫폼개발파트에 둔다. 보더리스 플랫폼 프로젝트의 `affiliation`은 "글로벌사업전략팀 · 2025.10 ~ 진행 중"이다
 - 연락처(`profile.json`의 `socials`)에 전화번호를 둔다. 화면과 PDF 양쪽에 나온다
 
+## 지원처별 링크·방문 분석
+
+- `?for=<id>`는 `views.json`의 보기대로 Projects 순서·노출을 바꾼다(화면·PDF 모두). 순서 계산은 `src/data/profile.ts`의 `viewProjects()` 한곳에서 한다. 프로젝트를 다루는 컴포넌트는 `projects`를 직접 돌지 말고 이 함수를 쓴다
+- `views.json`의 프로젝트 제목이 `projects.json`에 없으면 `tools/content-check.ts`가 빌드를 실패시킨다. 프로젝트 제목을 바꾸면 `views.json`도 함께 고친다
+- 방문 분석은 GoatCounter(`src/lib/analytics.ts`)다. `settings.json`의 `goatcounter`가 비어 있으면 꺼져 있다. 새 클릭 지점을 기록하려면 `track('<종류>: <이름>')`을 부른다. 상세 모달·PDF·바깥 링크는 이미 기록한다
+- `ref`는 기록용이라 화면을 바꾸지 않는다
+
 ## 링크 미리보기(OG 이미지)
 
 - `og.png`는 빌드할 때 `tools/og-image.ts`(Vite 플러그인)가 `profile.json`의 `role`·`name`·`headline`으로 그린다. 이미지 파일을 따로 커밋하지 않는다
@@ -49,7 +56,7 @@
 
 ```bash
 npm run build        # tsc -b + vite build. JSON이 타입과 어긋나면 여기서 실패한다
-npm run test:smoke   # dist/를 띄워 모든 상세 모달을 열고 닫아 본다 (Playwright 필요)
+npm run test:smoke   # dist/를 띄워 모든 상세 모달을 열고 닫고, 지원처별 보기의 카드 순서를 확인한다 (Playwright 필요)
 ```
 
 - 내용만 바꿨으면 `npm run build`, 컴포넌트·CSS를 바꿨으면 `test:smoke`까지 돌린다

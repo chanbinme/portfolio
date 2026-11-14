@@ -6,10 +6,12 @@
 // - 페이지가 콘솔 에러·런타임 예외 없이 뜨는지
 // - 상세 모달을 여는 단추마다: 모달이 뜨고, 다른 요소에 가리지 않고 맨 위에 그려지고,
 //   Esc로 닫히는지 (데스크톱·모바일 두 화면 크기)
+// - 지원처별 보기(?for=)마다: Projects 카드가 views.json에 적은 순서로 앞에 오는지
 //
 // Playwright가 필요합니다. 없으면:
 //   npm i -D playwright && npx playwright install chromium
 
+import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { preview } from 'vite'
 
@@ -97,6 +99,21 @@ try {
     console.log(`${vp.name}: 모달 ${count}개 확인`)
     await page.close()
   }
+
+  // 지원처별 보기: 적어 둔 프로젝트가 그 순서대로 맨 앞에 와야 합니다
+  const views = JSON.parse(readFileSync('src/content/views.json', 'utf8')) ?? []
+  const page = await browser.newPage()
+  for (const view of views) {
+    await page.goto(`${url}?for=${view.id}`, { waitUntil: 'networkidle' })
+    const titles = await page.locator('#projects article h3').allInnerTexts()
+    const expected = view.projects ?? []
+    const actual = titles.slice(0, expected.length).map((t) => t.trim())
+    if (expected.some((title, i) => !actual[i]?.startsWith(title))) {
+      failures.push(`[?for=${view.id}] 카드 순서가 다름: ${actual.join(' / ')}`)
+    }
+  }
+  console.log(`보기 ${views.length}개 확인`)
+  await page.close()
 } finally {
   await browser.close()
   await new Promise((resolve) => server.httpServer.close(resolve))

@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { animateSpring, prefersReducedMotion, projectMomentum, rubberband } from '../lib/spring'
+import { track } from '../lib/analytics'
 
 type ModalProps = {
   open: boolean
@@ -42,6 +43,12 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
   // 부모는 닫는 순간 내용을 비우므로, 닫히는 동안에는 마지막 내용을 그대로 보여줍니다
   const contentRef = useRef({ title, meta, children })
   if (open) contentRef.current = { title, meta, children }
+
+  // 어떤 상세를 열어 보는지 방문 분석에 남깁니다 (열릴 때 한 번)
+  useEffect(() => {
+    if (open) track(`modal: ${title}`)
+    // 제목이 바뀌어도 다시 세지 않도록 open만 지켜봅니다
+  }, [open])
 
   // 시트 위치(px, 0 = 다 올라온 상태)와 진행 중인 스프링
   const sheet = useRef({ isSheet: false, y: 0, height: 0, velocity: 0, stop: () => {} })

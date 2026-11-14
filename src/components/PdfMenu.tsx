@@ -1,4 +1,5 @@
 import { profile } from '../data/profile'
+import { track } from '../lib/analytics'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -31,6 +32,7 @@ function printAs(kind: Kind, label: string) {
     window.removeEventListener('afterprint', restore)
   }
 
+  track(`pdf: ${label}`)
   root.dataset.print = kind
   document.title = `${profile.name} ${label}`
   window.addEventListener('afterprint', restore)
