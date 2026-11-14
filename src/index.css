@@ -612,11 +612,9 @@
   /*
    * ── PDF 구성 ──
    * 이력서(기본):  About → Experience → Projects(앞 3개) → Skills → Open Source → Writing → Education & Activities
-   *   이력서 페이지(/resume/)에는 Projects가 없어 Projects를 뺀 같은 구성이 됩니다.
-   *   resume.pdf는 tools/resume-pdf.mjs가 그 페이지를 이 규칙으로 인쇄해 만듭니다.
    * 경력기술서:    About → Experience → Projects (모든 프로젝트, 상세 포함)
    * 순서는 화면(DOM) 순서와 같으므로 여기서는 무엇을 뺄지만 정합니다.
-   * 포트폴리오를 직접 인쇄할 때의 프로젝트 수는 profile.ts의 RESUME_PROJECT_COUNT입니다.
+   * 이력서의 프로젝트 수는 profile.ts의 RESUME_PROJECT_COUNT입니다.
    */
 
   /* 노출을 끈 프로젝트·성과는 어느 PDF에도 싣지 않습니다 */

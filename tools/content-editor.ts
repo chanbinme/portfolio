@@ -20,7 +20,6 @@ const FILES = [
   'opensource',
   'posts',
   'others',
-  'resume',
 ] as const
 
 type File = (typeof FILES)[number]

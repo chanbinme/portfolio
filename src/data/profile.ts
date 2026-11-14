@@ -13,7 +13,6 @@
 import profileJson from '../content/profile.json'
 import skillsJson from '../content/skills.json'
 import experiencesJson from '../content/experiences.json'
-import resumeJson from '../content/resume.json'
 import projectsJson from '../content/projects.json'
 import postsJson from '../content/posts.json'
 import othersJson from '../content/others.json'
@@ -306,8 +305,8 @@ export const skills: SkillGroup[] = list<Loose<SkillGroup>>(skillsJson)
   .map((g) => ({ category: req(g.category), items: lines(g.items) }))
   .filter(keep((g) => g.category && g.items.length > 0))
 
-const toExperiences = (v: Maybe<Maybe<Loose<Experience>>[]>): Experience[] =>
-  list(v).map((e) => ({
+export const experiences: Experience[] = list<Loose<Experience>>(experiencesJson).map(
+  (e) => ({
     company: req(e.company),
     role: req(e.role),
     period: req(e.period),
@@ -327,13 +326,8 @@ const toExperiences = (v: Maybe<Maybe<Loose<Experience>>[]>): Experience[] =>
     highlights: toHighlights(e.highlights),
     stack: lines(e.stack),
     detail: toDetail(e.detail),
-  }))
-
-/** 포트폴리오의 경력 (Experience 섹션, 경력기술서 PDF) */
-export const experiences: Experience[] = toExperiences(experiencesJson)
-
-/** 이력서 페이지(/resume/)의 경력. 포트폴리오와 따로 씁니다 (src/content/resume.json) */
-export const resumeExperiences: Experience[] = toExperiences(resumeJson)
+  }),
+)
 
 export const projects: Project[] = list<Loose<Project>>(projectsJson).map((pr) => ({
   title: req(pr.title),

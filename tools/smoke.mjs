@@ -7,8 +7,6 @@
 // - 상세 모달을 여는 단추마다: 모달이 뜨고, 다른 요소에 가리지 않고 맨 위에 그려지고,
 //   Esc로 닫히는지 (데스크톱·모바일 두 화면 크기)
 // - 지원처별 보기(?for=)마다: Projects 카드가 views.json에 적은 순서로 앞에 오는지
-// - 이력서 페이지(/resume/): 오류 없이 뜨고, 경력이 있고, Projects가 없는지.
-//   경력의 상세 모달도 위와 같이 열고 닫아 봅니다
 //
 // Playwright가 필요합니다. 없으면:
 //   npm i -D playwright && npx playwright install chromium
@@ -40,7 +38,7 @@ const TRIGGERS = ['#experience', '#projects', '#opensource']
   .map((s) => `${s} li button[type=button], ${s} button:has-text("자세히 보기")`)
   .join(', ')
 
-// 방문 분석 스크립트는 빈 스크립트로 바꿔 끼웁니다 (테스트 방문이 통계에 남지 않게, 네트워크 없이도 돌게)
+// 방문 분석 스크립트는 빈 스크립트로 바꿔 끼웁니다 (외부 접속이 막힌 환경에서도 콘솔 오류 없이 돌게)
 const stubAnalytics = (page) =>
   page.route('https://gc.zgo.at/**', (r) => r.fulfill({ contentType: 'text/javascript', body: '' }))
 
@@ -50,22 +48,14 @@ const browser = await chromium.launch()
 const failures = []
 
 try {
-  for (const vp of VIEWPORTS.flatMap((v) => [
-    { ...v, path: '' },
-    { ...v, name: `${v.name} /resume/`, path: 'resume/' },
-  ])) {
+  for (const vp of VIEWPORTS) {
     const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } })
     await stubAnalytics(page)
     const errors = []
     page.on('pageerror', (e) => errors.push(e.message))
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
 
-    await page.goto(url + vp.path, { waitUntil: 'networkidle' })
-
-    if (vp.path === 'resume/') {
-      if ((await page.locator('#experience li').count()) === 0) failures.push(`[${vp.name}] 경력이 없음`)
-      if ((await page.locator('#projects').count()) > 0) failures.push(`[${vp.name}] Projects가 있음`)
-    }
+    await page.goto(url, { waitUntil: 'networkidle' })
 
     const triggers = page.locator(TRIGGERS)
     const count = await triggers.count()

@@ -33,18 +33,15 @@
   - 기간을 보여야 하는 프로젝트(이전 팀·이전 회사, 보더리스 플랫폼)는 `affiliation` 끝에 "· YYYY.MM ~ YYYY.MM"(진행 중이면 "~ 진행 중")으로 붙인다. 현재 팀(글로벌플랫폼개발파트)의 가상계좌·GAVS·백오피스는 기간을 쓰지 않는다
   - 개인 프로젝트(HappyDev Kit 등)는 `affiliation` 없이 `period`를 쓴다
 - 경력의 `highlights`와 Projects의 `points`가 같은 일을 다룰 수 있다. 경력에는 결과가 보이는 한 줄만, 문제·대안·과정은 Projects의 `detail`에 쓴다
-- Projects는 카드 순서가 우선순위다. 숨기려면 `visible: false`. (포트폴리오 페이지를 직접 인쇄하면 노출 중인 앞 3개만 실린다)
-- 이력서는 별도 페이지(`/portfolio/resume/`, `resume/index.html` → `src/ResumeApp.tsx`)다. 구성: About → Experience → Skills → Open Source → Writing → Education & Activities. Projects는 없다
-  - 이력서의 경력은 `resume.json`(`experiences.json`과 같은 구조)에 따로 쓴다. 나머지 섹션은 포트폴리오와 같은 JSON을 쓴다. 포트폴리오 경력을 고쳐도 이력서 경력은 바뀌지 않는다
-  - "이력서" 다운로드는 배포 때 `npm run build:pdf`(`tools/resume-pdf.mjs`)가 이력서 페이지를 인쇄해 만든 `resume.pdf`를 받는다
-- 경력기술서 = About → Experience → Projects(모든 프로젝트, 상세 포함). 포트폴리오 페이지를 인쇄 창으로 저장한다 (`src/index.css`의 `@media print`, `data-print`)
+- Projects는 카드 순서가 우선순위다. 이력서 PDF에는 노출 중인(`visible`) 앞 3개만 실린다. 숨기려면 `visible: false`
+- PDF 구성: 이력서 = About → Experience → Projects(앞 3개) → Skills → Open Source → Writing → Education & Activities, 경력기술서 = About → Experience → Projects (`src/index.css`의 `@media print`, `data-print`)
 - More(`others.json`) 항목은 부연설명을 `issuer` 한 줄로만 쓰고 `note`는 비운다. 핵심만 전달한다
 - (주)더즌(2025.04 — 재직 중): 글로벌사업전략팀 글로벌플랫폼개발파트 2026.03 — 재직 중, 키오스크개발팀 선불서비스파트 2025.04 — 2026.02. DBP(보더리스 플랫폼) 작업은 모두 글로벌플랫폼개발파트에 둔다. 보더리스 플랫폼 프로젝트의 `affiliation`은 "글로벌사업전략팀 · 2025.10 ~ 진행 중"이다
 - 연락처(`profile.json`의 `socials`)에 전화번호를 둔다. 화면과 PDF 양쪽에 나온다
 
 ## 지원처별 링크·방문 분석
 
-- `?for=<id>`는 `views.json`의 보기대로 포트폴리오의 Projects 순서·노출을 바꾼다(화면·경력기술서). 이력서 페이지에는 Projects가 없어 영향이 없다. 순서 계산은 `src/data/profile.ts`의 `viewProjects()` 한곳에서 한다. 프로젝트를 다루는 컴포넌트는 `projects`를 직접 돌지 말고 이 함수를 쓴다
+- `?for=<id>`는 `views.json`의 보기대로 Projects 순서·노출을 바꾼다(화면·PDF 모두). 순서 계산은 `src/data/profile.ts`의 `viewProjects()` 한곳에서 한다. 프로젝트를 다루는 컴포넌트는 `projects`를 직접 돌지 말고 이 함수를 쓴다
 - `views.json`의 프로젝트 제목이 `projects.json`에 없으면 `tools/content-check.ts`가 빌드를 실패시킨다. 프로젝트 제목을 바꾸면 `views.json`도 함께 고친다
 - 방문 분석은 GoatCounter(`src/lib/analytics.ts`)다. `settings.json`의 `goatcounter`가 비어 있으면 꺼져 있다. 새 클릭 지점을 기록하려면 `track('<종류>: <이름>')`을 부른다. 상세 모달·PDF·바깥 링크는 이미 기록한다
 - `ref`는 기록용이라 화면을 바꾸지 않는다
@@ -59,11 +56,10 @@
 
 ```bash
 npm run build        # tsc -b + vite build. JSON이 타입과 어긋나면 여기서 실패한다
-npm run build:pdf    # dist/resume.pdf를 만든다 (배포에서도 돈다)
-npm run test:smoke   # dist/를 띄워 포트폴리오·이력서 페이지의 상세 모달을 열고 닫고, 지원처별 보기의 카드 순서를 확인한다 (Playwright 필요)
+npm run test:smoke   # dist/를 띄워 모든 상세 모달을 열고 닫고, 지원처별 보기의 카드 순서를 확인한다 (Playwright 필요)
 ```
 
-- 내용만 바꿨으면 `npm run build`, 컴포넌트·CSS를 바꿨으면 `test:smoke`까지 돌린다. 이력서에 영향을 주는 인쇄 CSS를 바꿨으면 `build:pdf`로 만든 PDF를 열어 본다
+- 내용만 바꿨으면 `npm run build`, 컴포넌트·CSS를 바꿨으면 `test:smoke`까지 돌린다
 - `src/` 아래 TS·JSON을 고치면 `.claude/hooks/typecheck.sh`가 타입 검사를 자동으로 돌린다 (`.claude/settings.json`)
 
 ## 주의할 구현
