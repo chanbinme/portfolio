@@ -38,6 +38,10 @@ const TRIGGERS = ['#experience', '#projects', '#opensource']
   .map((s) => `${s} li button[type=button], ${s} button:has-text("자세히 보기")`)
   .join(', ')
 
+// 방문 분석 스크립트는 빈 스크립트로 바꿔 끼웁니다 (외부 접속이 막힌 환경에서도 콘솔 오류 없이 돌게)
+const stubAnalytics = (page) =>
+  page.route('https://gc.zgo.at/**', (r) => r.fulfill({ contentType: 'text/javascript', body: '' }))
+
 const server = await preview({ preview: { port: 0, open: false }, logLevel: 'silent' })
 const url = server.resolvedUrls.local[0]
 const browser = await chromium.launch()
@@ -46,6 +50,7 @@ const failures = []
 try {
   for (const vp of VIEWPORTS) {
     const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } })
+    await stubAnalytics(page)
     const errors = []
     page.on('pageerror', (e) => errors.push(e.message))
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
@@ -103,6 +108,7 @@ try {
   // 지원처별 보기: 적어 둔 프로젝트가 그 순서대로 맨 앞에 와야 합니다
   const views = JSON.parse(readFileSync('src/content/views.json', 'utf8')) ?? []
   const page = await browser.newPage()
+  await stubAnalytics(page)
   for (const view of views) {
     await page.goto(`${url}?for=${view.id}`, { waitUntil: 'networkidle' })
     const titles = await page.locator('#projects article h3').allInnerTexts()
