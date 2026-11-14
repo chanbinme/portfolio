@@ -14,7 +14,6 @@ export type ContentFile =
   | 'opensource'
   | 'posts'
   | 'others'
-  | 'resume'
 
 export type Key = string | number
 

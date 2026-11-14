@@ -13,15 +13,6 @@ export default defineConfig({
   base: '/portfolio/',
   // contentEditor는 개발 서버에서만, contentCheck·ogImage는 빌드에서만 동작합니다
   plugins: [react(), tailwindcss(), contentEditor(), contentCheck(), ogImage()],
-  build: {
-    rollupOptions: {
-      // 포트폴리오(/portfolio/)와 이력서 페이지(/portfolio/resume/) 두 페이지를 만듭니다
-      input: {
-        main: fileURLToPath(new URL('./index.html', import.meta.url)),
-        resume: fileURLToPath(new URL('./resume/index.html', import.meta.url)),
-      },
-    },
-  },
   resolve: {
     // shadcn/ui 컴포넌트가 쓰는 '@/' 별칭
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },

@@ -107,7 +107,7 @@ collections:
       - name: experiences
         label: Experience
         file: src/content/experiences.json
-        fields: &experience_file_fields
+        fields:
           - name: items
             label: 경력
             label_singular: 경력
@@ -240,14 +240,6 @@ collections:
                 collapsed: true
                 hint: 채우면 '자세히 보기' 버튼이 생깁니다
                 fields: *detail_fields
-
-      # ── 이력서 페이지 경력 ────────────────────────────────
-      # 이력서 페이지(/portfolio/resume/)의 Experience. 포트폴리오 경력과 같은 구조로 따로 씁니다.
-      # 나머지 섹션(소개·기술·오픈소스·글·More)은 포트폴리오와 같은 내용을 씁니다.
-      - name: resume
-        label: 이력서 페이지 · Experience
-        file: src/content/resume.json
-        fields: *experience_file_fields
 
       # ── Projects ──────────────────────────────────────────
       - name: projects

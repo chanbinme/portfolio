@@ -2,14 +2,8 @@ import { heroMetrics, profile, socials } from '../data/profile'
 import { PdfMenu } from './PdfMenu'
 import { Button } from '@/components/ui/button'
 import { EditableText } from '../dev/Editable'
-import { track } from '../lib/analytics'
-import { RESUME_PDF_URL, resumeFileName } from '../lib/resume'
 
-/**
- * 첫 화면. variant="resume"이면 이력서 페이지용으로
- * "연락하기·PDF 저장" 대신 "PDF 다운로드·포트폴리오 보기"를 둡니다.
- */
-export function Hero({ variant = 'portfolio' }: { variant?: 'portfolio' | 'resume' }) {
+export function Hero() {
   const links = socials.filter((s) => s.href)
 
   return (
@@ -56,37 +50,11 @@ export function Hero({ variant = 'portfolio' }: { variant?: 'portfolio' | 'resum
       </p>
 
       <div className="no-print relative mt-10 flex flex-wrap items-center gap-3">
-        {variant === 'resume' ? (
-          <>
-            <Button asChild className="press h-10 px-4">
-              <a
-                href={RESUME_PDF_URL}
-                download={resumeFileName()}
-                onClick={(e) => {
-                  track('pdf: 이력서')
-                  // 개발 서버에는 PDF 파일이 없어, 같은 모양을 인쇄 창으로 보여줍니다
-                  if (import.meta.env.DEV) {
-                    e.preventDefault()
-                    window.print()
-                  }
-                }}
-              >
-                PDF 다운로드
-              </a>
-            </Button>
-            <Button asChild variant="outline" className="press h-10 px-4">
-              <a href={import.meta.env.BASE_URL}>포트폴리오 보기</a>
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button asChild className="press h-10 px-4">
-              <a href="#contact">연락하기</a>
-            </Button>
+        <Button asChild className="press h-10 px-4">
+          <a href="#contact">연락하기</a>
+        </Button>
 
-            <PdfMenu />
-          </>
-        )}
+        <PdfMenu />
 
         {profile.resumeUrl && (
           <Button asChild variant="outline" className="press h-10 px-4">
