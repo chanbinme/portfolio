@@ -365,9 +365,14 @@
     text-decoration: none !important;
   }
 
-  /* 클릭 가능 표시 아이콘은 종이에서 의미가 없습니다 */
-  li button svg {
+  /* 클릭 가능 표시 아이콘은 종이에서 의미가 없습니다 (링크는 주소가 괄호로 붙습니다) */
+  li button svg,
+  .highlight-link svg {
     display: none !important;
+  }
+
+  .highlight-link span {
+    text-decoration: none !important;
   }
 
   /* 진입 애니메이션이 적용된 채로 인쇄되면 내용이 날아갑니다 */

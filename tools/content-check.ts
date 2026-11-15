@@ -3,6 +3,7 @@
 // - views.json: id 형식·중복, 존재하지 않는 프로젝트 제목
 //   (프로젝트 제목을 바꾸고 보기를 안 고치면 그 카드가 조용히 빠지기 때문입니다)
 // - settings.json: GoatCounter 사이트 코드 형식
+// - 모든 콘텐츠의 url: https://·http://·mailto:로 시작하는지 (성과 링크, 글, 오픈소스 PR 등)
 //
 // 하나라도 어긋나면 빌드가 실패해 배포가 멈추고, 기존 사이트가 유지됩니다.
 
@@ -35,11 +36,31 @@ export async function checkContent() {
     }
   }
 
+  for (const name of ['profile', 'experiences', 'projects', 'opensource', 'posts', 'others']) {
+    walkUrls(await readJson(name), name, problems)
+  }
+
   const code = settings.goatcounter?.trim()
   if (code && !ID.test(code)) {
     problems.push(`settings.json: goatcounter에는 사이트 코드만 적습니다 (예: chanbin). 지금 값: "${code}"`)
   }
   return problems
+}
+
+const URL_OK = /^(https?:\/\/|mailto:)/
+
+/** JSON 안의 모든 url 칸을 찾아, 비어 있지 않은데 형식이 틀린 것을 모읍니다 */
+function walkUrls(value: unknown, where: string, problems: string[]) {
+  if (Array.isArray(value)) {
+    value.forEach((v, i) => walkUrls(v, `${where}[${i}]`, problems))
+  } else if (value && typeof value === 'object') {
+    for (const [key, v] of Object.entries(value)) {
+      if (key === 'url' && typeof v === 'string' && v.trim() && !URL_OK.test(v.trim())) {
+        problems.push(`${where}.url: "${v}"는 https://, http:// 또는 mailto:로 시작해야 합니다`)
+      }
+      walkUrls(v, `${where}.${key}`, problems)
+    }
+  }
 }
 
 export function contentCheck(): Plugin {
