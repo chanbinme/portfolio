@@ -237,7 +237,7 @@
         "text": "모계좌 지급정지는 통보 수신·이력 저장·알림을 자동화하고 환급 판단은 사람이 하도록 설계 (진행 중)"
       }
     ],
-    "visible": true
+    "visible": false
   },
   {
     "title": "글로벌 보더리스 플랫폼 구축",
@@ -516,7 +516,8 @@
         }
       }
     ],
-    "badge": "신규"
+    "badge": "신규",
+    "visible": false
   },
   {
     "title": "글로벌 예금주 조회 (GAVS)",
@@ -596,7 +597,8 @@
       "MySQL",
       "React",
       "TypeScript"
-    ]
+    ],
+    "visible": false
   },
   {
     "title": "선불서비스 설계 및 개발",
@@ -714,7 +716,8 @@
       "Jaeger",
       "Jacoco"
     ],
-    "badge": "신규"
+    "badge": "신규",
+    "visible": false
   },
   {
     "title": "백오피스·제휴사 포털 개발",
@@ -758,7 +761,8 @@
       "MySQL",
       "React",
       "TypeScript"
-    ]
+    ],
+    "visible": false
   },
   {
     "title": "루이까또즈 프로모션 시스템 개발 및 개선",
@@ -842,7 +846,8 @@
       "Mybatis",
       "JSP",
       "jQuery"
-    ]
+    ],
+    "visible": false
   },
   {
     "title": "사내 인사평가 시스템 개발",
@@ -931,7 +936,8 @@
       "jQuery"
     ],
     "period": "",
-    "badge": "신규"
+    "badge": "신규",
+    "visible": false
   },
   {
     "title": "루이까또즈 직영몰 선물하기 서비스 개발",
@@ -959,7 +965,8 @@
       "JSP",
       "jQuery"
     ],
-    "badge": "신규"
+    "badge": "신규",
+    "visible": false
   },
   {
     "title": "HappyDev Kit",
@@ -1093,6 +1100,7 @@
           ]
         }
       ]
-    }
+    },
+    "visible": true
   }
 ]
