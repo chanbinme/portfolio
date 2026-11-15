@@ -24,6 +24,7 @@
 - 혼자 했는지 팀이 했는지 확인된 것만 쓴다. 단독으로 확인된 것: 입금 집계·대사, 웹훅 HMAC 서명, 이벤트 기반 발급 흐름 설계
 - 모든 작업을 나열하지 않는다. 임팩트 있는 것만 남긴다
 - 성과 한 줄은 결과가 보이게, 상세 모달(`detail`)은 문제 → 검토한 대안 → 한 일 → 결과 순서로 쓴다
+- 문장 안 강조는 `**굵게**`, `==형광펜==` 표기로 한다 (`src/lib/rich.tsx`). 어디를 강조할지는 사용자가 정한다. 요청 없이 강조를 넣거나 빼지 않는다
 
 현재 정해진 구성
 
@@ -56,7 +57,7 @@
 
 ```bash
 npm run build        # tsc -b + vite build. JSON이 타입과 어긋나면 여기서 실패한다
-npm run test:smoke   # dist/를 띄워 모든 상세 모달을 열고 닫고, 지원처별 보기의 카드 순서를 확인한다 (Playwright 필요)
+npm run test:smoke   # dist/를 띄워 모든 상세 모달을 열고 닫고, 강조 표기가 새어 나오지 않는지, 지원처별 보기의 카드 순서를 확인한다 (Playwright 필요)
 ```
 
 - 내용만 바꿨으면 `npm run build`, 컴포넌트·CSS를 바꿨으면 `test:smoke`까지 돌린다
@@ -64,6 +65,7 @@ npm run test:smoke   # dist/를 띄워 모든 상세 모달을 열고 닫고, �
 
 ## 주의할 구현
 
+- 콘텐츠 문장은 `EditableText`(또는 `RichText`)로 그려야 강조 표기가 적용된다. 문장을 `{text}`로 직접 그리면 `**`·`==`가 글자로 새어 나오고 스모크 테스트가 실패한다. 꾸밀 수 없는 자리(제목 속성, 이미지 등)에는 `stripRich()`를 쓴다
 - 상세 모달(`src/components/Modal.tsx`)은 `createPortal`로 `document.body`에 띄운다. 목록 항목의 `isolation: isolate`와 등장 애니메이션의 `translate`가 쌓임 맥락을 만들어, 안에 두면 뒤따르는 내용이 모달을 덮는다
 - 인쇄(PDF 저장) 스타일은 `src/index.css`의 `@media print`에 있다. 화면 UI를 바꾸면 인쇄 미리보기도 확인한다
 - shadcn/ui(new-york, neutral)를 쓴다. 컴포넌트는 `src/components/ui/`, 별칭은 `@/`, 설정은 `components.json`이다. 쓰는 것은 Button·Badge·DropdownMenu(Hero 버튼, `PdfMenu`, `Tag`)뿐이고 `Modal`은 직접 만든 시트·드래그 제스처 때문에 Dialog로 바꾸지 않았다

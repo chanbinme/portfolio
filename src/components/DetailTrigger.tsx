@@ -1,3 +1,5 @@
+import { RichText } from '../lib/rich'
+
 type DetailTriggerProps = {
   text: string
   onClick: () => void
@@ -17,7 +19,7 @@ export function DetailTrigger({ text, onClick }: DetailTriggerProps) {
       className="group -my-0.5 cursor-pointer py-0.5 text-left transition-colors hover:text-neutral-900 active:text-accent active:duration-0 dark:hover:text-neutral-100 dark:active:text-accent-dark"
     >
       <span className="underline decoration-neutral-300 decoration-dashed underline-offset-4 transition-colors group-hover:decoration-accent dark:decoration-neutral-600 dark:group-hover:decoration-accent-dark">
-        {text}
+        <RichText text={text} />
       </span>
       {/* 클릭 가능하다는 신호 */}
       <svg

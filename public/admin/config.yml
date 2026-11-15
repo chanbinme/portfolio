@@ -5,6 +5,8 @@
 #
 # 필드 구조는 src/data/profile.ts의 타입과 맞춰야 합니다.
 # 필드를 추가·변경하면 두 곳을 함께 고치세요.
+#
+# 모든 문장 칸에서 **굵게**, ==형광펜== 표기로 강조할 수 있습니다 (src/lib/rich.tsx).
 # 문서: https://sveltiacms.app/en/docs
 
 backend:
@@ -154,7 +156,7 @@ collections:
                         summary: '{{fields.text}}'
                         # 성과 한 줄의 구조 — 팀·회사 단위 성과에서도 그대로 씁니다
                         fields: &highlight_fields
-                          - { name: text, label: 문장, widget: text }
+                          - { name: text, label: 문장, widget: text, hint: '**굵게**, ==형광펜== 으로 강조할 수 있습니다' }
                           - { name: visible, label: 포트폴리오에 노출, widget: boolean, required: false, default: true, hint: 끄면 화면과 PDF에서 모두 빠집니다 }
                           - name: detail
                             label: 상세 (문장 클릭 시 모달)

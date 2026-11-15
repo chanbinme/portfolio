@@ -3,6 +3,7 @@ import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { animateSpring, prefersReducedMotion, projectMomentum, rubberband } from '../lib/spring'
 import { track } from '../lib/analytics'
+import { RichText, stripRich } from '../lib/rich'
 
 type ModalProps = {
   open: boolean
@@ -46,7 +47,7 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
 
   // 어떤 상세를 열어 보는지 방문 분석에 남깁니다 (열릴 때 한 번)
   useEffect(() => {
-    if (open) track(`modal: ${title}`)
+    if (open) track(`modal: ${stripRich(title)}`)
     // 제목이 바뀌어도 다시 세지 않도록 open만 지켜봅니다
   }, [open])
 
@@ -312,7 +313,7 @@ export function Modal({ open, onClose, title, meta, children }: ModalProps) {
               id="modal-title"
               className="text-lg font-semibold text-neutral-900 dark:text-neutral-50"
             >
-              {content.title}
+              <RichText text={content.title} />
             </h3>
             {content.meta && (
               <p className="mt-0.5 font-mono text-xs text-neutral-500 dark:text-neutral-400">
