@@ -1,4 +1,5 @@
 import type { Detail } from '../data/profile'
+import { RichText } from '../lib/rich'
 
 /**
  * 경력기술서 PDF에만 나오는 상세 본문.
@@ -24,11 +25,17 @@ export function PrintDetail({ detail }: { detail: Detail }) {
           {section.list ? (
             <ul>
               {section.body.map((item, j) => (
-                <li key={`${j}-${item}`}>{item}</li>
+                <li key={`${j}-${item}`}>
+                  <RichText text={item} />
+                </li>
               ))}
             </ul>
           ) : (
-            section.body.map((paragraph, j) => <p key={`${j}-${paragraph}`}>{paragraph}</p>)
+            section.body.map((paragraph, j) => (
+              <p key={`${j}-${paragraph}`}>
+                <RichText text={paragraph} />
+              </p>
+            ))
           )}
         </div>
       ))}

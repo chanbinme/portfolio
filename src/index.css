@@ -987,3 +987,69 @@
     outline: 0 !important;
   }
 }
+
+/* ── 강조: **굵게**, ==형광펜== (src/lib/rich.tsx) ─────────────
+ *
+ * 형광펜은 글자 아래쪽 2/3쯤에 띠를 칠합니다. 띠는 배경 이미지라서
+ * background-size를 0 → 100%로 늘리면 왼쪽에서 오른쪽으로 그어집니다.
+ * 여러 줄에 걸친 형광펜은 줄 조각들이 한 줄로 이어 붙은 것처럼 계산되므로
+ * (box-decoration-break: slice, 기본값) 첫 줄 끝까지 그은 뒤 다음 줄로 넘어갑니다.
+ * 긋는 시간(--mark-duration)은 글자 수에 따라 rich.tsx가 정합니다.
+ */
+.rich-bold {
+  font-weight: 650;
+  color: var(--color-neutral-900);
+}
+
+.dark .rich-bold {
+  color: var(--color-neutral-50);
+}
+
+.rich-mark {
+  --mark-color: oklch(0.93 0.15 100 / 0.8);
+  color: inherit;
+  background-color: transparent;
+  background-image: linear-gradient(
+    to bottom,
+    transparent 34%,
+    var(--mark-color) 34%,
+    var(--mark-color) 94%,
+    transparent 94%
+  );
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 100% 100%;
+  border-radius: 0.15em;
+  padding-inline: 0.06em;
+  margin-inline: -0.06em;
+}
+
+.dark .rich-mark {
+  --mark-color: oklch(0.8 0.14 95 / 0.32);
+}
+
+/* 모션을 줄이는 설정이 아니면, 화면에 들어오기 전에는 비워 두었다가 긋습니다 */
+@media (prefers-reduced-motion: no-preference) {
+  .rich-mark:not([data-drawn]) {
+    background-size: 0% 100%;
+  }
+
+  .rich-mark {
+    /* 펜을 대고 빨리 긋다가 끝에서 살짝 늦추는 곡선 */
+    transition: background-size var(--mark-duration, 0.8s) cubic-bezier(0.3, 0.7, 0.4, 1) 0.12s;
+  }
+}
+
+@media print {
+  .rich-mark,
+  .rich-mark:not([data-drawn]) {
+    background-size: 100% 100% !important;
+    transition: none !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .rich-bold {
+    color: inherit;
+  }
+}

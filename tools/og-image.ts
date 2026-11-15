@@ -79,7 +79,8 @@ export async function renderOgImage(profile: Profile, siteUrl: string) {
               // 한국어가 글자 단위로 끊기지 않게 어절 단위로 줄을 바꿉니다
               wordBreak: 'keep-all',
             },
-            profile.headline,
+            // 강조 표기(**굵게**, ==형광펜==)는 이미지에서 걷어냅니다
+            profile.headline.replace(/\*\*(.+?)\*\*|==(.+?)==/gs, (_, b, m) => b ?? m),
           ),
       ].filter(Boolean)),
       el(

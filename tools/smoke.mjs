@@ -6,6 +6,7 @@
 // - 페이지가 콘솔 에러·런타임 예외 없이 뜨는지
 // - 상세 모달을 여는 단추마다: 모달이 뜨고, 다른 요소에 가리지 않고 맨 위에 그려지고,
 //   Esc로 닫히는지 (데스크톱·모바일 두 화면 크기)
+// - 강조 표기(**굵게**, ==형광펜==)가 표기 그대로 화면에 새어 나오지 않는지
 // - 지원처별 보기(?for=)마다: Projects 카드가 views.json에 적은 순서로 앞에 오는지
 //
 // Playwright가 필요합니다. 없으면:
@@ -56,6 +57,10 @@ try {
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
 
     await page.goto(url, { waitUntil: 'networkidle' })
+
+    // 짝이 안 맞거나 그리지 못한 강조 표기가 글자로 보이면 안 됩니다
+    const raw = (await page.locator('main').innerText()).match(/.{0,20}(\*\*|==).{0,20}/)
+    if (raw) failures.push(`[${vp.name}] 강조 표기가 그대로 보임: "${raw[0]}"`)
 
     const triggers = page.locator(TRIGGERS)
     const count = await triggers.count()

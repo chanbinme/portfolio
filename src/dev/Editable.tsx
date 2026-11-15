@@ -16,6 +16,8 @@ import {
   type Key,
   type Move,
 } from './editor'
+import { RichText } from '../lib/rich'
+import { MarkToolbar } from './MarkToolbar'
 
 /** 저장에 실패하면 조용히 넘어가지 않고 알립니다 */
 function report(error: unknown) {
@@ -35,10 +37,11 @@ type EditableTextProps = {
 
 /**
  * 감싼 글자를 편집 모드에서 그 자리에 고칠 수 있게 합니다.
- * 편집 모드가 꺼져 있거나 프로덕션이면 받은 것을 그대로 그립니다.
+ * 편집 모드가 꺼져 있거나 프로덕션이면 강조 표기(**굵게**, ==형광펜==)를 그려서 보여줍니다.
+ * 편집 모드에서는 표기를 그대로 드러내 고칠 수 있게 합니다.
  */
 export function EditableText({ file, path, children }: EditableTextProps) {
-  if (!import.meta.env.DEV) return <>{children}</>
+  if (!import.meta.env.DEV) return <RichText text={children} />
   return (
     <EditableTextDev file={file} path={path}>
       {children}
@@ -61,7 +64,7 @@ function EditableTextDev({ file, path, children }: EditableTextProps) {
     if (!editing && ref.current) ref.current.textContent = text
   }, [editing, text])
 
-  if (!editing) return <>{children}</>
+  if (!editing) return <RichText text={children} />
 
   const save = async () => {
     const next = ref.current?.textContent ?? ''
@@ -328,17 +331,21 @@ function EditToggleDev() {
   const editing = useEditing()
 
   return (
-    <button
-      type="button"
-      onClick={() => setEditing(!editing)}
-      className={`no-print fixed right-4 bottom-4 z-50 rounded-full px-4 py-2.5 text-sm font-medium shadow-lg transition-colors ${
-        editing
-          ? 'bg-accent text-white dark:bg-accent-dark dark:text-neutral-950'
-          : 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900'
-      }`}
-      title="개발 서버에서만 보입니다"
-    >
-      {editing ? '편집 끝내기' : '편집'}
-    </button>
+    <>
+      {/* 글자를 드래그하면 굵게·형광펜 도구가 뜹니다 */}
+      {editing && <MarkToolbar />}
+      <button
+        type="button"
+        onClick={() => setEditing(!editing)}
+        className={`no-print fixed right-4 bottom-4 z-50 rounded-full px-4 py-2.5 text-sm font-medium shadow-lg transition-colors ${
+          editing
+            ? 'bg-accent text-white dark:bg-accent-dark dark:text-neutral-950'
+            : 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900'
+        }`}
+        title="개발 서버에서만 보입니다"
+      >
+        {editing ? '편집 끝내기' : '편집'}
+      </button>
+    </>
   )
 }
