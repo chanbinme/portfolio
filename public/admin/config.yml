@@ -157,6 +157,7 @@ collections:
                         # 성과 한 줄의 구조 — 팀·회사 단위 성과에서도 그대로 씁니다
                         fields: &highlight_fields
                           - { name: text, label: 문장, widget: text, hint: '**굵게**, ==형광펜== 으로 강조할 수 있습니다' }
+                          - { name: url, label: 링크, widget: string, required: false, pattern: ['^(https?://|mailto:)', 'https://, http:// 또는 mailto: 로 시작해야 합니다'], hint: '채우면 문장을 눌러 이 주소를 새 탭으로 엽니다. 상세도 있으면 문장은 상세를 열고 옆에 ↗ 아이콘으로 링크가 붙습니다' }
                           - { name: visible, label: 포트폴리오에 노출, widget: boolean, required: false, default: true, hint: 끄면 화면과 PDF에서 모두 빠집니다 }
                           - name: detail
                             label: 상세 (문장 클릭 시 모달)

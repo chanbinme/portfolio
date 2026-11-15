@@ -4,9 +4,11 @@ import { Modal } from './Modal'
 import { DetailBody } from './DetailBody'
 import { Bullet } from './Bullet'
 import { DetailTrigger } from './DetailTrigger'
+import { LinkIcon, LinkTrigger } from './LinkTrigger'
 import { PrintDetail } from './PrintDetail'
 import {
   EditableAdd,
+  EditableLink,
   EditableRemove,
   EditableSet,
   EditableText,
@@ -84,7 +86,7 @@ export function HighlightList({
     <>
       <ul className="mt-3 space-y-1.5">
         {shown.map(({ item, i }) => {
-          const { text, detail } = item
+          const { text, detail, url } = item
 
           return (
             <li
@@ -94,11 +96,23 @@ export function HighlightList({
             >
               <Bullet />
 
+              {/*
+                상세가 있으면 문장이 모달을 열고, 링크는 옆 ↗ 아이콘으로 붙습니다.
+                링크만 있으면 문장 자체가 링크입니다
+              */}
               {detail && !editing ? (
-                <div className="min-w-0 flex-1">
-                  <DetailTrigger text={text} onClick={() => open(detail, text, i)} />
-                  <PrintDetail detail={detail} />
-                </div>
+                <>
+                  <div className="min-w-0 flex-1">
+                    <DetailTrigger text={text} onClick={() => open(detail, text, i)} />
+                    <PrintDetail detail={detail} />
+                  </div>
+                  {/* 문장 끝에 붙이면 혼자 다음 줄로 밀리기 쉬워, 오른쪽 끝 첫 줄 높이에 둡니다 */}
+                  {url && <LinkIcon href={url} />}
+                </>
+              ) : url && !editing ? (
+                <span className="min-w-0 flex-1">
+                  <LinkTrigger text={text} href={url} />
+                </span>
               ) : (
                 <span>
                   <EditableText file={file} path={[...path, i, 'text']}>
@@ -120,6 +134,7 @@ export function HighlightList({
                       label="상세 만들기"
                     />
                   )}
+                  <EditableLink file={file} path={[...path, i, 'url']} value={url} />
                   <EditableToggle
                     file={file}
                     path={[...path, i, 'visible']}

@@ -60,6 +60,11 @@ export type Detail = {
 export type Highlight = {
   text: string
   detail?: Detail
+  /**
+   * 선택: 문장에 걸 링크 (글·PR·데모 등). 상세가 없으면 문장을 누르면 새 탭으로 열리고,
+   * 상세도 있으면 문장은 모달을 열고 옆에 ↗ 아이콘으로 링크가 붙습니다
+   */
+  url?: string
   /** false면 포트폴리오(화면·PDF)에 노출하지 않습니다. 비워 두면 노출합니다 */
   visible: boolean
 }
@@ -240,7 +245,12 @@ function toDetail(d: Maybe<Loose<Detail>>): Detail | undefined {
 
 const toHighlights = (v: Maybe<Maybe<Loose<Highlight>>[]>): Highlight[] =>
   list(v)
-    .map((h) => ({ text: req(h.text), detail: toDetail(h.detail), visible: h.visible !== false }))
+    .map((h) => ({
+      text: req(h.text),
+      detail: toDetail(h.detail),
+      url: opt(h.url),
+      visible: h.visible !== false,
+    }))
     .filter(keep((h) => h.text))
 
 /** 이름이 없는 프로젝트는 없는 것으로 칩니다 */

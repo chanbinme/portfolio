@@ -316,6 +316,55 @@ function EditableSetDev({ file, path, value, label, confirm }: SetProps) {
   )
 }
 
+// ── 링크 걸기 ───────────────────────────────────────────────
+
+type LinkProps = {
+  file: ContentFile
+  /** 링크 주소까지의 경로 (예: [..., 'url']) */
+  path: Key[]
+  value?: string
+}
+
+/** 성과 문장에 링크를 걸거나 바꾸거나 떼는 단추. 주소를 비우면 링크를 뗍니다 */
+export function EditableLink(props: LinkProps) {
+  if (!import.meta.env.DEV) return null
+  return <EditableLinkDev {...props} />
+}
+
+function EditableLinkDev({ file, path, value }: LinkProps) {
+  const editing = useEditing()
+  if (!editing) return null
+
+  const run = async () => {
+    const input = window.prompt('링크 주소 (비우면 링크를 뗍니다)', value ?? 'https://')
+    if (input === null) return // 취소
+    const next = input.trim()
+    // 비우거나 처음 채워 둔 'https://'만 남기면 링크를 뗍니다
+    const cleared = next === '' || next === 'https://'
+    if (cleared ? !value : next === value) return // 바뀐 게 없음
+    if (!cleared && !/^(https?:\/\/|mailto:)/.test(next)) {
+      window.alert('https://, http:// 또는 mailto: 로 시작하는 주소만 걸 수 있습니다.')
+      return
+    }
+    try {
+      await patch(cleared ? { op: 'unset', file, path } : { op: 'set', file, path, value: next })
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => void run()}
+      className="edit-btn edit-btn-add"
+      title={value}
+    >
+      {value ? '링크 수정' : '링크 걸기'}
+    </button>
+  )
+}
+
 // ── 편집 모드 토글 ───────────────────────────────────────────
 
 /**
