@@ -5,7 +5,7 @@ import { openSource, posts, profile, viewProjects } from '../data/profile'
 const NAV = [
   { id: 'about', label: 'About' },
   { id: 'experience', label: 'Experience' },
-  { id: 'projects', label: 'Projects' },
+  { id: 'projects', label: 'Side Projects' },
   { id: 'skills', label: 'Skills' },
   { id: 'opensource', label: 'Open Source' },
   { id: 'writing', label: 'Writing' },

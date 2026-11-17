@@ -145,6 +145,7 @@ collections:
                     # 프로젝트 묶음의 구조 — 회사 단위에서도 그대로 씁니다
                     fields: &experience_project_fields
                       - { name: name, label: 프로젝트 이름, widget: string, hint: '예: 가상계좌 발급' }
+                      - { name: badge, label: 배지, widget: string, required: false, hint: '이름 옆 작은 글 (예: 신규, 운영·개선). 비우면 표시되지 않습니다' }
                       - { name: period, label: 기간, widget: string, required: false, hint: 비우면 표시되지 않습니다 }
                       - { name: summary, label: 프로젝트 소개, widget: text, required: false }
                       - name: highlights

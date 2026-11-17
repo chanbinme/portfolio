@@ -61,8 +61,8 @@ export function Projects() {
   return (
     <Section
       id="projects"
-      title="Projects"
-      subtitle="직접 설계하고 만든 것들입니다."
+      title="Side Projects"
+      subtitle="직접 설계하고 만든 개인 프로젝트입니다."
     >
       <div className={`grid gap-4 ${cards.length > 1 ? 'lg:grid-cols-2' : ''}`}>
         {cards.map(({ project, index: i, visible, skipInResume }) => (
