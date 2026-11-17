@@ -1,4 +1,5 @@
 import { profile, socials } from '../data/profile'
+import { readableHref } from '../lib/links'
 import { Section } from './Section'
 import { EditableAdd, EditableRemove, EditableText } from '../dev/Editable'
 import { BLANK } from '../dev/editor'
@@ -72,12 +73,4 @@ export function Contact() {
       />
     </Section>
   )
-}
-
-/** 링크 주소를 사람이 읽는 모양으로: https://github.com/x/ → github.com/x, tel:010-… → 010-… */
-function readableHref(href: string) {
-  return href
-    .replace(/^(https?:\/\/|mailto:|tel:)/, '')
-    .replace(/^www\./, '')
-    .replace(/\/$/, '')
 }

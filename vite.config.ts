@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import { contentEditor } from './tools/content-editor.ts'
 import { ogImage } from './tools/og-image.ts'
+import { siteMeta } from './tools/site-meta.ts'
 import { contentCheck } from './tools/content-check.ts'
 
 // https://vite.dev/config/
@@ -12,7 +13,7 @@ export default defineConfig({
   // 커스텀 도메인이나 사용자 사이트로 옮기면 '/'로 되돌리세요.
   base: '/portfolio/',
   // contentEditor는 개발 서버에서만, contentCheck·ogImage는 빌드에서만 동작합니다
-  plugins: [react(), tailwindcss(), contentEditor(), contentCheck(), ogImage()],
+  plugins: [react(), tailwindcss(), contentEditor(), contentCheck(), siteMeta(), ogImage()],
   resolve: {
     // shadcn/ui 컴포넌트가 쓰는 '@/' 별칭
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },

@@ -2,6 +2,7 @@ import { heroMetrics, profile, socials } from '../data/profile'
 import { PdfMenu } from './PdfMenu'
 import { Button } from '@/components/ui/button'
 import { EditableText } from '../dev/Editable'
+import { readableHref } from '../lib/links'
 
 export function Hero() {
   const links = socials.filter((s) => s.href)
@@ -41,8 +42,8 @@ export function Hero() {
             {links.map((s, i) => (
               <span key={`${i}-${s.label}`}>
                 {i > 0 && ' · '}
-                {/* 종이에서는 주소 자체가 정보라 프로토콜만 떼고 그대로 보여줍니다 */}
-                <a href={s.href}>{s.href.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
+                {/* 종이에서는 주소 자체가 정보라 https://·mailto:·tel: 같은 접두어만 떼고 보여줍니다 */}
+                <a href={s.href}>{readableHref(s.href)}</a>
               </span>
             ))}
           </>

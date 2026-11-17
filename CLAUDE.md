@@ -24,16 +24,18 @@
 - 혼자 했는지 팀이 했는지 확인된 것만 쓴다. 단독으로 확인된 것: 입금 집계·대사, 웹훅 HMAC 서명, 이벤트 기반 발급 흐름 설계
 - 모든 작업을 나열하지 않는다. 임팩트 있는 것만 남긴다
 - 성과 한 줄은 결과가 보이게, 상세 모달(`detail`)은 문제 → 검토한 대안 → 한 일 → 결과 순서로 쓴다
+- 기술 이름은 공식 표기로 쓴다: Querydsl, MyBatis, JUnit 5, k6. 다르게 쓰면 `tools/content-check.ts`가 빌드를 실패시킨다 (블로그 글 제목 `posts.json`은 실제 제목 그대로 둔다)
+- 같은 대상은 이름을 하나로 쓴다 (예: 사내 업무 성과 평가 시스템). 줄바꿈 없는 공백·연속 공백은 `profile.ts`가 읽을 때 정리하지만, 내용에도 남기지 않는다
 - 성과에는 상세 모달(`detail`) 외에 링크(`url`)를 걸 수 있다. 상세가 없으면 문장 자체가 링크, 있으면 오른쪽 ↗ 아이콘이 링크다. 주소는 `https://`·`http://`·`mailto:`만 (빌드에서 검사)
 - 문장 안 강조는 `**굵게**`, `==형광펜==` 표기로 한다 (`src/lib/rich.tsx`). 어디를 강조할지는 사용자가 정한다. 요청 없이 강조를 넣거나 빼지 않는다
 
 현재 정해진 구성
 
 - 첫 화면 대표 성과(`heroMetrics`)는 쓰지 않는다
-- 경력(`experiences.json`)은 회사 아래 팀별 경력(`positions`)으로 나눈다. 팀마다 `summary` 한 줄과 팀 단위 핵심 성과(`highlights`)를 두고, 경력 아래 프로젝트(`projects`)는 비워 둔다. 덜 중요한 성과는 지우지 않고 `visible: false`로 숨긴다
-- 회사 프로젝트는 성과·상세·기술을 Projects(`projects.json`)에 두고 `affiliation`에 "회사 · 팀"을 적는다. `period` 필드는 비운다
-  - 기간을 보여야 하는 프로젝트(이전 팀·이전 회사, 보더리스 플랫폼)는 `affiliation` 끝에 "· YYYY.MM ~ YYYY.MM"(진행 중이면 "~ 진행 중")으로 붙인다. 현재 팀(글로벌플랫폼개발파트)의 가상계좌·GAVS·백오피스는 기간을 쓰지 않는다
-  - 개인 프로젝트(HappyDev Kit 등)는 `affiliation` 없이 `period`를 쓴다
+- 경력(`experiences.json`)은 회사 아래 팀별 경력(`positions`)으로 나눈다. 팀마다 `summary` 한 줄을 두고, 그 아래 프로젝트(`projects`)별로 성과를 묶는다. 프로젝트의 신규·운영·개선 같은 성격은 이름 뒤에 `| 신규`로 붙이지 말고 `badge`에 적는다. 덜 중요한 성과는 지우지 않고 `visible: false`로 숨긴다
+- 회사 프로젝트의 성과·상세는 경력 아래에 둔다. Projects 섹션은 화면에서 "Side Projects"(개인 프로젝트)이고, 지금 노출 중인 것은 HappyDev Kit뿐이다. 개인 프로젝트는 `affiliation` 없이 `period`를 쓴다
+  - `projects.json`의 회사 프로젝트(`affiliation`에 "회사 · 팀")는 모두 `visible: false`로 숨겨 둔 상태다. 다시 노출한다면 `period`는 비우고 `affiliation` 끝에 기간을 붙인다 ("· YYYY.MM ~ YYYY.MM", 진행 중이면 "~ 진행 중")
+  - `?for=` 보기에 제목을 넣은 프로젝트는 `visible: false`여도 보인다. 숨긴 카드가 의도치 않게 드러나지 않게, 보기에는 노출하려는 프로젝트만 넣는다
 - 경력의 `highlights`와 Projects의 `points`가 같은 일을 다룰 수 있다. 경력에는 결과가 보이는 한 줄만, 문제·대안·과정은 Projects의 `detail`에 쓴다
 - Projects는 카드 순서가 우선순위다. 이력서 PDF에는 노출 중인(`visible`) 앞 3개만 실린다. 숨기려면 `visible: false`
 - PDF 구성: 이력서 = About → Experience → Projects(앞 3개) → Skills → Open Source → Writing → Education & Activities, 경력기술서 = About → Experience → Projects (`src/index.css`의 `@media print`, `data-print`)
@@ -50,6 +52,7 @@
 
 ## 링크 미리보기(OG 이미지)
 
+- 직무 표기는 `profile.json`의 `role` 한 곳이다. 탭 제목·`og:title`·`og:image:alt`는 `index.html`의 `%SITE_TITLE%`을 `tools/site-meta.ts`가 `이름 · 역할`로 바꿔 넣는다. `index.html`에 직무를 직접 쓰지 않는다
 - `og.png`는 빌드할 때 `tools/og-image.ts`(Vite 플러그인)가 `profile.json`의 `role`·`name`·`headline`으로 그린다. 이미지 파일을 따로 커밋하지 않는다
 - `index.html`의 `og:image`·`twitter:image`는 절대 주소(`https://chanbinme.github.io/portfolio/og.png`)다. 배포 주소나 `base`를 바꾸면 `og:url`과 함께 고친다
 - 그림 확인: `npm run build` 뒤 `dist/og.png`를 연다. 카카오톡은 미리보기를 캐시하므로 바뀐 이미지는 카카오 개발자 도구의 OG 캐시 초기화로 반영한다

@@ -270,6 +270,13 @@ function ProjectList({
                 <EditableText file="experiences" path={[...path, i, 'name']}>
                   {project.name}
                 </EditableText>
+                {(project.badge || import.meta.env.DEV) && (
+                  <span className="ml-2 align-middle font-mono text-[10px] tracking-wide text-accent uppercase dark:text-accent-dark">
+                    <EditableText file="experiences" path={[...path, i, 'badge']}>
+                      {project.badge ?? ''}
+                    </EditableText>
+                  </span>
+                )}
                 <EditableRemove
                   file="experiences"
                   path={path}

@@ -75,6 +75,8 @@ export type Highlight = {
  */
 export type ExperienceProject = {
   name: string
+  /** 선택: 이름 옆에 붙는 짧은 글 (예: 신규, 운영·개선). 비우면 표시되지 않습니다 */
+  badge?: string
   /** 선택: 프로젝트 기간 */
   period?: string
   /** 선택: 프로젝트 한 줄 소개 */
@@ -199,11 +201,17 @@ type Loose<T> = T extends string
 
 type Maybe<T> = T | null | undefined
 
+/**
+ * 노션·메신저에서 붙여 넣으면 줄바꿈 없는 공백(nbsp)이나 연속 공백이 딸려 옵니다.
+ * 화면에서 간격이 벌어져 보이고 줄바꿈도 어색해지므로 읽을 때 한 칸 공백으로 정리합니다.
+ */
+const tidy = (s: string) => s.replace(/\u00a0/g, ' ').replace(/ {2,}/g, ' ').trim()
+
 /** 필수 문자열: 비어 있으면 빈 문자열 */
-const req = (v: Maybe<string>) => v?.trim() ?? ''
+const req = (v: Maybe<string>) => (v ? tidy(v) : '')
 
 /** 선택 문자열: 비어 있으면 undefined (화면에서 아예 안 그림) */
-const opt = (v: Maybe<string>) => v?.trim() || undefined
+const opt = (v: Maybe<string>) => (v ? tidy(v) : '') || undefined
 
 /**
  * 개발 서버에서는 빈 항목을 지우지 않습니다.
@@ -260,6 +268,7 @@ const toExperienceProjects = (
   list(v)
     .map((pj) => ({
       name: req(pj.name),
+      badge: opt(pj.badge),
       period: opt(pj.period),
       summary: opt(pj.summary),
       highlights: toHighlights(pj.highlights),
