@@ -631,6 +631,11 @@
     display: none !important;
   }
 
+  html:not([data-print='career']) #opensource,
+  html:not([data-print='career']) #writing {
+    display: none !important;
+  }
+
   html[data-print='career'] #skills,
   html[data-print='career'] #opensource,
   html[data-print='career'] #writing,
