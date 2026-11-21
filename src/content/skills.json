@@ -25,22 +25,7 @@
       "Docker",
       "Drone CI",
       "JEUS",
-      "GitHub Actions",
-      "Linux"
-    ]
-  },
-  {
-    "category": "Testing & Observability",
-    "items": [
-      "JUnit 5",
-      "Mockito",
-      "Jacoco",
-      "Fixture Monkey",
-      "ELK",
-      "k6",
-      "Grafana",
-      "InfluxDB",
-      "Jaeger"
+      "GitHub Actions"
     ]
   },
   {
@@ -54,14 +39,20 @@
     ]
   },
   {
+    "category": "Collaboration",
+    "items": [
+      "Jira",
+      "Confluence",
+      "Dooray"
+    ]
+  },
+  {
     "category": "Integrations",
     "items": [
       "Triple A (오프램프)",
       "iPiD (해외계좌검증)",
       "M-DAQ (크로스보더)",
-      "케이뱅크 (가상계좌)",
-      "웰컴저축은행 (가상계좌)",
-      "SC은행 (외환)",
+      "국내은행 3곳 (가상계좌·외환)",
       "KG이니시스 (PG)",
       "카카오 (알림톡)"
     ]
