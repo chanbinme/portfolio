@@ -263,10 +263,9 @@ function ProjectList({
         {projects.map((project, i) => (
           <li
             key={i}
-            className="border-l border-neutral-200 pl-4 dark:border-neutral-800"
           >
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-              <h5 className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+              <h5 className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                 <EditableText file="experiences" path={[...path, i, 'name']}>
                   {project.name}
                 </EditableText>
